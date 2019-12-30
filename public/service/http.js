@@ -10,7 +10,7 @@ axios.interceptors.request.use((config) => {
   if (config.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
     config.data = qs.stringify(config.data)
   }
-  config.headers.common['AdminAuthorization'] = sessionStorage.getItem('token') || ''
+  // config.headers.common['AdminAuthorization'] = sessionStorage.getItem('token') || ''
   return config
 }, (error) => {
   return Promise.reject(error)
