@@ -10,7 +10,7 @@ axios.interceptors.request.use((config) => {
   if (config.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
     config.data = qs.stringify(config.data)
   }
-  config.headers.common['token'] = sessionStorage.getItem('token') || ''
+  config.headers.common['AdminAuthorization'] = sessionStorage.getItem('token') || ''
   return config
 }, (error) => {
   return Promise.reject(error)
@@ -28,7 +28,7 @@ export function Fetch (ajaxOptions = {}, name = '') {
   ajaxOptions.method = ajaxOptions.method || 'post'
   return new Promise((resolve, reject) => {
     axios(ajaxOptions).then((response) => {
-      if (response.data.code !== 200) {
+      if (response.data.result_code !== 1000) {
         reject(response.data)
       } else {
         if (response.data.data && typeof response.data.data === 'string') {

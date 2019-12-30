@@ -3,7 +3,13 @@ var CssSplitWebpackPlugin = require('css-split-webpack-plugin').default
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 module.exports = {
   devServer: {
-    port: 8099
+    port: 8099,
+    proxy: {
+      '/api': {
+        target: 'http://txh.17zxiu.com',
+        changeOrigin: true
+      }
+    }
   },
   configureWebpack: {
     plugins: [
