@@ -16,16 +16,15 @@ export default {
     }
   },
   mounted () {
-    // fetchKey().then(({ data }) => {
-    //   console.log(data)
-    // })
   },
   methods: {
     async handleLogin () {
       let keys = {}
       try {
         keys = await fetchKey()
-      } catch {}
+      } catch {
+        this.$message.error('获取publicKey失败！')
+      }
       console.log(keys)
       sessionStorage.setItem('publickey', keys.data.publickey)
       sessionStorage.setItem('rsakey', keys.data.rsakey)
@@ -37,6 +36,8 @@ export default {
         rsakey: keys.data.rsakey
       }).then(({ data }) => {
         console.log(data)
+        this.$store.commit('UPDATE_USER_INFO', data.item)
+        sessionStorage.setItem('userInfo', JSON.stringify(data.item))
       }).catch(error => {
         this.$message.error(`登陆失败：${error.result_msg || '系统错误'}`)
       })
