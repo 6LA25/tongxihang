@@ -1,3 +1,5 @@
 export default {
-  demo: ''
+  login: {
+    keys: '/api/member/admin/login/publickey'
+  }
 }
