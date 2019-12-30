@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Retech-cli"/>
+    <HelloWorld msg="demo"/>
   </div>
 </template>
 
