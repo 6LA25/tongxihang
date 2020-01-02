@@ -1,25 +1,20 @@
 <template>
   <div id="app">
-    <el-container>
-      <el-aside width="200px">Aside</el-aside>
-      <el-container>
-        <el-header>Header</el-header>
-        <el-main>
-          <router-view/>
-        </el-main>
-        <el-footer>Footer</el-footer>
-      </el-container>
-    </el-container>
+    <router-view />
   </div>
 </template>
-
+<script>
+export default {
+  name: 'App',
+  mounted () {
+    console.log('init app')
+  }
+}
+</script>
 <style lang="stylus">
+@import './assets/css/preset'
 #app {
   width 100%
   height 100%
-  .el-container {
-    width 100%
-    height 100%
-  }
 }
 </style>
