@@ -38,6 +38,7 @@ export default {
         console.log(data)
         this.$store.commit('UPDATE_USER_INFO', data.item)
         sessionStorage.setItem('userInfo', JSON.stringify(data.item))
+        sessionStorage.setItem('ticket', data.item.ticket)
       }).catch(error => {
         this.$message.error(`登陆失败：${error.result_msg || '系统错误'}`)
       })

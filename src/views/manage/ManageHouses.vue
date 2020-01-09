@@ -2,7 +2,7 @@
   <div class="manage-houses-page">
     <div class="search-head-box">
       <div class="ilb-top search-item-box">
-        <div class="ilb-top search-item-label">名称：</div>
+        <div class="ilb-top search-item-label">楼盘名称：</div>
         <div class="ilb-top">
           <el-input v-model="search.title" placeholder="请输入内容" size="mini"></el-input>
         </div>
@@ -40,13 +40,33 @@
           ></el-option>
         </el-select>
       </div>
+      <div class="ilb-top search-item-box">
+        发布日期：
+        <el-date-picker
+          v-model="search.time"
+          size="mini"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期">
+        </el-date-picker>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { fetchArea } from '../../assets/services/manage-service'
 export default {
   name: 'manage-houses',
+  mounted () {
+    fetchArea({
+      parent: '1'
+    }).then(({ data }) => {
+      console.log(data)
+    })
+  },
   data () {
     return {
       houseTypes: [
@@ -99,7 +119,8 @@ export default {
         title: '',
         type: '',
         houseStatus: '',
-        putawayStatus: ''
+        putawayStatus: '',
+        time: ''
       }
     }
   }
