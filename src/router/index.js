@@ -27,6 +27,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "ManageHouses" */ '../views/manage/ManageHouses.vue')
       },
       {
+        path: '/add-houses',
+        name: 'add-houses',
+        component: () => import(/* webpackChunkName: "AddHouses" */ '../views/manage/AddHouses.vue')
+      },
+      {
         path: '/manage-label',
         name: 'manage-label',
         component: () => import(/* webpackChunkName: "ManageLabel" */ '../views/manage/ManageLabel.vue')

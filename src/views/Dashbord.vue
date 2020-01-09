@@ -130,9 +130,15 @@ export default {
 }
 </script>
 <style lang="stylus">
+.pager-box {
+  text-align center
+  padding 10px 0
+  color #333
+}
 .search-head-box {
   padding 5px
   background #eee
+  margin-bottom 10px
   .search-item-box {
     margin 5px
     &.search-btns-box {
@@ -173,6 +179,15 @@ export default {
       }
     }
     .el-main {
+      .operate-btn-box {
+        margin-bottom 10px
+      }
+      .content-title {
+        margin-bottom 10px
+        font-size 16px
+        background: #eee;
+        padding: 5px;
+      }
     }
   }
 }
