@@ -24,7 +24,72 @@ const routes = [
       {
         path: '/manage-houses',
         name: 'manage-houses',
-        component: () => import(/* webpackChunkName: "ManageHouses" */ '../views/ManageHouses.vue')
+        component: () => import(/* webpackChunkName: "ManageHouses" */ '../views/manage/ManageHouses.vue')
+      },
+      {
+        path: '/manage-label',
+        name: 'manage-label',
+        component: () => import(/* webpackChunkName: "ManageLabel" */ '../views/manage/ManageLabel.vue')
+      },
+      {
+        path: '/manage-customer-sea',
+        name: 'manage-customer-sea',
+        component: () => import(/* webpackChunkName: "ManageCustomerSea" */ '../views/manage/ManageCustomerSea.vue')
+      },
+      {
+        path: '/manage-customer-following',
+        name: 'manage-customer-following',
+        component: () => import(/* webpackChunkName: "ManageCustomerFollowing" */ '../views/manage/ManageCustomerFollowing.vue')
+      },
+      {
+        path: '/manage-commission',
+        name: 'manage-commission',
+        component: () => import(/* webpackChunkName: "ManageComission" */ '../views/manage/ManageCommission.vue')
+      },
+      {
+        path: '/confirm-transfer-account',
+        name: 'confirm-transfer-account',
+        component: () => import(/* webpackChunkName: "ConfirmTransferAccount" */ '../views/manage/ConfirmTransferAccount.vue')
+      },
+      {
+        path: '/check-final-statement',
+        name: 'check-final-statement',
+        component: () => import(/* webpackChunkName: "CheckFinalStatement" */ '../views/manage/CheckFinalStatement.vue')
+      },
+      {
+        path: '/manage-register-user',
+        name: 'manage-register-user',
+        component: () => import(/* webpackChunkName: "ManageRegisterUser" */ '../views/manage/ManageRegisterUser.vue')
+      },
+      {
+        path: '/broker-info',
+        name: 'broker-info',
+        component: () => import(/* webpackChunkName: "BrokerInfo" */ '../views/manage/BrokerInfo.vue')
+      },
+      {
+        path: '/manage-advertise-place',
+        name: 'manage-advertise-place',
+        component: () => import(/* webpackChunkName: "ManageAdvertisePlace" */ '../views/manage/ManageAdvertisePlace.vue')
+      },
+      {
+        path: '/manage-hot-word',
+        name: 'manage-hot-word',
+        component: () => import(/* webpackChunkName: "ManageHotWord" */ '../views/manage/ManageHotWord.vue')
+      },
+      {
+        path: '/manage-activity-message',
+        name: 'manage-activity-message',
+        component: () => import(/* webpackChunkName: "ManageActivityMessage" */ '../views/manage/ManageActivityMessage.vue')
+      },
+      {
+        path: '/manage-role',
+        name: 'manage-role',
+        component: () => import(/* webpackChunkName: "ManageRole" */ '../views/manage/ManageRole.vue')
+      },
+      {
+        path: '/manage-permission',
+        name: 'manage-permission',
+        component: () => import(/* webpackChunkName: "ManagePermission" */ '../views/manage/ManagePermission.vue')
       },
       {
         path: '/about',
