@@ -4,7 +4,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/login',
     name: 'login',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -17,7 +17,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "dashboard" */ '../views/Dashbord.vue'),
     children: [
       {
-        path: '/',
+        path: '/dashboard-work-bench',
         name: 'dashboard-work-bench',
         component: () => import(/* webpackChunkName: "workbench" */ '../views/WorkBench.vue')
       },

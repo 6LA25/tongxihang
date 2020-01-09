@@ -44,10 +44,10 @@ module.exports = {
         '@services': path.resolve(__dirname, './src/assets/services'),
         '@component': path.resolve(__dirname, '../src/components')
       }
-    },
-    transpileDependencies: [
-      'vue-echarts',
-      'resize-detector'
-    ]
-  }
+    }
+  },
+  transpileDependencies: [
+    'vue-echarts',
+    'resize-detector'
+  ]
 }

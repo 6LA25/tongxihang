@@ -39,7 +39,7 @@ export default {
   data () {
     return {
       rootMap: {
-        '1': 'dashboard',
+        '1': 'dashboard-work-bench',
         '2-1': 'manage-houses'
       }
     }
@@ -58,7 +58,6 @@ export default {
   methods: {
     handleSelectNav (key, keyPath) {
       console.log(key, keyPath)
-      this.activeRoot = key
       console.log(this.rootMap[key])
       this.$router.push({
         name: this.rootMap[key]
@@ -68,12 +67,28 @@ export default {
 }
 </script>
 <style lang="stylus">
+.search-head-box {
+  padding 5px
+  background #eee
+  .search-item-box {
+    margin 5px
+    &.search-btns-box {
+      margin-left 30px
+    }
+    .search-item-label {
+      height 28px
+      line-height 28px
+    }
+  }
+}
 .dashboard-page {
   width 100%
   height 100%
   .el-container {
     width 100%
     height 100%
+    .el-main {
+    }
   }
 }
 </style>
