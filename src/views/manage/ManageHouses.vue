@@ -52,6 +52,9 @@
           end-placeholder="结束日期">
         </el-date-picker>
       </div>
+      <div class="ilb-top search-item-box search-btns-box">
+        <el-button type="warning" size="mini">重置</el-button>
+      </div>
     </div>
   </div>
 </template>

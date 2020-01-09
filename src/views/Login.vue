@@ -1,6 +1,8 @@
 <template>
   <div class="login-page">
-    <div @click="handleLogin">login</div>
+    <div @click="handleLogin" style="text-align: center;">
+      <el-button type="primary">登录</el-button>
+    </div>
   </div>
 </template>
 
@@ -39,6 +41,9 @@ export default {
         this.$store.commit('UPDATE_USER_INFO', data.item)
         sessionStorage.setItem('userInfo', JSON.stringify(data.item))
         sessionStorage.setItem('ticket', data.item.ticket)
+        this.$router.push({
+          name: 'manage-houses'
+        })
       }).catch(error => {
         this.$message.error(`登陆失败：${error.result_msg || '系统错误'}`)
       })
