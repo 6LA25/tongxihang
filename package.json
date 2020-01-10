@@ -45,6 +45,10 @@
       "@vue/standard"
     ],
     "rules": {},
+    "globals": {
+      "TMap": true,
+      "qq": true
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }

@@ -2,6 +2,7 @@
   <div class="add-houses-page">
     <div class="content-title">{{titleText}}</div>
     <el-form ref="housesForm" :model="housesForm" label-width="100px">
+      <div class="form-divide-title">楼盘信息</div>
       <el-form-item label="楼盘名称：" prop="name">
         <el-input style="width: 400px" size="mini" v-model="housesForm.name"></el-input>
       </el-form-item>
@@ -166,23 +167,88 @@
         <el-upload
           :headers="headers"
           :data="uploadData"
+          :name="'Filedata'"
           style="display: inline-block;"
           class="avatar-uploader"
           :action="uploadUrl"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
-          <img v-if="housesForm.imageUrl" :src="housesForm.coverImg" class="avatar">
+          <img v-if="housesForm.coverImg" :src="housesForm.coverImg" class="cover-img">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div class="form-item-hint-text">支持jpg/jpeg/png格式图片，大小不超过2M，建议图片比例为5:3</div>
+        <div class="form-item-hint-text">支持jpg/jpeg/png格式图片，大小不超过2M</div>
+      </el-form-item>
+      <el-form-item label="实景图：" prop="realImg">
+        <el-upload
+          :headers="headers"
+          :data="uploadData"
+          list-type="picture-card"
+          :name="'Filedata'"
+          style="display: inline-block;"
+          class="avatar-uploader"
+          :limit="6"
+          :on-success="uploadRealImgSuccess"
+          :before-upload="beforeAvatarUpload"
+          :on-remove="removeRealImg"
+          :action="uploadUrl">
+          <i class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+        <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过2M</div>
+      </el-form-item>
+      <el-form-item label="效果图：" prop="renderImg">
+        <el-upload
+          :headers="headers"
+          :data="uploadData"
+          list-type="picture-card"
+          :name="'Filedata'"
+          style="display: inline-block;"
+          class="avatar-uploader"
+          :limit="6"
+          :on-success="uploadRenderImgSuccess"
+          :before-upload="beforeAvatarUpload"
+          :on-remove="removeRenderImg"
+          :action="uploadUrl">
+          <i class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+        <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过2M</div>
+      </el-form-item>
+      <el-form-item label="分享封面图：" prop="shareImg">
+        <el-upload
+          :headers="headers"
+          :data="uploadData"
+          :name="'Filedata'"
+          style="display: inline-block;"
+          class="avatar-uploader"
+          :action="uploadUrl"
+          :show-file-list="false"
+          :on-success="uploadShareImgSuccess"
+          :before-upload="beforeAvatarUpload">
+          <img v-if="housesForm.shareImg" :src="housesForm.shareImg" class="cover-img">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+        <div class="form-item-hint-text">支持jpg/jpeg/png格式图片，大小不超过2M</div>
+      </el-form-item>
+      <div class="form-divide-title">楼盘位置</div>
+      <el-form-item label="楼盘地址：" prop="shareImg">
+        <el-cascader @change="handleChangeArea" :props="location" size="mini" v-model="housesForm.houseLocation"></el-cascader><br />
+        <el-input type="textarea" style="width: 400px;" size="mini" placeholder="请在此填写详细地址" resize="none" v-model="housesForm.houseAddress"></el-input>
+        <div class="form-item-hint-text">
+          经纬度查询：
+          <el-button type="primary" size="mini" @click="handleCheckInMap">地图查询</el-button>
+        </div>
+        <div id="mapContainer" style="margin-top: 10px;width: 800px;height: 400px;"></div>
+        <div style="margin-top: 10px;">
+          <div style="margin-right: 20px;" class="ilb-top">经度：<el-input disabled style="width: 100px" size="mini" v-model="housesForm.lng"></el-input></div>
+          <div class="ilb-top">纬度：<el-input disabled style="width: 100px" size="mini" v-model="housesForm.lat"></el-input></div>
+        </div>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
-import { initUpload } from '../../../src/assets/services/manage-service'
+import { initUpload, fetchArea } from '../../../src/assets/services/manage-service'
 export default {
   name: 'add-houses',
   data () {
@@ -281,8 +347,37 @@ export default {
         managementPrice: '', // 物业费用
         lightspot: '', // 楼盘亮点
         rim: '', // 周边介绍
-        coverImg: '' // 封面
-      }
+        coverImg: '', // 封面
+        realImg: [], // 实景图
+        renderImg: [], // 效果图
+        shareImg: '',
+        houseLocation: [], // 楼盘位置
+        houseAddress: '', // 楼盘具体地址
+        lng: '', // 经度
+        lat: '' // 纬度
+      },
+      location: {
+        lazy: true,
+        async lazyLoad (node, resolve) {
+          const { level } = node
+          console.log(level)
+          let nodes = []
+          let areas = []
+          try {
+            let { data } = await fetchArea({ parent: level === 0 ? '' : node.value.id })
+            areas = data.items
+          } catch {}
+          areas.forEach(item => {
+            nodes.push({
+              value: item,
+              label: item.name,
+              leaf: level >= 2
+            })
+          })
+          resolve(nodes)
+        }
+      },
+      map: null
     }
   },
   computed: {
@@ -295,39 +390,88 @@ export default {
       return title[this.$route.query.tag || 'add']
     }
   },
-  mounted () {},
+  async mounted () {
+    this.map = new qq.maps.Map(document.getElementById('mapContainer'), {
+      // center: new qq.maps.LatLng(4.397, 150.644),
+      zoom: 13
+    })
+    let { data } = await initUpload()
+    this.uploadUrl = data.file_server
+    this.uploadData.file_init = data.file_init
+    this.uploadData.file_token = data.file_token
+  },
   methods: {
+    handleCheckInMap () {
+      let callbacks = {
+        complete: (results) => {
+          console.log('res', results)
+          this.map.setCenter(results.detail.location)
+          this.housesForm.lng = results.detail.location.lng
+          this.housesForm.lat = results.detail.location.lat
+          // eslint-disable-next-line no-unused-vars
+          let marker = new qq.maps.Marker({
+            map: this.map,
+            position: results.detail.location
+          })
+        }
+      }
+      let geocoder = new qq.maps.Geocoder(callbacks)
+      let areas = []
+      this.housesForm.houseLocation.forEach(item => {
+        areas.push(item.name)
+      })
+      let address = `${areas.join(',')},${this.housesForm.houseAddress}`
+      geocoder.getLocation(address)
+    },
+    handleChangeArea (val) {
+      console.log(val)
+    },
     handleAvatarSuccess (res, file) {
       console.log(res)
       if (res.result_code === 10001) {
         this.$message.error(`上传错误：${res.result_msg}`)
         return
       }
-      // this.courseForm.imageUrl = URL.createObjectURL(file.raw)
-      this.housesForm.coverImg = res.data.path
-      // this.$refs['housesForm'].clearValidate('imageUrl')
+      this.housesForm.coverImg = res.http_path
     },
-    async beforeAvatarUpload (file) {
-      let { data } = await initUpload()
-      this.uploadUrl = data.file_server
-      this.uploadData.file_init = data.file_init
-      this.uploadData.file_token = data.file_token
-      this.uploadData.Filedata = file
-      console.log(data)
+    uploadShareImgSuccess (res, file) {
+      if (res.result_code === 10001) {
+        this.$message.error(`上传错误：${res.result_msg}`)
+        return
+      }
+      this.housesForm.shareImg = res.http_path
+    },
+    uploadRealImgSuccess (res, file, fileList) {
+      console.log(fileList)
+      this.housesForm.realImg = fileList
+    },
+    removeRealImg (file, fileList) {
+      console.log(file, fileList)
+      this.housesForm.realImg = fileList
+    },
+    uploadRenderImgSuccess (res, file, fileList) {
+      console.log(fileList)
+      this.housesForm.renderImg = fileList
+    },
+    removeRenderImg (file, fileList) {
+      console.log(file, fileList)
+      this.housesForm.renderImg = fileList
+    },
+    beforeAvatarUpload (file) {
       console.log(file)
       const isJPG = file.type === 'image/jpeg'
       const isPNG = file.type === 'image/png'
       const isJPEG = file.type === 'image/jpeg'
-      const isLt500K = file.size / 1024 < 500
+      const isLt2M = file.size / 1024 / 1024 < 2
       if (!isJPG && !isPNG && !isJPEG) {
-        this.$message.error('上传微课封面只能是 JPG/PNG/JPEG 格式!')
+        this.$message.error('上传封面只能是 JPG/PNG/JPEG 格式!')
         return false
       }
-      if (!isLt500K) {
-        this.$message.error('上传微课封面大小不能超过 500kb!')
+      if (!isLt2M) {
+        this.$message.error('上传封面大小不能超过 2M!')
         return false
       }
-      return (isJPG || isPNG || isJPEG) && isLt500K
+      return (isJPG || isPNG || isJPEG) && isLt2M
     }
   }
 }
@@ -336,6 +480,8 @@ export default {
 <style lang="stylus">
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
+  width: 146px;
+  height: 146px;
   border-radius: 6px;
   cursor: pointer;
   position: relative;
@@ -347,10 +493,13 @@ export default {
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 160px;
-  height: 160px;
-  line-height: 160px;
+  width: 146px;
+  height: 146px;
+  line-height: 146px;
   text-align: center;
+}
+.el-upload-list--picture-card {
+  height 146px
 }
 .form-item-hint-text {
   color #606266
@@ -363,9 +512,15 @@ export default {
   .el-form-item {
     margin-bottom 10px
   }
+  .form-divide-title {
+    padding 10px
+  }
   .form-label {
     margin-left 10px
     color #606266
+  }
+  .cover-img {
+    width 100%
   }
 }
 </style>
