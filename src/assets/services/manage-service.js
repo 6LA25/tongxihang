@@ -7,3 +7,8 @@ export const fetchArea = (options) => Fetch({
     ...options
   }
 })
+
+// 初始化上传接口
+export const initUpload = () => Fetch({
+  url: URL.upload.init
+})

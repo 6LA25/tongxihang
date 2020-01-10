@@ -8,5 +8,8 @@ export default {
   },
   public: {
     area: `${domin}/api/admin/common/area/children`
+  },
+  upload: {
+    init: `${domin}/api/admin/common/upload/init`
   }
 }
