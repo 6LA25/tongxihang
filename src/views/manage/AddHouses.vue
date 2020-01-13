@@ -1,7 +1,7 @@
 <template>
   <div class="add-houses-page">
     <div class="content-title">{{titleText}}</div>
-    <el-form ref="housesForm" :model="housesForm" label-width="100px">
+    <el-form :rules="rules" ref="housesForm" :model="housesForm" label-width="130px">
       <div class="form-divide-title">楼盘信息</div>
       <el-form-item label="楼盘名称：" prop="name">
         <el-input style="width: 400px" size="mini" v-model="housesForm.name"></el-input>
@@ -230,9 +230,13 @@
         <div class="form-item-hint-text">支持jpg/jpeg/png格式图片，大小不超过2M</div>
       </el-form-item>
       <div class="form-divide-title">楼盘位置</div>
-      <el-form-item label="楼盘地址：" prop="shareImg">
-        <el-cascader @change="handleChangeArea" :props="location" size="mini" v-model="housesForm.houseLocation"></el-cascader><br />
+      <el-form-item label="楼盘所属区域：" prop="houseLocation">
+        <el-cascader @change="handleChangeArea" :props="location" size="mini" v-model="housesForm.houseLocation"></el-cascader>
+      </el-form-item>
+      <el-form-item label="楼盘详细地址：" prop="houseAddress">
         <el-input type="textarea" style="width: 400px;" size="mini" placeholder="请在此填写详细地址" resize="none" v-model="housesForm.houseAddress"></el-input>
+      </el-form-item>
+      <el-form-item>
         <div class="form-item-hint-text">
           经纬度查询：
           <el-button type="primary" size="mini" @click="handleCheckInMap">地图查询</el-button>
@@ -242,6 +246,74 @@
           <div style="margin-right: 20px;" class="ilb-top">经度：<el-input disabled style="width: 100px" size="mini" v-model="housesForm.lng"></el-input></div>
           <div class="ilb-top">纬度：<el-input disabled style="width: 100px" size="mini" v-model="housesForm.lat"></el-input></div>
         </div>
+      </el-form-item>
+      <div class="form-divide-title">营收设置：</div>
+      <div>
+        <div class="ilb-top">
+          <el-form-item label="营收佣金类型：" prop="commissionType">
+            <el-radio-group v-model="housesForm.commissionType">
+              <el-radio label="百分比金额"></el-radio>
+              <el-radio label="固定金额"></el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </div>
+        <div class="ilb-top">
+          <el-form-item label="佣金设置：" prop="commissionValue">
+            <el-input style="width: 100px" size="mini" v-model="housesForm.commissionValue"></el-input>
+          </el-form-item>
+        </div>
+      </div>
+      <div class="form-divide-title">分销设置：</div>
+      <el-form-item label="是否支持分销：" prop="isDistribution">
+        <el-radio-group v-model="housesForm.isDistribution">
+          <el-radio :label="true">是</el-radio>
+          <el-radio :label="false">否</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="分销佣金类别：" prop="distributionType">
+        <el-radio-group v-model="housesForm.distributionType">
+          <el-radio :label="true">百分比金额</el-radio>
+          <el-radio :label="false">固定金额</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <div>
+        <div class="ilb-top">
+          <el-form-item label="1级佣金比例：" prop="">
+            <el-input style="width: 100px" size="mini" v-model="housesForm.onePer"></el-input>
+          </el-form-item>
+        </div>
+        <div class="ilb-top">
+          <el-form-item label="2级佣金比例：" prop="">
+            <el-input style="width: 100px" size="mini" v-model="housesForm.twoPer"></el-input>
+          </el-form-item>
+        </div>
+        <div class="ilb-top">
+          <el-form-item label="3级佣金比例：" prop="">
+            <el-input style="width: 100px" size="mini" v-model="housesForm.threePer"></el-input>
+          </el-form-item>
+        </div>
+        <div class="warn" style="padding-left: 20px;">合计：计算3级佣金或佣金比例总和，注意，佣金比例是根据实际放款计算</div>
+      </div>
+      <el-form-item label="置业顾问：" prop="counselor">
+        <el-select size="mini" v-model="housesForm.counselor" placeholder="请选择置业顾问">
+          <el-option label="张三" value="shanghai"></el-option>
+          <el-option label="李四" value="beijing"></el-option>
+        </el-select>
+      </el-form-item>
+      <div class="form-divide-title">楼盘状态：</div>
+      <el-form-item label="上下架：" prop="distributionType">
+        <el-radio-group v-model="housesForm.isPutaway">
+          <el-radio :label="true">上架</el-radio>
+          <el-radio :label="false">下架</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="排序：" prop="sort">
+        <el-input style="width: 100px" size="mini" v-model="housesForm.sort"></el-input>
+        <span class="form-item-hint-text" style="margin-left: 10px;">数字越大，优先级越高；如优先级相同，则根据创建时间排序</span>
+      </el-form-item>
+      <el-form-item>
+        <el-button size="mini" type="primary" @click="handleSubmit">确定</el-button>
+        <el-button size="mini">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -253,6 +325,18 @@ export default {
   name: 'add-houses',
   data () {
     return {
+      rules: {
+        name: [{ required: true, message: '请输入楼盘名称', trigger: 'blur' }],
+        price: [{ required: true, message: '请输入楼盘定价', trigger: 'blur' }],
+        type: [{ required: true, message: '请选择楼盘类型', trigger: 'change' }],
+        status: [{ required: true, message: '请选择楼盘状态', trigger: 'change' }],
+        houseLocation: [{ required: true, message: '请选择楼盘所属区域', trigger: 'change' }],
+        counselor: [{ required: true, message: '请选择置业顾问', trigger: 'change' }],
+        desc: [{ required: true, message: '请输入楼盘简介', trigger: 'blur' }],
+        houseAddress: [{ required: true, message: '请输入楼盘详细地址', trigger: 'blur' }],
+        coverImg: [{ required: true, message: '请上传楼盘封面' }],
+        commissionValue: [{ required: true, message: '请输入佣金设置', trigger: 'blur' }]
+      },
       headers: {
         AdminAuthorization: sessionStorage.getItem('ticket')
       },
@@ -354,7 +438,16 @@ export default {
         houseLocation: [], // 楼盘位置
         houseAddress: '', // 楼盘具体地址
         lng: '', // 经度
-        lat: '' // 纬度
+        lat: '', // 纬度
+        commissionType: '', // 营收佣金类别
+        isDistribution: '', // 是否支持分销
+        distributionType: '', // 分销佣金类别
+        onePer: '', // 一级佣金比例
+        twoPer: '', // 二级佣金比例
+        threePer: '', // 三级佣金比例
+        counselor: '', // 置业顾问
+        isPutaway: '', // 上下架
+        sort: '' // 排序
       },
       location: {
         lazy: true,
@@ -432,6 +525,7 @@ export default {
         this.$message.error(`上传错误：${res.result_msg}`)
         return
       }
+      this.$refs['housesForm'].clearValidate('coverImg')
       this.housesForm.coverImg = res.http_path
     },
     uploadShareImgSuccess (res, file) {
@@ -472,6 +566,16 @@ export default {
         return false
       }
       return (isJPG || isPNG || isJPEG) && isLt2M
+    },
+    handleSubmit () {
+      this.$refs['housesForm'].validate((valid) => {
+        if (valid) {
+          alert('submit!')
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }
@@ -505,12 +609,15 @@ export default {
   color #606266
 }
 .add-houses-page {
+  .warn {
+    color #f56c6c
+  }
   .ilb-top {
     display inline-block
     vertical-align top
   }
   .el-form-item {
-    margin-bottom 10px
+    margin-bottom 20px
   }
   .form-divide-title {
     padding 10px
