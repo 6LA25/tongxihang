@@ -16,5 +16,11 @@ export default {
 #app {
   width 100%
   height 100%
+  .form-item-hint-text {
+    color #606266
+  }
+  .ml-10 {
+    margin-left 10px
+  }
 }
 </style>

@@ -71,23 +71,24 @@
       tooltip-effect="dark"
       style="width: 100%"
       size="mini"
-      @cell-click="handleClickCell"
+      @row-click="handleClickCell"
       v-loading="loading"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
-      <el-table-column prop="id" label="楼盘ID" width="120" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="id" label="楼盘ID" width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="name" label="楼盘名称" width="180" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="price" label="定价（元/平）" width="120"></el-table-column>
+      <el-table-column prop="price" label="定价（元/平）" width="100"></el-table-column>
       <el-table-column prop="location" label="所在地" width="180" show-overflow-tooltip></el-table-column>
       <el-table-column prop="houseType" label="楼盘类型" width="80" show-overflow-tooltip></el-table-column>
       <el-table-column prop="houseStatus" label="楼盘状态" width="80" show-overflow-tooltip></el-table-column>
       <el-table-column prop="putawayStatus" label="楼盘状态" width="80"></el-table-column>
-      <el-table-column label="操作" width="240">
-        <template>
-          <el-button type="primary" size="mini" @click="handleAddHouses('edit')">编辑</el-button>
-          <el-button size="mini" type="primary">下架</el-button>
-          <el-button type="warning" size="mini">设为热门</el-button>
+      <el-table-column label="操作" width="340">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click.stop="handleEditHouses(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="primary" @click.stop="handlePutaway(scope.$index, scope.row)">下架</el-button>
+          <el-button type="primary" size="mini" @click.stop="handleAddHouseType(scope.$index, scope.row)">新增户型</el-button>
+          <el-button type="warning" size="mini" @click.stop="handleSetHot(scope.$index, scope.row)">设为热门</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -245,11 +246,31 @@ export default {
         }
       })
     },
-    handleAddHouses (tag) {
+    handleEditHouses (index, row) {
       this.$router.push({
         name: 'add-houses',
         query: {
-          tag
+          tag: 'edit',
+          id: row.id
+        }
+      })
+    },
+    handleAddHouses (index, row, tag) {
+      this.$router.push({
+        name: 'add-houses'
+      })
+    },
+    handlePutaway (index, row) {
+      console.log(index, row)
+    },
+    handleSetHot (index, row) {
+      console.log(index, row)
+    },
+    handleAddHouseType (index, row) {
+      this.$router.push({
+        name: 'add-house-type',
+        query: {
+          id: row.id
         }
       })
     }

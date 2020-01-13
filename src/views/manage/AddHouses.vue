@@ -313,7 +313,7 @@
       </el-form-item>
       <el-form-item>
         <el-button size="mini" type="primary" @click="handleSubmit">确定</el-button>
-        <el-button size="mini">取消</el-button>
+        <el-button size="mini" @click="handleCancel">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -576,6 +576,9 @@ export default {
           return false
         }
       })
+    },
+    handleCancel () {
+      this.$router.go(-1)
     }
   }
 }
@@ -604,9 +607,6 @@ export default {
 }
 .el-upload-list--picture-card {
   height 146px
-}
-.form-item-hint-text {
-  color #606266
 }
 .add-houses-page {
   .warn {

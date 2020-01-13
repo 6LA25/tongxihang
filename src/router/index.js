@@ -32,6 +32,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "AddHouses" */ '../views/manage/AddHouses.vue')
       },
       {
+        path: '/add-house-type',
+        name: 'add-house-type',
+        component: () => import(/* webpackChunkName: "AddHouseType" */ '../views/manage/AddHouseType.vue')
+      },
+      {
         path: '/manage-label',
         name: 'manage-label',
         component: () => import(/* webpackChunkName: "ManageLabel" */ '../views/manage/ManageLabel.vue')
