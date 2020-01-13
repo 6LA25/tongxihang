@@ -3,7 +3,7 @@
     <div class="content-title">楼盘列表</div>
     <div class="operate-btn-box">
       <el-button type="primary" size="small" @click="handleAddHouses('add')">新建楼盘</el-button>
-      <el-button type="danger" size="small">批量下架</el-button>
+      <el-button type="danger" size="small" >批量下架</el-button>
     </div>
     <div class="search-head-box">
       <div class="ilb-top search-item-box">
@@ -86,7 +86,7 @@
       <el-table-column label="操作" width="340">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleEditHouses(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="primary" @click.stop="handlePutaway(scope.$index, scope.row)">下架</el-button>
+          <el-button size="mini" type="primary" @click.stop="handlePutaway(scope.row)">下架</el-button>
           <el-button type="primary" size="mini" @click.stop="handleAddHouseType(scope.$index, scope.row)">新增户型</el-button>
           <el-button type="warning" size="mini" @click.stop="handleSetHot(scope.$index, scope.row)">设为热门</el-button>
         </template>
@@ -111,11 +111,6 @@ import { fetchArea } from '../../assets/services/manage-service'
 export default {
   name: 'manage-houses',
   mounted () {
-    // fetchArea({
-    //   parent: ''
-    // }).then(({ data }) => {
-    //   console.log(data)
-    // })
   },
   data () {
     return {
@@ -260,8 +255,23 @@ export default {
         name: 'add-houses'
       })
     },
-    handlePutaway (index, row) {
-      console.log(index, row)
+    handlePutaway (row) {
+      console.log(row)
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
     handleSetHot (index, row) {
       console.log(index, row)

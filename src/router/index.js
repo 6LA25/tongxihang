@@ -37,6 +37,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "AddHouseType" */ '../views/manage/AddHouseType.vue')
       },
       {
+        path: '/add-following-record',
+        name: 'add-following-record',
+        component: () => import(/* webpackChunkName: "AddFollowingRecord" */ '../views/manage/AddFollowingRecord.vue')
+      },
+      {
         path: '/manage-label',
         name: 'manage-label',
         component: () => import(/* webpackChunkName: "ManageLabel" */ '../views/manage/ManageLabel.vue')

@@ -77,28 +77,55 @@
             </el-form-item>
           </div>
         </div>
+        <el-form-item label="标签：" prop="tags">
+          <el-input type="textarea" style="width: 400px" size="mini" resize="none" v-model="editForm.tags"></el-input>
+        </el-form-item>
+        <el-form-item label="户型图：" prop="editForm">
+          <el-upload
+            :headers="headers"
+            :data="uploadData"
+            list-type="picture-card"
+            :name="'Filedata'"
+            style="display: inline-block;"
+            class="avatar-uploader"
+            :limit="4"
+            :on-success="uploadRealImgSuccess"
+            :before-upload="beforeAvatarUpload"
+            :on-remove="removeRealImg"
+            :action="uploadUrl">
+            <i class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        <div class="form-item-hint-text">最多上传4张图片，支持jpg/jpeg/png格式图片，大小不超过2M</div>
+      </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="centerDialogVisible = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="centerDialogVisible = false">确 定</el-button>
+        <el-button size="mini" @click="handleCancel">取 消</el-button>
+        <el-button size="mini" type="primary" @click="handleConfirm">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import { initUpload } from '../../../src/assets/services/manage-service'
+
 export default {
   name: 'add-house-type',
   data () {
     return {
+      headers: {
+        AdminAuthorization: sessionStorage.getItem('ticket')
+      },
       loading: false,
-      editDialogVisible: true,
+      editDialogVisible: false,
       editForm: {
         name: '',
         price: '',
         type: '',
         area: '',
-        inArea: ''
+        inArea: '',
+        tags: '',
+        houseImgs: []
       },
       tableData: [
         {
@@ -142,8 +169,16 @@ export default {
           value: '5',
           label: '五'
         }
-      ]
+      ],
+      uploadUrl: '',
+      uploadData: {}
     }
+  },
+  async mounted () {
+    let { data } = await initUpload()
+    this.uploadUrl = data.file_server
+    this.uploadData.file_init = data.file_init
+    this.uploadData.file_token = data.file_token
   },
   methods: {
     handleEdit (index, row) {
@@ -171,6 +206,39 @@ export default {
     },
     handleCurrentChange (val) {
       this.search.pageNum = val
+    },
+    uploadRealImgSuccess (res, file, fileList) {
+      console.log(fileList)
+      this.editForm.houseImgs = fileList
+    },
+    beforeAvatarUpload (file) {
+      console.log(file)
+      const isJPG = file.type === 'image/jpeg'
+      const isPNG = file.type === 'image/png'
+      const isJPEG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isJPG && !isPNG && !isJPEG) {
+        this.$message.error('上传封面只能是 JPG/PNG/JPEG 格式!')
+        return false
+      }
+      if (!isLt2M) {
+        this.$message.error('上传封面大小不能超过 2M!')
+        return false
+      }
+      return (isJPG || isPNG || isJPEG) && isLt2M
+    },
+    removeRealImg (file, fileList) {
+      console.log(file, fileList)
+      this.editForm.houseImgs = fileList
+    },
+    handleCancel () {
+      this.editDialogVisible = false
+    },
+    handleConfirm () {
+      this.editDialogVisible = false
+    },
+    handleAddHouses () {
+      this.editDialogVisible = true
     }
   }
 }
