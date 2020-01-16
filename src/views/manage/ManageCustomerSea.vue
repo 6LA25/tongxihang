@@ -147,6 +147,9 @@ export default {
   },
   methods: {
     handleAddCustomer () {
+      this.$router.push({
+        name: 'add-intention-customer'
+      })
     },
     handleReset () {
       Object.keys(this.search).forEach(item => {

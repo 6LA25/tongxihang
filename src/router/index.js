@@ -52,6 +52,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "ManageCustomerSea" */ '../views/manage/ManageCustomerSea.vue')
       },
       {
+        path: '/add-intention-customer',
+        name: 'add-intention-customer',
+        component: () => import(/* webpackChunkName: "AddIntentionCustomer" */ '../views/manage/AddIntentionCustomer.vue')
+      },
+      {
         path: '/manage-customer-following',
         name: 'manage-customer-following',
         component: () => import(/* webpackChunkName: "ManageCustomerFollowing" */ '../views/manage/ManageCustomerFollowing.vue')
