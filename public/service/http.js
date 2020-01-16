@@ -10,7 +10,7 @@ axios.interceptors.request.use((config) => {
   if (config.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
     config.data = qs.stringify(config.data)
   }
-  config.headers.common['AdminAuthorization'] = sessionStorage.getItem('ticket') || 'PC-367369c069014d08aab44fb193f3ce881578557636'
+  config.headers.common['AdminAuthorization'] = sessionStorage.getItem('ticket')
   return config
 }, (error) => {
   return Promise.reject(error)

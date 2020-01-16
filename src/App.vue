@@ -19,6 +19,10 @@ export default {
   .form-item-hint-text {
     color #606266
   }
+  .form-label {
+    margin-left 10px
+    color #606266
+  }
   .ml-10 {
     margin-left 10px
   }

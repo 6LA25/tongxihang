@@ -82,8 +82,9 @@
         </el-form-item>
         <el-form-item label="户型图：" prop="editForm">
           <el-upload
-            :headers="headers"
-            :data="uploadData"
+            v-if="$store.state.uploadUrl"
+            :headers="$store.state.uploadHeaders"
+            :data="$store.state.uploadData"
             list-type="picture-card"
             :name="'Filedata'"
             style="display: inline-block;"
@@ -92,7 +93,7 @@
             :on-success="uploadRealImgSuccess"
             :before-upload="beforeAvatarUpload"
             :on-remove="removeRealImg"
-            :action="uploadUrl">
+            :action="$store.state.uploadUrl">
             <i class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         <div class="form-item-hint-text">最多上传4张图片，支持jpg/jpeg/png格式图片，大小不超过2M</div>
@@ -107,15 +108,10 @@
 </template>
 
 <script>
-import { initUpload } from '../../../src/assets/services/manage-service'
-
 export default {
   name: 'add-house-type',
   data () {
     return {
-      headers: {
-        AdminAuthorization: sessionStorage.getItem('ticket')
-      },
       loading: false,
       editDialogVisible: false,
       editForm: {
@@ -169,16 +165,11 @@ export default {
           value: '5',
           label: '五'
         }
-      ],
-      uploadUrl: '',
-      uploadData: {}
+      ]
     }
   },
-  async mounted () {
-    let { data } = await initUpload()
-    this.uploadUrl = data.file_server
-    this.uploadData.file_init = data.file_init
-    this.uploadData.file_token = data.file_token
+  mounted () {
+    this.$store.dispatch('initUpload')
   },
   methods: {
     handleEdit (index, row) {

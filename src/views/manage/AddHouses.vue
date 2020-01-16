@@ -165,12 +165,13 @@
       </el-form-item>
       <el-form-item label="楼盘封面：" prop="coverImg">
         <el-upload
-          :headers="headers"
-          :data="uploadData"
+          v-if="$store.state.uploadUrl"
+          :headers="$store.state.uploadHeaders"
+          :data="$store.state.uploadData"
           :name="'Filedata'"
           style="display: inline-block;"
           class="avatar-uploader"
-          :action="uploadUrl"
+          :action="$store.state.uploadUrl"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
@@ -181,8 +182,9 @@
       </el-form-item>
       <el-form-item label="实景图：" prop="realImg">
         <el-upload
-          :headers="headers"
-          :data="uploadData"
+          v-if="$store.state.uploadUrl"
+          :headers="$store.state.uploadHeaders"
+          :data="$store.state.uploadData"
           list-type="picture-card"
           :name="'Filedata'"
           style="display: inline-block;"
@@ -191,15 +193,16 @@
           :on-success="uploadRealImgSuccess"
           :before-upload="beforeAvatarUpload"
           :on-remove="removeRealImg"
-          :action="uploadUrl">
+          :action="$store.state.uploadUrl">
           <i class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过2M</div>
       </el-form-item>
       <el-form-item label="效果图：" prop="renderImg">
         <el-upload
-          :headers="headers"
-          :data="uploadData"
+          v-if="$store.state.uploadUrl"
+          :headers="$store.state.uploadHeaders"
+          :data="$store.state.uploadData"
           list-type="picture-card"
           :name="'Filedata'"
           style="display: inline-block;"
@@ -208,19 +211,20 @@
           :on-success="uploadRenderImgSuccess"
           :before-upload="beforeAvatarUpload"
           :on-remove="removeRenderImg"
-          :action="uploadUrl">
+          :action="$store.state.uploadUrl">
           <i class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过2M</div>
       </el-form-item>
       <el-form-item label="分享封面图：" prop="shareImg">
         <el-upload
-          :headers="headers"
-          :data="uploadData"
+          v-if="$store.state.uploadUrl"
+          :headers="$store.state.uploadHeaders"
+          :data="$store.state.uploadData"
           :name="'Filedata'"
           style="display: inline-block;"
           class="avatar-uploader"
-          :action="uploadUrl"
+          :action="$store.state.uploadUrl"
           :show-file-list="false"
           :on-success="uploadShareImgSuccess"
           :before-upload="beforeAvatarUpload">
@@ -320,7 +324,7 @@
 </template>
 
 <script>
-import { initUpload, fetchArea } from '../../../src/assets/services/manage-service'
+import { fetchArea } from '../../../src/assets/services/manage-service'
 export default {
   name: 'add-houses',
   data () {
@@ -337,12 +341,7 @@ export default {
         coverImg: [{ required: true, message: '请上传楼盘封面' }],
         commissionValue: [{ required: true, message: '请输入佣金设置', trigger: 'blur' }]
       },
-      headers: {
-        AdminAuthorization: sessionStorage.getItem('ticket')
-      },
       // 装修类型
-      uploadUrl: '',
-      uploadData: {},
       fitments: [
         {
           value: '1',
@@ -483,15 +482,12 @@ export default {
       return title[this.$route.query.tag || 'add']
     }
   },
-  async mounted () {
+  mounted () {
     this.map = new qq.maps.Map(document.getElementById('mapContainer'), {
       // center: new qq.maps.LatLng(4.397, 150.644),
       zoom: 13
     })
-    let { data } = await initUpload()
-    this.uploadUrl = data.file_server
-    this.uploadData.file_init = data.file_init
-    this.uploadData.file_token = data.file_token
+    this.$store.dispatch('initUpload')
   },
   methods: {
     handleCheckInMap () {
@@ -621,10 +617,6 @@ export default {
   }
   .form-divide-title {
     padding 10px
-  }
-  .form-label {
-    margin-left 10px
-    color #606266
   }
   .cover-img {
     width 100%
