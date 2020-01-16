@@ -12,38 +12,44 @@
         </div>
       </div>
       <div class="ilb-top search-item-box">
-        身份：
-        <el-select v-model="search.identity" placeholder="请选择" size="mini">
-          <el-option
-            v-for="item in identities"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
+        <div class="ilb-top search-item-label">身份：</div>
+        <div class="ilb-top">
+          <el-select v-model="search.identity" placeholder="请选择" size="mini">
+            <el-option
+              v-for="item in identities"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </div>
       </div>
       <div class="ilb-top search-item-box">
-        已购房客户：
-        <el-select v-model="search.bought" placeholder="请选择" size="mini">
-          <el-option
-            v-for="item in boughts"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
+        <div class="ilb-top search-item-label">已购房客户：</div>
+        <div class="ilb-top">
+          <el-select v-model="search.bought" placeholder="请选择" size="mini">
+            <el-option
+              v-for="item in boughts"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </div>
       </div>
       <div class="ilb-top search-item-box">
-        发布日期：
-        <el-date-picker
-          v-model="search.time"
-          size="mini"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
+        <div class="ilb-top search-item-label">发布日期：</div>
+        <div class="ilb-top">
+          <el-date-picker
+            v-model="search.time"
+            size="mini"
+            value-format="yyyy-MM-dd"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
+        </div>
       </div>
       <div class="ilb-top search-item-box search-btns-box">
         <el-button type="warning" size="mini" @click="handleReset">重置</el-button>

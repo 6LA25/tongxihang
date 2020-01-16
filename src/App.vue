@@ -26,5 +26,13 @@ export default {
   .ml-10 {
     margin-left 10px
   }
+  .table-cell-click-span {
+    display inline-block
+    width 100%
+    color #409eff
+  }
+  .pointer {
+    cursor pointer
+  }
 }
 </style>

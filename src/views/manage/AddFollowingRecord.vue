@@ -72,6 +72,23 @@
         <el-button size="mini" @click="handleCancel">取消</el-button>
       </el-form-item>
     </el-form>
+    <div class="following-list-box">
+      <div class="title">跟进日志：</div>
+      <ul>
+        <li>
+          <div>2019.09.08 12:31:23   操作人：曾诚</div>
+          <div>跟进状态"联系中"，跟进时间“2019.09.08 12:30”，下次跟进时间为“2019.09.18 12:30”，备注“未打通客户电话，下次继续联系”</div>
+        </li>
+        <li>
+          <div>2019.09.08 12:31:23   操作人：曾诚</div>
+          <div>跟进状态"联系中"，跟进时间“2019.09.08 12:30”，下次跟进时间为“2019.09.18 12:30”，备注“未打通客户电话，下次继续联系”</div>
+        </li>
+        <li>
+          <div>2019.09.08 12:31:23   操作人：曾诚</div>
+          <div>跟进状态"联系中"，跟进时间“2019.09.08 12:30”，下次跟进时间为“2019.09.18 12:30”，备注“未打通客户电话，下次继续联系”</div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -151,5 +168,17 @@ export default {
 
 <style lang="stylus" scoped>
 .add-following-record-page {
+  .following-list-box {
+    color #606266
+    padding-left 20px
+    .title {
+      margin-bottom 10px
+      font-size 16px
+    }
+    ul>li {
+      border-bottom 1px solid #eeeeee
+      padding 10px 0
+    }
+  }
 }
 </style>
