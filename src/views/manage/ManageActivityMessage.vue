@@ -16,8 +16,8 @@
     >
       <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
       <el-table-column type="index" label="序号" width="55"></el-table-column>
-      <el-table-column prop="name" label="通知标题" width="200"></el-table-column>
-      <el-table-column prop="time" label="创建时间" width="100"></el-table-column>
+      <el-table-column prop="name" label="通知标题" width="300"></el-table-column>
+      <el-table-column prop="time" label="创建时间" width="200"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleAddWord('edit', scope.row)">编辑</el-button>
@@ -40,24 +40,51 @@
       :title="flag === 'add' ? '新增活动通知': '编辑活动通知'"
       :visible.sync="dialogVisible"
       :before-close="handleClose"
-      width="50%">
+      width="60%">
+      <div>
+        <div style="margin-bottom: 20px;">
+          <div class="ilb">通知标题：</div>
+          <div class="ilb">
+            <el-input style="width: 400px" size="mini" v-model="activityForm.title"></el-input>
+          </div>
+        </div>
+        <div>
+          <div class="ilb-top">通知正文：</div>
+          <div class="ilb" style="width: 650px">
+            <ueditor ref="content" :value="activityForm.content" :config="config" @getContent="getContent"></ueditor>
+          </div>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="handleClose">取 消</el-button>
+        <el-button size="mini" type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import ueditor from '../../components/ueditor'
 export default {
   name: 'manage-hot-word',
+  components: { ueditor },
   data () {
     return {
       dialogVisible: false,
       loading: false,
       total: 0,
       flag: '',
+      config: {
+        maximumWords: 10000
+      },
       multipleSelection: [],
       search: {
         pageSize: 10,
         pageNum: 1
+      },
+      activityForm: {
+        title: '',
+        content: ''
       },
       tableData: [
         {
@@ -100,7 +127,14 @@ export default {
       this.search.pageNum = val
     },
     handleClose () {
+      Object.keys(this.activityForm).forEach(item => {
+        this.activityForm[item] = ''
+      })
       this.dialogVisible = false
+    },
+    getContent (content) {
+      console.log(content)
+      this.activityForm.content = content
     }
   }
 }
