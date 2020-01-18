@@ -71,6 +71,11 @@ const routes = [
         name: 'confirm-transfer-account',
         component: () => import(/* webpackChunkName: "ConfirmTransferAccount" */ '../views/manage/ConfirmTransferAccount.vue')
       },
+      { // 结算管理
+        path: '/manage-settled',
+        name: 'manage-settled',
+        component: () => import(/* webpackChunkName: "ManageSettled" */ '../views/manage/ManageSettled.vue')
+      },
       {
         path: '/check-final-statement',
         name: 'check-final-statement',
