@@ -102,6 +102,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "ManageAdvertisePlace" */ '../views/manage/ManageAdvertisePlace.vue')
       },
       {
+        path: '/add-advertisement-position',
+        name: 'add-advertisement-position',
+        component: () => import(/* webpackChunkName: "AddAdvertisementPosition" */ '../views/manage/AddAdvertisementPosition.vue')
+      },
+      {
         path: '/manage-hot-word',
         name: 'manage-hot-word',
         component: () => import(/* webpackChunkName: "ManageHotWord" */ '../views/manage/ManageHotWord.vue')

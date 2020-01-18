@@ -13,6 +13,32 @@ export default {
 </script>
 <style lang="stylus">
 @import './assets/css/preset'
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  width: 146px;
+  height: 146px;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 146px;
+  height: 146px;
+  line-height: 146px!important;
+  text-align: center;
+}
+.el-upload-list--picture-card {
+  height 146px
+}
+.cover-img {
+  width 100%
+}
 #app {
   width 100%
   height 100%
