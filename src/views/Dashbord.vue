@@ -40,6 +40,7 @@
                 <el-menu-item index="4-1">分销佣金审核</el-menu-item>
                 <el-menu-item index="4-2">财务确认打款</el-menu-item>
                 <el-menu-item index="4-3">结算单查询</el-menu-item>
+                <el-menu-item index="4-4">财务统计表</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="5">
@@ -97,6 +98,7 @@ export default {
         '4-1': 'manage-commission',
         '4-2': 'confirm-transfer-account',
         '4-3': 'check-final-statement',
+        '4-4': 'manage-financial-statistics',
         '5-1': 'manage-register-user',
         '5-2': 'broker-info',
         '6-1': 'manage-advertise-place',

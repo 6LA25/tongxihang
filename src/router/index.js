@@ -81,6 +81,11 @@ const routes = [
         name: 'check-final-statement',
         component: () => import(/* webpackChunkName: "CheckFinalStatement" */ '../views/manage/CheckFinalStatement.vue')
       },
+      { // 财务统计表
+        path: '/manage-financial-statistics',
+        name: 'manage-financial-statistics',
+        component: () => import(/* webpackChunkName: "ManageFinancialStatistics" */ '../views/manage/ManageFinancialStatistics.vue')
+      },
       {
         path: '/manage-register-user',
         name: 'manage-register-user',

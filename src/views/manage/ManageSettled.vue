@@ -6,7 +6,7 @@
       <div><span>结算方式：支付宝</span><span>结算账号：zengcheng@126.com</span></div>
       <div class="money-box"><span>佣金总额：10000</span><span>待结算金额：1000</span></div>
     </div>
-    <div class="operate-btn-box">
+    <div class="operate-btn-box" v-if="$route.query.flag !== 'preview'">
       <el-button type="primary" size="small" @click="handleConfirmPay">批量确认打款</el-button>
     </div>
     <el-table
@@ -17,19 +17,19 @@
       size="mini"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
+      <el-table-column v-if="$route.query.flag !== 'preview'" type="selection" width="55" :selectable="checkSelectable"></el-table-column>
       <el-table-column prop="contractNum" label="合同号" width="100"></el-table-column>
       <el-table-column prop="customer" label="客户姓名" width="100"></el-table-column>
       <el-table-column prop="mobile" label="手机号" width="100"></el-table-column>
       <el-table-column prop="buyHouse" label="购买楼盘" width="100"></el-table-column>
-      <el-table-column prop="contractMoney" label="合同总价" width="100"></el-table-column>
+      <el-table-column prop="contractMoney" label="合同总价" width="70"></el-table-column>
       <el-table-column prop="payTime" label="客户付款时间" width="100"></el-table-column>
-      <el-table-column prop="commissionPer" label="佣金比例" width="100"></el-table-column>
-      <el-table-column prop="yjfy" label="佣金费用" width="100"></el-table-column>
-      <el-table-column prop="shyj" label="税后佣金" width="100"></el-table-column>
+      <el-table-column prop="commissionPer" label="佣金比例" width="70"></el-table-column>
+      <el-table-column prop="yjfy" label="佣金费用" width="70"></el-table-column>
+      <el-table-column prop="shyj" label="税后佣金" width="70"></el-table-column>
       <el-table-column prop="status" label="结算状态" width="70"></el-table-column>
-      <el-table-column prop="code" label="结算单号" width="100"></el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column prop="code" label="结算单号"></el-table-column>
+      <el-table-column label="操作" width="200" v-if="$route.query.flag !== 'preview'">
         <template slot-scope="scope">
           <template v-if="scope.row.status === '待结算'">
             <el-button type="success" size="mini" @click="handleConfirmPay(scope.row)">确认打款</el-button>
@@ -184,6 +184,7 @@ export default {
   }
 }
 .settled-detail-box {
+  margin-bottom 20px
   div {
     margin-bottom 10px
     &.money-box {
