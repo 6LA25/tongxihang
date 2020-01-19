@@ -3,13 +3,15 @@
     <div class="content-title">楼盘列表</div>
     <div class="operate-btn-box">
       <el-button type="primary" size="small" @click="handleAddHouses('add')">新建楼盘</el-button>
-      <el-button type="danger" size="small" >批量下架</el-button>
+      <el-button type="primary" size="small" @click="handlePutaway(multipleSelection, 1)">批量上架</el-button>
+      <el-button type="danger" size="small" @click="handlePutaway(multipleSelection, 0)">批量下架</el-button>
+      <el-button type="warning" size="mini" @click="handleSetHot(multipleSelection)">批量设为热门</el-button>
     </div>
     <div class="search-head-box">
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">楼盘名称：</div>
         <div class="ilb-top">
-          <el-input v-model="search.title" placeholder="请输入内容" size="mini"></el-input>
+          <el-input v-model="search.name" placeholder="请输入内容" size="mini"></el-input>
         </div>
       </div>
       <div class="ilb-top search-item-box">
@@ -90,15 +92,20 @@
       <el-table-column prop="name" label="楼盘名称" width="180" show-overflow-tooltip></el-table-column>
       <el-table-column prop="price" label="定价（元/平）" width="100"></el-table-column>
       <el-table-column prop="location" label="所在地" width="180" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="houseType" label="楼盘类型" width="80" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="houseStatus" label="楼盘状态" width="80" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="putawayStatus" label="楼盘状态" width="80"></el-table-column>
+      <el-table-column prop="typeName" label="楼盘类型" width="80" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="stateName" label="楼盘状态" width="80" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="state" label="上架状态" width="80">
+        <template slot-scope="scope">
+          {{scope.row.state === 1 ? '上架': '下架'}}
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="340">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleEditHouses(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="primary" @click.stop="handlePutaway(scope.row)">下架</el-button>
+          <el-button v-if="scope.row.state === 1" size="mini" type="danger" @click.stop="handlePutaway([scope.row], 0)">下架</el-button>
+          <el-button v-if="scope.row.state === 0" size="mini" type="primary" @click.stop="handlePutaway([scope.row], 1)">上架</el-button>
           <el-button type="primary" size="mini" @click.stop="handleAddHouseType(scope.$index, scope.row)">新增户型</el-button>
-          <el-button type="warning" size="mini" @click.stop="handleSetHot(scope.$index, scope.row)">设为热门</el-button>
+          <el-button type="warning" size="mini" @click.stop="handleSetHot([scope.row])">设为热门</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -106,7 +113,7 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="search.pageNum"
+        :current-page="search.pageNo"
         :page-sizes="[10, 20, 30, 40]"
         :page-size="search.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
@@ -117,10 +124,11 @@
 </template>
 
 <script>
-import { fetchArea } from '../../assets/services/manage-service'
+import { fetchArea, fetchHouseList, changeState, changeHot } from '../../assets/services/manage-service'
 export default {
   name: 'manage-houses',
   mounted () {
+    this.fetchList()
   },
   data () {
     return {
@@ -191,13 +199,13 @@ export default {
         }
       },
       search: {
-        title: '',
+        name: '',
         type: '',
         houseStatus: '',
         putawayStatus: '',
         time: '',
         pageSize: 10,
-        pageNum: 1
+        pageNo: 1
       },
       total: 0,
       loading: false,
@@ -224,10 +232,32 @@ export default {
       multipleSelection: []
     }
   },
+  watch: {
+    search: {
+      handler (nv) {
+        console.log(nv.name)
+        this.fetchList()
+      },
+      deep: true
+    }
+  },
   methods: {
+    fetchList () {
+      this.loading = true
+      fetchHouseList(this.search).then(({ data }) => {
+        console.log(data)
+        this.total = data.totalCount
+        this.tableData = data.items
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
+    },
     handleReset () {
       Object.keys(this.search).forEach(item => {
         this.search[item] = ''
+        this.search.pageSize = 10
+        this.search.pageNo = 1
       })
     },
     checkSelectable (row) {
@@ -240,7 +270,7 @@ export default {
       this.search.pageSize = val
     },
     handleCurrentChange (val) {
-      this.search.pageNum = val
+      this.search.pageNo = val
     },
     handleClickCell (row, column, cell, event) {
       this.$router.push({
@@ -265,26 +295,45 @@ export default {
         name: 'add-houses'
       })
     },
-    handlePutaway (row) {
-      console.log(row)
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+    handlePutaway (rows, state) {
+      let ids = []
+      rows.map(row => {
+        ids.push(row.id)
+      })
+      console.log(rows)
+      this.$confirm(`是否确定要${state === 1 ? '上架' : '下架'}`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        changeState({
+          ids: ids.join(','),
+          state
+        }).then(({ data }) => {
+          this.$message({
+            type: 'success',
+            message: `${state === 1 ? '上架' : '下架'}成功!`
+          })
+          this.fetchList()
         })
       }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
       })
     },
-    handleSetHot (index, row) {
-      console.log(index, row)
+    handleSetHot (rows) {
+      let ids = []
+      rows.map(row => {
+        ids.push(row.id)
+      })
+      changeHot({
+        ids: ids.join(','),
+        hot: 1
+      }).then(({ data }) => {
+        this.$message({
+          type: 'success',
+          message: '设为热门成功'
+        })
+        this.fetchList()
+      })
     },
     handleAddHouseType (index, row) {
       this.$router.push({

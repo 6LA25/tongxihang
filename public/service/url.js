@@ -1,15 +1,21 @@
-let domin = process.env.NODE_ENV === 'development' ? '' : 'http://txh.17zxiu.com'
-// let domin = 'http://txh.17zxiu.com'
+let domain = process.env.NODE_ENV === 'development' ? '' : 'http://txh.17zxiu.com'
+// let domain = 'http://txh.17zxiu.com'
 
 export default {
   login: {
-    keys: `${domin}/api/member/admin/login/publickey`,
-    login: `${domin}/api/member/admin/login`
+    keys: `${domain}/api/member/admin/login/publickey`,
+    login: `${domain}/api/member/admin/login`
   },
   public: {
-    area: `${domin}/api/admin/common/area/children`
+    area: `${domain}/api/admin/common/area/children`
   },
   upload: {
-    init: `${domin}/api/admin/common/upload/init`
+    init: `${domain}/api/admin/common/upload/init`
+  },
+  house: {
+    editHouse: `${domain}/api/admin/house/edit`,
+    houseItems: `${domain}/api/admin/house/items`,
+    changeState: `${domain}/api/admin/house/changeState`,
+    changeHot: `${domain}/api/admin/house/changeHot`
   }
 }
