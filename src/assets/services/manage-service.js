@@ -100,3 +100,19 @@ export const fetchAdverItem = (options) => Fetch({
     ...options
   }
 })
+
+// 新增，编辑活动信息
+export const editNotice = (options) => Fetch({
+  url: URL.notice.edit,
+  data: {
+    ...options
+  }
+})
+
+// 查询所有活动信息
+export const fetchNotice = (options) => Fetch({
+  url: URL.notice.list,
+  data: {
+    ...options
+  }
+})

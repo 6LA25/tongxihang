@@ -26,5 +26,9 @@ export default {
     edit: `${domain}/api/admin/promote/edit`,
     changeStatus: `${domain}/api/admin/promote/changeStatus`,
     checkItem: `${domain}/api/admin/promote/item`
+  },
+  notice: {
+    edit: `${domain}/api/admin/notices/edit`,
+    list: `${domain}/api/admin/notices/items`
   }
 }

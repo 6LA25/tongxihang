@@ -2,7 +2,7 @@
   <div class="manage-activity-message">
     <div class="content-title">活动信息列表</div>
     <div class="operate-btn-box">
-      <el-button type="primary" size="small" @click="handleAddWord('add')">新建搜索词</el-button>
+      <el-button type="primary" size="small" @click="handleAddWord('add')">新建活动通知</el-button>
       <el-button type="danger" size="small" @click="handleDelete">批量删除</el-button>
     </div>
     <el-table
@@ -16,8 +16,8 @@
     >
       <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
       <el-table-column type="index" label="序号" width="55"></el-table-column>
-      <el-table-column prop="name" label="通知标题" width="300"></el-table-column>
-      <el-table-column prop="time" label="创建时间" width="200"></el-table-column>
+      <el-table-column prop="title" label="通知标题" width="300"></el-table-column>
+      <el-table-column prop="created" label="创建时间" width="200"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleAddWord('edit', scope.row)">编辑</el-button>
@@ -29,7 +29,7 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="search.pageNum"
+        :current-page="search.pageNo"
         :page-sizes="[10, 20, 30, 40]"
         :page-size="search.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
@@ -57,13 +57,14 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" @click="handleClose">取 消</el-button>
-        <el-button size="mini" type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button size="mini" type="primary" @click="handleConfirm">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import { editNotice, fetchNotice } from '../../assets/services/manage-service'
 import ueditor from '../../components/ueditor'
 export default {
   name: 'manage-hot-word',
@@ -80,24 +81,42 @@ export default {
       multipleSelection: [],
       search: {
         pageSize: 10,
-        pageNum: 1
+        pageNo: 1,
+        state: 1
       },
       activityForm: {
         title: '',
         content: ''
       },
       tableData: [
-        {
-          id: 1,
-          name: '融创西羲里新年期间降价通知',
-          time: '2010-10-10'
-        }
-      ]
+      ],
+      currentEditData: null
     }
+  },
+  watch: {
+    search: {
+      handler () {
+        this.fetchList()
+      },
+      deep: true
+    }
+  },
+  mounted () {
+    this.fetchList()
   },
   methods: {
     checkSelectable () {
       return true
+    },
+    fetchList () {
+      this.loading = true
+      fetchNotice({
+        ...this.search
+      }).then(({ data }) => {
+        this.loading = false
+        this.total = data.totalCount
+        this.tableData = data.items
+      })
     },
     handleDelete () {
       this.$confirm('收否确认删除？', '提示', {
@@ -116,6 +135,15 @@ export default {
     handleAddWord (flag, data) {
       this.flag = flag
       this.dialogVisible = true
+      if (flag === 'edit') {
+        this.currentEditData = data
+        this.activityForm.title = data.title
+        this.activityForm.content = data.content
+      } else {
+        this.currentEditData = null
+        this.activityForm.title = ''
+        this.activityForm.content = ''
+      }
     },
     handleSelectionChange (val) {
       this.multipleSelection = val
@@ -124,13 +152,26 @@ export default {
       this.search.pageSize = val
     },
     handleCurrentChange (val) {
-      this.search.pageNum = val
+      this.search.pageNo = val
     },
     handleClose () {
       Object.keys(this.activityForm).forEach(item => {
         this.activityForm[item] = ''
       })
       this.dialogVisible = false
+    },
+    handleConfirm () {
+      editNotice({
+        id: this.flag === 'add' ? 0 : this.currentEditData.id,
+        ...this.activityForm,
+        state: 1
+      }).then(({ data }) => {
+        this.dialogVisible = false
+        this.$message.success('操作成功')
+        this.search.pageNo = 1
+        this.search.pageSize = 10
+        this.fetchList()
+      })
     },
     getContent (content) {
       console.log(content)
