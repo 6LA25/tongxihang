@@ -16,6 +16,9 @@ export default {
     editHouse: `${domain}/api/admin/house/edit`,
     houseItems: `${domain}/api/admin/house/items`,
     changeState: `${domain}/api/admin/house/changeState`,
-    changeHot: `${domain}/api/admin/house/changeHot`
+    changeHot: `${domain}/api/admin/house/changeHot`,
+    houseTypes: `${domain}/api/admin/apartment/items`,
+    editHouseTypes: `${domain}/api/admin/apartment/edit`,
+    apartmentItem: `${domain}/api/admin/apartment/item`
   }
 }

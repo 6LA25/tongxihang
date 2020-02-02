@@ -44,3 +44,27 @@ export const changeHot = (options) => Fetch({
     ...options
   }
 })
+
+// 获取户型列表
+export const fetchHouseTypes = (options) => Fetch({
+  url: URL.house.houseTypes,
+  data: {
+    ...options
+  }
+})
+
+// 编辑户型
+export const editHouseTypes = (options) => Fetch({
+  url: URL.house.editHouseTypes,
+  data: {
+    ...options
+  }
+})
+
+// 获取单个户型
+export const fetchHouseTypeItem = (options) => Fetch({
+  url: URL.house.apartmentItem,
+  data: {
+    ...options
+  }
+})
