@@ -75,11 +75,15 @@
         </div>
       </el-aside>
       <el-container>
-        <el-header>Header</el-header>
+        <el-header style="height: 50px;">
+          <div class="user-info-box">
+            {{$store.state.userInfo.account}}
+          </div>
+        </el-header>
         <el-main>
           <router-view />
         </el-main>
-        <el-footer>Footer</el-footer>
+        <!-- <el-footer>Footer</el-footer> -->
       </el-container>
     </el-container>
   </div>
@@ -159,7 +163,12 @@ export default {
     width 100%
     height 100%
     .el-header {
-
+      padding 0 40px
+      .user-info-box {
+        float right
+        height 50px
+        line-height 50px
+      }
     }
 
     .el-aside {
