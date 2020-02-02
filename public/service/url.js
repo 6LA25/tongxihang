@@ -20,5 +20,11 @@ export default {
     houseTypes: `${domain}/api/admin/apartment/items`,
     editHouseTypes: `${domain}/api/admin/apartment/edit`,
     apartmentItem: `${domain}/api/admin/apartment/item`
+  },
+  advertise: {
+    list: `${domain}/api/admin/promote/items`,
+    edit: `${domain}/api/admin/promote/edit`,
+    changeStatus: `${domain}/api/admin/promote/changeStatus`,
+    checkItem: `${domain}/api/admin/promote/item`
   }
 }

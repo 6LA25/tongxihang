@@ -68,3 +68,35 @@ export const fetchHouseTypeItem = (options) => Fetch({
     ...options
   }
 })
+
+// 新增/编辑广告位
+export const editAdvertise = (options) => Fetch({
+  url: URL.advertise.edit,
+  data: {
+    ...options
+  }
+})
+
+// 获取广告位列表
+export const fetchAdver = (options) => Fetch({
+  url: URL.advertise.list,
+  data: {
+    ...options
+  }
+})
+
+// 修改广告位状态
+export const batchEditAdvertise = (options) => Fetch({
+  url: URL.advertise.changeStatus,
+  data: {
+    ...options
+  }
+})
+
+// 查询单条广告位
+export const fetchAdverItem = (options) => Fetch({
+  url: URL.advertise.checkItem,
+  data: {
+    ...options
+  }
+})

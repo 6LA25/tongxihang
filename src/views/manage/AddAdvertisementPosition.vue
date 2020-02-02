@@ -3,8 +3,11 @@
     <div class="content-title">{{$route.query.flag === 'add' ? '新建' : '编辑'}}广告</div>
     <el-form :rules="rules" ref="advForm" :model="advForm" label-width="130px">
       <div class="form-divide-title">广告位管理：</div>
-      <el-form-item label="广告位置：" prop="position">
-        <el-select size="mini" v-model="advForm.position">
+      <el-form-item label="广告位名称：" prop="title">
+        <el-input style="width: 400px" size="mini" v-model="advForm.title"></el-input>
+      </el-form-item>
+      <el-form-item label="广告位置：" prop="postion">
+        <el-select size="mini" v-model="advForm.postion">
           <el-option
             v-for="item in positions"
             :key="item.value"
@@ -13,7 +16,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="广告图：" prop="advImg">
+      <el-form-item label="广告图：" prop="image">
         <el-upload
           v-if="$store.state.uploadUrl"
           :headers="$store.state.uploadHeaders"
@@ -25,29 +28,32 @@
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
-          <img v-if="advForm.advImg" :src="advForm.advImg" class="cover-img">
+          <img v-if="advForm.image" :src="advForm.image" class="cover-img">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         <div class="form-item-hint-text">支持jpg/jpeg/png格式图片，大小不超过2M</div>
       </el-form-item>
-      <el-form-item label="广告内容：" prop="type">
-        <el-radio-group v-model="advForm.type" @change="handleSelectLink">
+      <el-form-item label="广告内容：" prop="link_type">
+        <el-radio-group v-model="advForm.link_type" @change="handleSelectLink">
           <div style="margin-bottom: 10px;">
             <el-radio :label="0">外部链接</el-radio>
-            <el-input :disabled="advForm.type !== 0" style="width: 400px" size="mini" v-model="advForm.outLink"></el-input>
+            <el-input :disabled="advForm.link_type !== 0" style="width: 400px" size="mini" v-model="advForm.outLink"></el-input>
           </div>
           <div>
             <el-radio :label="1">楼盘详情</el-radio>
-            <el-input :disabled="advForm.type !== 1" style="width: 400px" size="mini" v-model="advForm.inLink"></el-input>
+            <el-input :disabled="advForm.link_type !== 1" style="width: 400px" size="mini" v-model="advForm.inLink"></el-input>
           </div>
         </el-radio-group>
       </el-form-item>
       <div class="form-divide-title">广告状态：</div>
-      <el-form-item label="上下架：" prop="putway">
-        <el-radio-group v-model="advForm.putway">
+      <el-form-item label="上下架：" prop="status">
+        <el-radio-group v-model="advForm.status">
           <el-radio :label="1">上架</el-radio>
           <el-radio :label="0">下架</el-radio>
         </el-radio-group>
+      </el-form-item>
+      <el-form-item label="排序：" prop="sort">
+        <el-input type="number" style="width: 200px" size="mini" v-model="advForm.sort"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button size="mini" type="primary" @click="handleSubmit">确定</el-button>
@@ -58,23 +64,24 @@
 </template>
 
 <script>
+import { editAdvertise, fetchAdverItem } from '../../assets/services/manage-service'
 export default {
   name: 'add-advertisement-position',
   data () {
     return {
       positions: [
         {
-          value: '0',
+          value: 1,
           label: '首页banner'
         },
         {
-          value: '1',
+          value: 2,
           label: '开屏广告'
         }
       ],
       rules: {
-        position: [{ required: true, message: '请选择广告位置', trigger: 'change' }],
-        type: [
+        postion: [{ required: true, message: '请选择广告位置', trigger: 'change' }],
+        link_type: [
           {
             required: true,
             validator: (rule, value, callback) => {
@@ -82,6 +89,8 @@ export default {
                 callback(new Error('请选择广告内容'))
               } else if (value === 0 && !this.advForm.outLink) {
                 callback(new Error('请填写外部链接'))
+              } else if (value === 1 && !this.advForm.inLink) {
+                callback(new Error('请填写楼盘详情'))
               } else {
                 callback()
               }
@@ -89,21 +98,41 @@ export default {
             message: ''
           }
         ],
-        advImg: [{ required: true, message: '请上传广告图' }],
-        putway: [{ required: true, message: '请选择广告状态' }]
+        image: [{ required: true, message: '请上传广告图' }],
+        status: [{ required: true, message: '请选择广告状态' }],
+        title: [{ required: true, message: '请输入广告位名称' }]
       },
       advForm: {
-        position: '',
-        advImg: '',
-        type: '',
+        title: '',
+        postion: '',
+        image: '',
+        link_type: '',
         outLink: '',
         inLink: '',
-        putway: ''
+        status: '',
+        sort: ''
       }
     }
   },
   mounted () {
     this.$store.dispatch('initUpload')
+    if (this.$route.query.flag === 'edit') {
+      fetchAdverItem({
+        id: this.$route.query.id
+      }).then(({ data }) => {
+        this.advForm.title = data.title
+        this.advForm.postion = data.postion
+        this.advForm.image = data.imageLink
+        this.advForm.link_type = data.link_type
+        this.advForm.status = data.status
+        this.advForm.sort = data.sort
+        if (data.link_type === 0) {
+          this.advForm.outLink = data.link
+        } else {
+          this.advForm.inLink = data.link
+        }
+      })
+    }
   },
   methods: {
     handleAvatarSuccess (res, file) {
@@ -112,8 +141,8 @@ export default {
         this.$message.error(`上传错误：${res.result_msg}`)
         return
       }
-      this.$refs['advForm'].clearValidate('advImg')
-      this.advForm.advImg = res.http_path
+      this.$refs['advForm'].clearValidate('image')
+      this.advForm.image = res.http_path
     },
     beforeAvatarUpload (file) {
       console.log(file)
@@ -134,7 +163,19 @@ export default {
     handleSubmit () {
       this.$refs['advForm'].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          editAdvertise({
+            id: this.$route.query.id || 0,
+            title: this.advForm.title,
+            postion: this.advForm.postion,
+            image: this.advForm.image,
+            link_type: this.advForm.link_type,
+            status: this.advForm.status,
+            link: this.advForm.link_type === 0 ? this.advForm.outLink : this.advForm.inLink,
+            sort: this.advForm.sort
+          }).then(({ data }) => {
+            this.$message.success('操作成功')
+            this.handleCancel()
+          })
         } else {
           console.log('error submit!!')
           return false
@@ -145,8 +186,8 @@ export default {
       this.$router.go(-1)
     },
     handleSelectLink () {
-      console.log(this.advForm.type)
-      if (this.advForm.type === 0) {
+      console.log(this.advForm.link_type)
+      if (this.advForm.link_type === 0) {
         this.advForm.inLink = ''
       } else {
         this.advForm.outLink = ''

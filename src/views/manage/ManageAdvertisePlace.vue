@@ -3,19 +3,19 @@
     <div class="content-title">广告位列表</div>
     <div class="operate-btn-box">
       <el-button type="primary" size="small" @click="handleAddAdvertisement('add')">新建广告</el-button>
-      <el-button type="danger" size="small" @click="handleSet([], '下架')">批量下架</el-button>
+      <el-button type="danger" size="small" @click="handleSet(multipleSelection, '下架')">批量下架</el-button>
     </div>
     <div class="search-head-box">
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">广告位名称：</div>
         <div class="ilb-top">
-          <el-input v-model="search.name" placeholder="请输入内容" size="mini"></el-input>
+          <el-input v-model="search.keyword" placeholder="请输入内容" size="mini"></el-input>
         </div>
       </div>
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">广告位位置：</div>
         <div class="ilb-top">
-          <el-select v-model="search.position" placeholder="请选择" size="mini">
+          <el-select v-model="search.postion" placeholder="请选择" size="mini">
             <el-option
               v-for="item in positions"
               :key="item.value"
@@ -28,7 +28,7 @@
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">上架状态：</div>
         <div class="ilb-top">
-          <el-select v-model="search.putway" placeholder="请选择" size="mini">
+          <el-select v-model="search.status" placeholder="请选择" size="mini">
             <el-option
               v-for="item in putways"
               :key="item.value"
@@ -53,16 +53,16 @@
     >
       <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
       <el-table-column type="index" label="序号" width="55"></el-table-column>
-      <el-table-column prop="name" label="广告位名称" width="200"></el-table-column>
+      <el-table-column prop="title" label="广告位名称" width="200"></el-table-column>
       <el-table-column prop="sort" label="排序" width="100"></el-table-column>
-      <el-table-column prop="upTime" label="上架时间" width="200"></el-table-column>
-      <el-table-column prop="downTime" label="下架时间" width="200"></el-table-column>
-      <el-table-column prop="status" label="上架状态" width="100"></el-table-column>
-      <el-table-column label="操作" width="340">
+      <el-table-column prop="on_time" label="上架时间" width="180"></el-table-column>
+      <el-table-column prop="off_time" label="下架时间" width="180"></el-table-column>
+      <el-table-column prop="statusName" label="上架状态" width="100"></el-table-column>
+      <el-table-column label="操作" width="280">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleAddAdvertisement('edit', scope.row)">编辑</el-button>
-          <el-button type="danger" size="mini" @click.stop="handleSet(scope.row, '下架')">下架</el-button>
-          <el-button type="success" size="mini" @click.stop="handleSet(scope.row, '上架')">上架</el-button>
+          <el-button type="danger" v-if="scope.row.status === 1" size="mini" @click.stop="handleSet([scope.row], '下架')">下架</el-button>
+          <el-button type="success" v-if="scope.row.status === 0" size="mini" @click.stop="handleSet([scope.row], '上架')">上架</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -70,7 +70,7 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="search.pageNum"
+        :current-page="search.pageNo"
         :page-sizes="[10, 20, 30, 40]"
         :page-size="search.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
@@ -81,6 +81,7 @@
 </template>
 
 <script>
+import { fetchAdver, batchEditAdvertise } from '../../assets/services/manage-service'
 export default {
   name: 'manage-advertise-place',
   data () {
@@ -88,78 +89,70 @@ export default {
       loading: false,
       total: 0,
       multipleSelection: [],
-      tableData: [
-        {
-          id: 1,
-          name: '万科翡翠东方头部广告位',
-          sort: 1,
-          upTime: '2010-10-10 00:00',
-          downTime: '2010-10-10 00:00',
-          status: '上架'
-        },
-        {
-          id: 2,
-          name: '万科翡翠东方头部广告位',
-          sort: 1,
-          upTime: '2010-10-10 00:00',
-          downTime: '2010-10-10 00:00',
-          status: '上架'
-        },
-        {
-          id: 3,
-          name: '万科翡翠东方头部广告位',
-          sort: 1,
-          upTime: '2010-10-10 00:00',
-          downTime: '2010-10-10 00:00',
-          status: '上架'
-        },
-        {
-          id: 4,
-          name: '万科翡翠东方头部广告位',
-          sort: 1,
-          upTime: '2010-10-10 00:00',
-          downTime: '2010-10-10 00:00',
-          status: '上架'
-        }
-      ],
+      tableData: [],
       search: {
-        name: '',
-        position: '',
-        putway: '',
+        keyword: '',
+        postion: -1,
+        status: -1,
         pageSize: 10,
-        pageNum: 1
+        pageNo: 1
       },
       positions: [
         {
-          value: '',
+          value: -1,
           label: '全部'
         },
         {
-          value: '0',
+          value: 1,
           label: '首页banner'
         },
         {
-          value: '1',
+          value: 2,
           label: '开屏广告'
         }
       ],
       putways: [
         {
-          value: '0',
+          value: -1,
+          label: '全部'
+        },
+        {
+          value: 0,
           label: '待上架'
         },
         {
-          value: '1',
+          value: 1,
           label: '已上架'
         },
         {
-          value: '2',
+          value: 2,
           label: '已下架'
         }
       ]
     }
   },
+  watch: {
+    search: {
+      handler () {
+        this.fetchList()
+      },
+      deep: true
+    }
+  },
+  mounted () {
+    this.fetchList()
+  },
   methods: {
+    fetchList () {
+      this.loading = true
+      fetchAdver({
+        ...this.search
+      }).then(({ data }) => {
+        this.total = data.totalCount
+        this.tableData = data.items
+        this.loading = false
+      })
+    },
     checkSelectable (row) {
       return true
     },
@@ -175,22 +168,39 @@ export default {
         }
       })
     },
-    handleReset () {},
+    handleReset () {
+      this.search.keyword = ''
+      this.search.postion = -1
+      this.search.status = -1
+      this.search.pageSize = 10
+      this.search.pageNo = 1
+    },
     handleSizeChange (val) {
       this.search.pageSize = val
     },
     handleCurrentChange (val) {
-      this.search.pageNum = val
+      this.search.pageNo = val
     },
     handleSet (data, status) {
+      if (data.length === 0) { return }
+      let ids = []
+      data.forEach(item => {
+        ids.push(item.id)
+      })
       this.$confirm(`请确定是否要${status}？`, `商品${status}`, {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        batchEditAdvertise({
+          ids: ids.join(','),
+          status: status === '上架' ? 1 : 0
+        }).then(({ data }) => {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          })
+          this.fetchList()
         })
       }).catch(() => {
       })
