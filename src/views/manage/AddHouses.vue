@@ -166,7 +166,7 @@
         <el-input style="width: 400px" type="textarea" resize="none" size="mini" v-model="housesForm.lightspot"></el-input>
       </el-form-item>
       <el-form-item label="周边介绍：" prop="rim">
-        <el-input style="width: 400px" type="textarea" resize="none" size="mini" v-model="housesForm.rim"></el-input>
+        <el-input style="width: 400px" placeholder="请用英文逗号','分隔周边信息" type="textarea" resize="none" size="mini" v-model="housesForm.rim"></el-input>
       </el-form-item>
       <el-form-item label="楼盘封面：" prop="coverImg">
         <el-upload
@@ -597,9 +597,12 @@ export default {
         })
         fetchArea({ parent: this.housesForm.province }).then(({ data }) => {
           this.cityList = data.items
-        })
-        fetchArea({ parent: this.housesForm.city }).then(({ data }) => {
-          this.regionList = data.items
+          fetchArea({ parent: this.housesForm.city }).then(({ data }) => {
+            this.regionList = data.items
+            this.$nextTick(() => {
+              this.handleCheckInMap()
+            })
+          })
         })
       }).catch(error => {
         console.log(error)

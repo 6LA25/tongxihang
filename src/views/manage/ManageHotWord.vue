@@ -9,10 +9,11 @@
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">搜索词名称：</div>
         <div class="ilb-top">
-          <el-input v-model="search.name" placeholder="请输入内容" size="mini"></el-input>
+          <el-input v-model="keyword" placeholder="请输入内容" size="mini"></el-input>
         </div>
       </div>
       <div class="ilb-top search-item-box search-btns-box">
+        <el-button type="primary" size="mini" @click="handleSearch">搜索</el-button>
         <el-button type="warning" size="mini" @click="handleReset">重置</el-button>
       </div>
     </div>
@@ -27,7 +28,7 @@
     >
       <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
       <el-table-column type="index" label="序号" width="55"></el-table-column>
-      <el-table-column prop="name" label="搜索词名称" width="200"></el-table-column>
+      <el-table-column prop="word" label="搜索词名称" width="200"></el-table-column>
       <el-table-column prop="sort" label="排序" width="100"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -40,7 +41,7 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="search.pageNum"
+        :current-page="search.pageNo"
         :page-sizes="[10, 20, 30, 40]"
         :page-size="search.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
@@ -54,10 +55,10 @@
       width="50%">
       <el-form ref="wordForm" :model="wordForm" label-width="130px">
         <el-form-item label="搜索词名称：">
-          <el-input style="width: 400px" size="mini" v-model="wordForm.name"></el-input>
+          <el-input style="width: 400px" size="mini" v-model="wordForm.word"></el-input>
         </el-form-item>
         <el-form-item label="指向楼盘：">
-          <el-input style="width: 400px" size="mini" v-model="wordForm.house"></el-input>
+          <el-input style="width: 400px" size="mini" v-model="wordForm.houseId"></el-input>
         </el-form-item>
         <el-form-item label="优先级排序：">
           <el-input style="width: 400px" type="number" size="mini" v-model="wordForm.sort"></el-input>
@@ -72,6 +73,7 @@
 </template>
 
 <script>
+import { fetchSearchWord, editSearchWord } from '../../assets/services/manage-service'
 export default {
   name: 'manage-hot-word',
   data () {
@@ -82,14 +84,15 @@ export default {
       flag: '',
       multipleSelection: [],
       wordForm: {
-        name: '',
-        house: '',
+        id: '',
+        word: '',
+        houseId: '',
         sort: ''
       },
+      keyword: '',
       search: {
-        name: '',
         pageSize: 10,
-        pageNum: 1
+        pageNo: 1
       },
       tableData: [
         {
@@ -100,7 +103,30 @@ export default {
       ]
     }
   },
+  watch: {
+  },
+  mounted () {
+    this.fetchList()
+  },
   methods: {
+    handleSearch () {
+      this.search.pageNo = 1
+      this.fetchList()
+    },
+    fetchList () {
+      this.loading = true
+      fetchSearchWord({
+        ...this.search,
+        keyword: this.keyword
+      }).then(({ data }) => {
+        console.log(data)
+        this.total = data.totalCount
+        this.tableData = data.items
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
+    },
     checkSelectable () {
       return true
     },
@@ -117,12 +143,18 @@ export default {
       }).catch(() => {
       })
     },
-    handleReset () {},
+    handleReset () {
+      this.search.pageNo = 1
+      this.keyword = ''
+      this.search.pageSize = 10
+      this.fetchList()
+    },
     handleAddWord (flag, data) {
       this.flag = flag
       this.dialogVisible = true
       if (flag === 'edit') {
-        this.wordForm.name = data.name
+        this.wordForm.word = data.word
+        this.wordForm.houseId = data.houseId
         this.wordForm.sort = data.sort
       }
     },
@@ -131,14 +163,26 @@ export default {
     },
     handleSizeChange (val) {
       this.search.pageSize = val
+      this.fetchList()
     },
     handleCurrentChange (val) {
-      this.search.pageNum = val
+      this.search.pageNo = val
+      this.fetchList()
     },
     handleSubmit () {
       this.$refs['wordForm'].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          editSearchWord(this.wordForm).then(({ data }) => {
+            this.$message.success('操作成功')
+            this.handleClose()
+            if (this.search.pageNo > 1) {
+              this.search.pageNo = 1
+            } else {
+              this.fetchList()
+            }
+          }).catch(() => {
+            this.$message.error('操作失败')
+          })
         } else {
           console.log('error submit!!')
           return false

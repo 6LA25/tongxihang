@@ -124,3 +124,19 @@ export const fetchHouseItem = (options) => Fetch({
     ...options
   }
 })
+
+// 获取热词列表
+export const fetchSearchWord = (options) => Fetch({
+  url: URL.searchWord.list,
+  data: {
+    ...options
+  }
+})
+
+// 编辑热词
+export const editSearchWord = (options) => Fetch({
+  url: URL.searchWord.edit,
+  data: {
+    ...options
+  }
+})

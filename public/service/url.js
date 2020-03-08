@@ -31,5 +31,9 @@ export default {
   notice: {
     edit: `${domain}/api/admin/notices/edit`,
     list: `${domain}/api/admin/notices/items`
+  },
+  searchWord: {
+    list: `${domain}/api/admin/searchWord/items`,
+    edit: `${domain}/api/admin/searchWord/edit`
   }
 }
