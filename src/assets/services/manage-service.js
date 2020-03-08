@@ -116,3 +116,11 @@ export const fetchNotice = (options) => Fetch({
     ...options
   }
 })
+
+// 获取单个楼盘信息
+export const fetchHouseItem = (options) => Fetch({
+  url: URL.house.houseItem,
+  data: {
+    ...options
+  }
+})

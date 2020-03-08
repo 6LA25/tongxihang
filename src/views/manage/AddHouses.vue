@@ -7,7 +7,7 @@
         <el-input style="width: 400px" size="mini" v-model="housesForm.name"></el-input>
       </el-form-item>
       <el-form-item label="定价：" prop="price">
-        <el-input style="width: 400px" size="mini" v-model="housesForm.price"></el-input>
+        <el-input style="width: 400px" size="mini" type="number" v-model="housesForm.price"></el-input>
         <span class="form-label">元/m2</span>
       </el-form-item>
       <el-form-item label="楼盘类型：" prop="type">
@@ -34,7 +34,7 @@
         <el-input type="textarea" style="width: 400px" size="mini" resize="none" v-model="housesForm.intro"></el-input>
       </el-form-item>
       <el-form-item label="楼盘标签：" prop="tags">
-        <el-input type="textarea" style="width: 400px" size="mini" resize="none" v-model="housesForm.tags"></el-input>
+        <el-input type="textarea" placeholder="多个标签请以英文逗号“,”分开，最多填写3个标签，每个标签不超过5个汉字" style="width: 400px" size="mini" resize="none" v-model="housesForm.tags"></el-input>
       </el-form-item>
       <el-form-item label="楼盘特色：" prop="feature">
         <el-input style="width: 400px" size="mini" v-model="housesForm.feature"></el-input>
@@ -45,12 +45,14 @@
       <div>
         <div class="ilb-top">
           <el-form-item label="装修标准：" prop="standard">
-            <el-input style="width: 150px" size="mini" v-model="housesForm.standard"></el-input>
+            <el-input style="width: 150px" size="mini" type="number" v-model="housesForm.standard"></el-input>
+            <span class="form-label">元/m2</span>
           </el-form-item>
         </div>
         <div class="ilb-top">
           <el-form-item label="产权年限：" prop="propertyYears">
-            <el-input style="width: 150px" size="mini" v-model="housesForm.propertyYears"></el-input>
+            <el-input style="width: 150px" type="number" size="mini" v-model="housesForm.propertyYears"></el-input>
+            <span class="form-label">年</span>
           </el-form-item>
         </div>
       </div>
@@ -122,22 +124,25 @@
       <div>
         <div class="ilb-top">
           <el-form-item label="占地面积：" prop="floorSpace">
-            <el-input style="width: 150px" size="mini" v-model="housesForm.floorSpace"></el-input>
+            <el-input style="width: 150px" type="number" size="mini" v-model="housesForm.floorSpace"></el-input>
+             <span class="form-label">m2</span>
           </el-form-item>
         </div>
         <div class="ilb-top">
           <el-form-item label="规划户数：" prop="planNum">
-            <el-input style="width: 150px" size="mini" v-model="housesForm.planNum"></el-input>
+            <el-input style="width: 150px" size="mini" type="number" v-model="housesForm.planNum"></el-input>
           </el-form-item>
         </div>
         <div class="ilb-top">
           <el-form-item label="容积率：" prop="plotRatio">
-            <el-input style="width: 150px" size="mini" v-model="housesForm.plotRatio"></el-input>
+            <el-input style="width: 150px" size="mini" type="number" v-model="housesForm.plotRatio"></el-input>
+            <span class="form-label">%</span>
           </el-form-item>
         </div>
         <div class="ilb-top">
           <el-form-item label="绿化率：" prop="greetingRate">
-            <el-input style="width: 150px" size="mini" v-model="housesForm.greetingRate"></el-input>
+            <el-input style="width: 150px" type="number" size="mini" v-model="housesForm.greetingRate"></el-input>
+            <span class="form-label">%</span>
           </el-form-item>
         </div>
         <div class="ilb-top">
@@ -152,7 +157,7 @@
         </div>
         <div class="ilb-top">
           <el-form-item label="物业费用：" prop="management">
-            <el-input style="width: 150px" size="mini" v-model="housesForm.managementPrice"></el-input>
+            <el-input style="width: 150px" type="number" size="mini" v-model="housesForm.managementPrice"></el-input>
             <span class="form-label">元/月*m2</span>
           </el-form-item>
         </div>
@@ -175,7 +180,7 @@
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
-          <img v-if="housesForm.coverImg" :src="housesForm.coverImg" class="cover-img">
+          <img v-if="housesForm.coverImg" :src="housesForm.coverImg.filepath" class="cover-img">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         <div class="form-item-hint-text">支持jpg/jpeg/png格式图片，大小不超过2M</div>
@@ -193,6 +198,7 @@
           :on-success="uploadRealImgSuccess"
           :before-upload="beforeAvatarUpload"
           :on-remove="removeRealImg"
+          :file-list="housesForm.addRealImgs"
           :action="$store.state.uploadUrl">
           <i class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
@@ -211,6 +217,7 @@
           :on-success="uploadRenderImgSuccess"
           :before-upload="beforeAvatarUpload"
           :on-remove="removeRenderImg"
+          :file-list="housesForm.addRenderImgs"
           :action="$store.state.uploadUrl">
           <i class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
@@ -228,14 +235,39 @@
           :show-file-list="false"
           :on-success="uploadShareImgSuccess"
           :before-upload="beforeAvatarUpload">
-          <img v-if="housesForm.shareImg" :src="housesForm.shareImg" class="cover-img">
+          <img v-if="housesForm.shareImg" :src="housesForm.shareImg.filepath" class="cover-img">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         <div class="form-item-hint-text">支持jpg/jpeg/png格式图片，大小不超过2M</div>
       </el-form-item>
       <div class="form-divide-title">楼盘位置</div>
-      <el-form-item label="楼盘所属区域：" prop="houseLocation">
-        <el-cascader @change="handleChangeArea" :props="location" size="mini" v-model="housesForm.houseLocation"></el-cascader>
+      <el-form-item label="楼盘所属区域：" prop="region">
+        <el-select @change="handleSelectProvince" style="margin-right: 20px;" size="mini" v-model="housesForm.province" placeholder="请选择省（市）">
+          <el-option
+            v-for="item in provinceList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
+        <el-select @change="handleSelectCity" style="margin-right: 20px;" size="mini" v-model="housesForm.city" placeholder="请选择市">
+          <el-option
+            v-for="item in cityList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
+
+        <el-select style="margin-right: 20px;" size="mini" v-model="housesForm.region" placeholder="请选择区（市）">
+          <el-option
+            v-for="item in regionList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
+
       </el-form-item>
       <el-form-item label="楼盘详细地址：" prop="address">
         <el-input type="textarea" style="width: 400px;" size="mini" placeholder="请在此填写详细地址" resize="none" v-model="housesForm.address"></el-input>
@@ -263,45 +295,49 @@
         </div>
         <div class="ilb-top">
           <el-form-item label="佣金设置：" prop="revenueCommission">
-            <el-input style="width: 100px" size="mini" v-model="housesForm.revenueCommission"></el-input>
+            <el-input style="width: 100px" type="number" size="mini" v-model="housesForm.revenueCommission"></el-input>
+            <span class="form-label">{{housesForm.revenueCommissionType ? '元' : '%'}}</span>
           </el-form-item>
         </div>
       </div>
       <div class="form-divide-title">分销设置：</div>
       <el-form-item label="是否支持分销：" prop="distribution">
         <el-radio-group v-model="housesForm.distribution">
-          <el-radio :label="true">是</el-radio>
-          <el-radio :label="false">否</el-radio>
+          <el-radio :label="1">是</el-radio>
+          <el-radio :label="0">否</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="分销佣金类别：" prop="distributionType">
         <el-radio-group v-model="housesForm.distributionType">
-          <el-radio :label="true">百分比金额</el-radio>
-          <el-radio :label="false">固定金额</el-radio>
+          <el-radio :label="0">百分比金额</el-radio>
+          <el-radio :label="1">固定金额</el-radio>
         </el-radio-group>
       </el-form-item>
       <div>
         <div class="ilb-top">
           <el-form-item label="1级佣金比例：" prop="">
             <el-input style="width: 100px" size="mini" v-model="housesForm.level1"></el-input>
+            <span class="form-label">{{housesForm.distributionType ? '元' : '%'}}</span>
           </el-form-item>
         </div>
         <div class="ilb-top">
           <el-form-item label="2级佣金比例：" prop="">
             <el-input style="width: 100px" size="mini" v-model="housesForm.level2"></el-input>
+            <span class="form-label">{{housesForm.distributionType ? '元' : '%'}}</span>
           </el-form-item>
         </div>
         <div class="ilb-top">
           <el-form-item label="3级佣金比例：" prop="">
             <el-input style="width: 100px" size="mini" v-model="housesForm.level3"></el-input>
+            <span class="form-label">{{housesForm.distributionType ? '元' : '%'}}</span>
           </el-form-item>
         </div>
         <div class="warn" style="padding-left: 20px;">合计：计算3级佣金或佣金比例总和，注意，佣金比例是根据实际放款计算</div>
       </div>
       <el-form-item label="置业顾问：" prop="adviser">
         <el-select size="mini" v-model="housesForm.adviser" placeholder="请选择置业顾问">
-          <el-option label="张三" value="shanghai"></el-option>
-          <el-option label="李四" value="beijing"></el-option>
+          <el-option label="张三" :value="1"></el-option>
+          <el-option label="李四" :value="2"></el-option>
         </el-select>
       </el-form-item>
       <div class="form-divide-title">楼盘状态：</div>
@@ -324,7 +360,7 @@
 </template>
 
 <script>
-import { fetchArea, editHouse } from '../../../src/assets/services/manage-service'
+import { fetchArea, editHouse, fetchHouseItem } from '../../../src/assets/services/manage-service'
 export default {
   name: 'add-houses',
   data () {
@@ -334,21 +370,44 @@ export default {
         price: [{ required: true, message: '请输入楼盘定价', trigger: 'blur' }],
         type: [{ required: true, message: '请选择楼盘类型', trigger: 'change' }],
         status: [{ required: true, message: '请选择楼盘状态', trigger: 'change' }],
-        houseLocation: [{ required: true, message: '请选择楼盘所属区域', trigger: 'change' }],
+        region: [{ required: true, message: '请选择楼盘所属区域', trigger: 'change' }],
         adviser: [{ required: true, message: '请选择置业顾问', trigger: 'change' }],
         intro: [{ required: true, message: '请输入楼盘简介', trigger: 'blur' }],
         address: [{ required: true, message: '请输入楼盘详细地址', trigger: 'blur' }],
         coverImg: [{ required: true, message: '请上传楼盘封面' }],
-        revenueCommission: [{ required: true, message: '请输入佣金设置', trigger: 'blur' }]
+        revenueCommission: [{ required: true, message: '请输入佣金设置', trigger: 'blur' }],
+        tags: [
+          {
+            validator: (rule, value, callback) => {
+              let _err = false
+              let tags = value.split(',')
+              if (tags.length > 3) { _err = true }
+              tags.forEach(tag => {
+                if (tag.length > 5) {
+                  _err = true
+                }
+              })
+              if (_err) {
+                callback(new Error('请输入正确格式的标签'))
+              } else {
+                callback()
+              }
+            },
+            trigger: 'blur'
+          }
+        ]
       },
+      provinceList: [], // 省
+      cityList: [],
+      regionList: [],
       // 装修类型
       fitments: [
         {
-          value: '1',
+          value: 1,
           label: '毛坯房'
         },
         {
-          value: '2',
+          value: 2,
           label: '精装修'
         }
       ],
@@ -404,78 +463,61 @@ export default {
         }
       ],
       housesForm: {
-        name: 'xxxx', // 楼盘名称
-        price: '123', // 定价
-        type: '1', // 楼盘类型
-        status: '1', // 楼盘状态
-        intro: 'desc笑嘻嘻', // 简介
-        tags: '', // 楼盘标签
-        feature: '', // 楼盘特色
-        buildingType: '', // 建筑类型
-        standard: '', // 装修标准
-        propertyYears: '', // 产权年限
-        developer: '', // 开发商
-        mainType: '', // 主力户型
-        acreage: '', // 建筑面积
-        fitment: '', // 装修
-        floorType: '', // 楼型
-        openTime: '', // 开盘时间
-        finishTime: '', // 交房时间
-        floorSpace: '', // 占地面积
-        planNum: '', // 规划户数
-        plotRatio: '', // 容积率
-        greetingRate: '', // 绿化率
-        carport: '', // 车位占比
-        managementCompany: '', // 物业公司
-        managementPrice: '', // 物业费用
-        lightspot: '', // 楼盘亮点
-        rim: '', // 周边介绍
-        coverImg: 'http://f.txh.17zxiu.com/2020/01/19/28/1SN2TpyvszpUrmcm1mjm.jpg', // 封面
-        addRealImgs: [], // 实景图
-        addRenderImgs: [], // 效果图
-        shareImg: '', // 分享封面图
-        houseLocation: [
-          { id: 10, initials: 'J', name: '江苏', parent: 0 },
-          { id: 109, initials: 'W', name: '无锡', parent: 10 },
-          { id: 1132, initials: 'B', name: '北塘区', parent: 109 }
-        ], // 楼盘位置
-        province: 10, // 省id
-        city: 109, // 市id
-        region: 1132, // 区id
-        address: '双河苑', // 楼盘具体地址
-        lng: '120.262009', // 经度
-        lat: '31.60935', // 纬度
-        revenueCommissionType: '', // 营收佣金类别
-        distribution: '', // 是否支持分销
-        distributionType: '', // 分销佣金类别
-        revenueCommission: 0.1, // 佣金设置
-        level1: '', // 一级佣金比例
-        level2: '', // 二级佣金比例
-        level3: '', // 三级佣金比例
+        name: '协信未来城', // 楼盘名称
+        price: 22000, // 定价
+        status: 1, // 楼盘状态
+        type: 1, // 楼盘类型
+        intro: '相当不错的房子', // 简介
+        tags: '很好,大方,美丽', // 楼盘标签
+        feature: '这是特色文字', // 楼盘特色
+        buildingType: '混凝土', // 建筑类型
+        standard: 2000, // 装修标准
+        propertyYears: 70, // 产权年限
+        developer: '启迪', // 开发商
+        mainType: '80平小户型', // 主力户型
+        acreage: '70', // 建筑面积
+        fitment: 2, // 装修
+        floorType: 1, // 楼型
+        openTime: '2020-03-03', // 开盘时间
+        finishTime: '2020-04-03', // 交房时间
+        floorSpace: 200000, // 占地面积
+        planNum: 1000, // 规划户数
+        plotRatio: 2.1, // 容积率
+        greetingRate: 2.1, // 绿化率
+        carport: '1:2', // 车位占比
+        managementCompany: '好的公司', // 物业公司
+        managementPrice: 2.32, // 物业费用
+        lightspot: '亮点非常大', // 楼盘亮点
+        rim: '好的，不错，东西多', // 周边介绍
+        coverImg: null, // 封面
+        shareImg: null, // 分享封面图
+        province: '', // 省id
+        city: '', // 市id
+        region: '', // 区id
+        address: '', // 楼盘具体地址
+        lng: '', // 经度
+        lat: '', // 纬度
+        revenueCommissionType: 0, // 营收佣金类别
+        revenueCommission: 1, // 佣金设置
         adviser: 1, // 置业顾问id
+        sort: '', // 排序
         state: '', // 上下架
-        sort: '' // 排序
-      },
-      location: {
-        lazy: true,
-        async lazyLoad (node, resolve) {
-          const { level } = node
-          console.log(level)
-          let nodes = []
-          let areas = []
-          try {
-            let { data } = await fetchArea({ parent: level === 0 ? '' : node.value.id })
-            areas = data.items
-          } catch {}
-          areas.forEach(item => {
-            nodes.push({
-              value: item,
-              label: item.name,
-              leaf: level >= 2
-            })
-          })
-          resolve(nodes)
-        }
+        hot: '',
+        addRealImgs: [], // 实景图
+        delRealImgs: [],
+        addRenderImgs: [], // 效果图
+        delRenderImgs: [],
+        distribution: 1, // 是否支持分销
+        distributionType: 0, // 分销佣金类别
+        level1: 1.1, // 一级佣金比例
+        level2: 2.1, // 二级佣金比例
+        level3: 3.1, // 三级佣金比例
+        houseLocation: []
+        // houseLocation: [
+        //   { id: 10, initials: 'J', name: '江苏', parent: 0 },
+        //   { id: 109, initials: 'W', name: '无锡', parent: 10 },
+        //   { id: 1135, initials: 'B', name: '滨湖区', parent: 109 }
+        // ] // 楼盘位置
       },
       map: null
     }
@@ -490,14 +532,79 @@ export default {
       return title[this.$route.query.tag || 'add']
     }
   },
+  created () {
+  },
   mounted () {
     this.map = new qq.maps.Map(document.getElementById('mapContainer'), {
       // center: new qq.maps.LatLng(4.397, 150.644),
       zoom: 13
     })
+    fetchArea({ parent: '' }).then(({ data }) => {
+      this.provinceList = data.items
+    })
+    if (this.$route.query.tag === 'edit') {
+      this.getHouseaItem()
+    }
     this.$store.dispatch('initUpload')
   },
   methods: {
+    handleSelectProvince (val) {
+      console.log(val)
+      this.housesForm.city = ''
+      this.housesForm.region = ''
+      fetchArea({ parent: val }).then(({ data }) => {
+        this.cityList = data.items
+      })
+    },
+    handleSelectCity (val) {
+      this.housesForm.region = ''
+      fetchArea({ parent: val }).then(({ data }) => {
+        this.regionList = data.items
+      })
+    },
+    getHouseaItem () {
+      fetchHouseItem({ id: this.$route.query.id }).then(({ data }) => {
+        Object.keys(this.housesForm).forEach(item => {
+          if (item === 'coverImg') {
+            this.housesForm.coverImg = {
+              filename: data.coverImg,
+              filepath: data.coverImageLink
+            }
+          } else if (item === 'shareImg') {
+            this.housesForm.shareImg = {
+              filename: data.shareImg,
+              filepath: data.shareImageLink
+            }
+          } else if (item === 'addRealImgs') {
+            data.realImgList.forEach(img => {
+              this.housesForm.addRealImgs.push({
+                name: img.filename,
+                url: img.filepath
+              })
+            })
+          } else if (item === 'addRenderImgs') {
+            data.renderImgList.forEach(img => {
+              this.housesForm.addRenderImgs.push({
+                name: img.filename,
+                url: img.filepath
+              })
+            })
+          } else if (item !== 'houseLocation') {
+            this.housesForm[item] = data[item]
+          }
+          this.housesForm.delRealImgs = []
+          this.housesForm.delRenderImgs = []
+        })
+        fetchArea({ parent: this.housesForm.province }).then(({ data }) => {
+          this.cityList = data.items
+        })
+        fetchArea({ parent: this.housesForm.city }).then(({ data }) => {
+          this.regionList = data.items
+        })
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     handleCheckInMap () {
       let callbacks = {
         complete: (results) => {
@@ -513,18 +620,18 @@ export default {
         }
       }
       let geocoder = new qq.maps.Geocoder(callbacks)
-      let areas = []
-      this.housesForm.houseLocation.forEach(item => {
-        areas.push(item.name)
+      let province = this.provinceList.find(item => {
+        return item.id === this.housesForm.province
       })
-      let address = `${areas.join(',')},${this.housesForm.address}`
+      let city = this.cityList.find(item => {
+        return item.id === this.housesForm.city
+      })
+      let region = this.regionList.find(item => {
+        return item.id === this.housesForm.region
+      })
+      // let address = `${areas.join(',')},${this.housesForm.address}`
+      let address = `${province.name},${city.name},${region.name},${this.housesForm.address}`
       geocoder.getLocation(address)
-    },
-    handleChangeArea (val) {
-      console.log(val)
-      this.housesForm.province = val[0].id
-      this.housesForm.city = val[1].id
-      this.housesForm.region = val[2].id
     },
     handleAvatarSuccess (res, file) {
       console.log(res)
@@ -533,14 +640,22 @@ export default {
         return
       }
       this.$refs['housesForm'].clearValidate('coverImg')
-      this.housesForm.coverImg = res.http_path
+      // this.housesForm.coverImg = res.http_path
+      this.housesForm.coverImg = {
+        filename: res.filename,
+        filepath: res.http_path
+      }
     },
     uploadShareImgSuccess (res, file) {
       if (res.result_code === 10001) {
         this.$message.error(`上传错误：${res.result_msg}`)
         return
       }
-      this.housesForm.shareImg = res.http_path
+      // this.housesForm.shareImg = res.http_path
+      this.housesForm.shareImg = {
+        filename: res.filename,
+        filepath: res.http_path
+      }
     },
     uploadRealImgSuccess (res, file, fileList) {
       console.log(fileList)
@@ -548,7 +663,13 @@ export default {
     },
     removeRealImg (file, fileList) {
       console.log(file, fileList)
-      this.housesForm.addRealImgs = fileList
+      if (!this.$route.query.tag) {
+        this.housesForm.addRealImgs = fileList
+      } else {
+        if (!file.response && !this.housesForm.delRealImgs.includes(file.name)) {
+          this.housesForm.delRealImgs.push(file.name)
+        }
+      }
     },
     uploadRenderImgSuccess (res, file, fileList) {
       console.log(fileList)
@@ -556,7 +677,13 @@ export default {
     },
     removeRenderImg (file, fileList) {
       console.log(file, fileList)
-      this.housesForm.addRenderImgs = fileList
+      if (!this.$route.query.tag) {
+        this.housesForm.addRenderImgs = fileList
+      } else {
+        if (!file.response && !this.housesForm.delRenderImgs.includes(file.name)) {
+          this.housesForm.delRenderImgs.push(file.name)
+        }
+      }
     },
     beforeAvatarUpload (file) {
       console.log(file)
@@ -577,12 +704,39 @@ export default {
     handleSubmit () {
       this.$refs['housesForm'].validate((valid) => {
         if (valid) {
-          editHouse(this.housesForm).then((data) => {
+          let housesForm = JSON.parse(JSON.stringify(this.housesForm))
+          // 编辑背景图
+          housesForm.coverImg = housesForm.coverImg.filename
+          // 编辑分享图片
+          if (housesForm.shareImg) {
+            housesForm.shareImg = housesForm.shareImg.filename
+          }
+          // 编辑新增实景图
+          let addRealImgs = []
+          housesForm.addRealImgs.forEach(item => {
+            if (item.response) {
+              addRealImgs.push(item.response.filename)
+            }
+          })
+          housesForm.addRealImgs = addRealImgs
+          // 编辑新增效果图
+          let addRenderImgs = []
+          housesForm.addRenderImgs.forEach(item => {
+            if (item.response) {
+              addRenderImgs.push(item.response.filename)
+            }
+          })
+          housesForm.addRenderImgs = addRenderImgs
+
+          editHouse({
+            ...housesForm,
+            id: this.$route.query.id || ''
+          }).then((data) => {
             console.log(data)
             this.$message.success('提交成功')
             this.$router.go(-1)
           }).catch(() => {
-            this.$message.success('提交失败')
+            this.$message.error('提交失败')
           })
         } else {
           console.log('error submit!!')

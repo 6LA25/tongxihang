@@ -278,10 +278,13 @@ export default {
     },
     removeRealImg (file, fileList) {
       console.log(file, fileList)
-      // this.editForm.addImages = fileList
       // 删除原有图片
-      if (!file.response && !this.editForm.delImages.includes(file.name)) {
-        this.editForm.delImages.push(file.name)
+      if (this.dialogStatus === 'add') {
+        this.editForm.addImages = fileList
+      } else {
+        if (!file.response && !this.editForm.delImages.includes(file.name)) {
+          this.editForm.delImages.push(file.name)
+        }
       }
     },
     handleCancel () {
