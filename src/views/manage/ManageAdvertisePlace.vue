@@ -49,6 +49,7 @@
       tooltip-effect="dark"
       style="width: 100%"
       size="mini"
+      @row-click="handleClickCell"
       v-loading="loading"
        @selection-change="handleSelectionChange"
     >
@@ -164,6 +165,15 @@ export default {
         query: {
           flag,
           id: data && data.id
+        }
+      })
+    },
+    handleClickCell (row, column, cell, event) {
+      this.$router.push({
+        name: 'add-advertisement-position',
+        query: {
+          id: row.id,
+          flag: 'preview'
         }
       })
     },

@@ -1,7 +1,7 @@
 <template>
   <div class="add-advertisement-position-page">
     <div class="content-title">{{$route.query.flag === 'add' ? '新建' : '编辑'}}广告</div>
-    <el-form :rules="rules" ref="advForm" :model="advForm" label-width="130px">
+    <el-form :disabled="$route.query.flag === 'preview'" :rules="rules" ref="advForm" :model="advForm" label-width="130px">
       <div class="form-divide-title">广告位管理：</div>
       <el-form-item label="广告位名称：" prop="title">
         <el-input style="width: 400px" size="mini" v-model="advForm.title"></el-input>
@@ -41,7 +41,24 @@
           </div>
           <div>
             <el-radio :label="1">楼盘详情</el-radio>
-            <el-input :disabled="advForm.link_type !== 1" style="width: 400px" size="mini" v-model="advForm.inLink"></el-input>
+            <!-- <el-input :disabled="advForm.link_type !== 1" style="width: 400px" size="mini" v-model="advForm.inLink"></el-input> -->
+            <el-select
+              style="width: 400px"
+              size="mini"
+              v-model="advForm.inLink"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入完整楼盘名称"
+              :remote-method="fetchHouses"
+              :loading="searching">
+            <el-option
+              v-for="item in options"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
           </div>
         </el-radio-group>
       </el-form-item>
@@ -64,7 +81,7 @@
 </template>
 
 <script>
-import { editAdvertise, fetchAdverItem } from '../../assets/services/manage-service'
+import { editAdvertise, fetchAdverItem, fetchHouseList } from '../../assets/services/manage-service'
 export default {
   name: 'add-advertisement-position',
   data () {
@@ -102,6 +119,8 @@ export default {
         status: [{ required: true, message: '请选择广告状态' }],
         title: [{ required: true, message: '请输入广告位名称' }]
       },
+      searching: false,
+      options: [],
       advForm: {
         title: '',
         postion: '',
@@ -116,7 +135,7 @@ export default {
   },
   mounted () {
     this.$store.dispatch('initUpload')
-    if (this.$route.query.flag === 'edit') {
+    if (this.$route.query.flag === 'edit' || this.$route.query.flag === 'preview') {
       fetchAdverItem({
         id: this.$route.query.id
       }).then(({ data }) => {
@@ -129,12 +148,25 @@ export default {
         if (data.link_type === 0) {
           this.advForm.outLink = data.link
         } else {
-          this.advForm.inLink = data.link
+          this.advForm.inLink = data.link / 1
         }
+        this.fetchHouses(data.houseName || '')
       })
     }
   },
   methods: {
+    fetchHouses (query) {
+      console.log(query)
+      this.searching = true
+      fetchHouseList({
+        keyword: query,
+        pageSize: 20,
+        pageNo: 1
+      }).then(({ data }) => {
+        this.options = data.items
+        this.searching = false
+      })
+    },
     handleAvatarSuccess (res, file) {
       console.log(res)
       if (res.result_code === 10001) {
@@ -142,6 +174,7 @@ export default {
         return
       }
       this.$refs['advForm'].clearValidate('image')
+      // this.advForm.image = res.filename
       this.advForm.image = res.http_path
     },
     beforeAvatarUpload (file) {
