@@ -74,7 +74,7 @@
         </div>
       </div>
       <div class="ilb-top search-item-box search-btns-box">
-        <el-button type="primary" size="mini" @click="fetchList">搜索</el-button>
+        <el-button type="primary" size="mini" @click="handleSearch">搜索</el-button>
         <el-button type="warning" size="mini" @click="handleReset">重置</el-button>
       </div>
     </div>
@@ -249,6 +249,10 @@ export default {
     },
     checkSelectable (row) {
       return true
+    },
+    handleSearch () {
+      this.search.pageNo = 1
+      this.fetchList()
     },
     handleSelectionChange (val) {
       this.multipleSelection = val

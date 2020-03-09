@@ -39,6 +39,7 @@
         </div>
       </div>
       <div class="ilb-top search-item-box search-btns-box">
+        <el-button type="primary" size="mini" @click="handleSearch">搜索</el-button>
         <el-button type="warning" size="mini" @click="handleReset">重置</el-button>
       </div>
     </div>
@@ -132,17 +133,15 @@ export default {
     }
   },
   watch: {
-    search: {
-      handler () {
-        this.fetchList()
-      },
-      deep: true
-    }
   },
   mounted () {
     this.fetchList()
   },
   methods: {
+    handleSearch () {
+      this.search.pageNo = 1
+      this.fetchList()
+    },
     fetchList () {
       this.loading = true
       fetchAdver({
@@ -174,12 +173,15 @@ export default {
       this.search.status = -1
       this.search.pageSize = 10
       this.search.pageNo = 1
+      this.fetchList()
     },
     handleSizeChange (val) {
       this.search.pageSize = val
+      this.fetchList()
     },
     handleCurrentChange (val) {
       this.search.pageNo = val
+      this.fetchList()
     },
     handleSet (data, status) {
       if (data.length === 0) { return }
@@ -200,6 +202,7 @@ export default {
             type: 'success',
             message: '操作成功!'
           })
+          this.search.pageNo = 1
           this.fetchList()
         })
       }).catch(() => {
