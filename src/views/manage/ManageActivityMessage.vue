@@ -3,7 +3,7 @@
     <div class="content-title">活动信息列表</div>
     <div class="operate-btn-box">
       <el-button type="primary" size="small" @click="handleAddWord('add')">新建活动通知</el-button>
-      <el-button type="danger" size="small" @click="handleDelete">批量删除</el-button>
+      <el-button type="danger" :disabled="multipleSelection.length === 0" size="small" @click="handleDelete(multipleSelection)">批量删除</el-button>
     </div>
     <el-table
       ref="multipleTable"
@@ -12,6 +12,7 @@
       style="width: 100%"
       size="mini"
       v-loading="loading"
+      @row-click="handleClickCell"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
@@ -21,7 +22,7 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleAddWord('edit', scope.row)">编辑</el-button>
-          <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row, '下架')">删除</el-button>
+          <el-button type="danger" size="mini" @click.stop="handleDelete([scope.row], '下架')">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -42,33 +43,27 @@
       :before-close="handleClose"
       width="60%">
       <div>
-        <div style="margin-bottom: 20px;">
-          <div class="ilb">通知标题：</div>
-          <div class="ilb">
-            <el-input style="width: 400px" size="mini" v-model="activityForm.title"></el-input>
-          </div>
-        </div>
-        <div>
-          <div class="ilb-top">通知正文：</div>
-          <div class="ilb" style="width: 650px">
-            <ueditor ref="content" :value="activityForm.content" :config="config" @getContent="getContent"></ueditor>
-          </div>
-        </div>
+        <el-form v-if="dialogVisible" :disabled="flag === 'preview'" label-width="100px" :rules="rules" ref="ruleForm" :model="activityForm">
+          <el-form-item label="通知标题：" prop="title">
+            <el-input size="mini" type="text" v-model="activityForm.title"></el-input>
+          </el-form-item>
+          <el-form-item label="通知正文：" prop="content">
+            <el-input size="mini" type="textarea" resize="none" v-model="activityForm.content"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button size="mini" type="primary" @click="handleConfirm">提交</el-button>
+            <el-button size="mini" @click="handleClose">取 消</el-button>
+          </el-form-item>
+        </el-form>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="handleClose">取 消</el-button>
-        <el-button size="mini" type="primary" @click="handleConfirm">确 定</el-button>
-      </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { editNotice, fetchNotice } from '../../assets/services/manage-service'
-import ueditor from '../../components/ueditor'
+import { deleteNotice, editNotice, fetchNotice, fetchNoticeItem } from '../../assets/services/manage-service'
 export default {
   name: 'manage-hot-word',
-  components: { ueditor },
   data () {
     return {
       dialogVisible: false,
@@ -85,28 +80,51 @@ export default {
         state: 1
       },
       activityForm: {
+        id: '',
         title: '',
         content: ''
       },
       tableData: [
       ],
-      currentEditData: null
+      currentEditData: null,
+      rules: {
+        title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
+        content: [{ required: true, message: '请输入正文', trigger: 'blur' }]
+      },
+      submitting: false
     }
   },
   watch: {
-    search: {
-      handler () {
-        this.fetchList()
-      },
-      deep: true
+    dialogVisible (nv) {
+      if (!nv) {
+        Object.keys(this.activityForm).forEach(item => {
+          this.activityForm[item] = ''
+        })
+      }
     }
   },
   mounted () {
     this.fetchList()
   },
   methods: {
+    fetchItem (id) {
+      fetchNoticeItem({
+        id
+      }).then(({ data }) => {
+        console.log(data)
+        this.activityForm.id = data.id
+        this.activityForm.title = data.title
+        this.activityForm.content = data.content
+      })
+    },
     checkSelectable () {
       return true
+    },
+    handleClickCell (row, column, cell, event) {
+      console.log(row)
+      this.flag = 'preview'
+      this.dialogVisible = true
+      this.fetchItem(row.id)
     },
     fetchList () {
       this.loading = true
@@ -118,15 +136,26 @@ export default {
         this.tableData = data.items
       })
     },
-    handleDelete () {
-      this.$confirm('收否确认删除？', '提示', {
+    handleDelete (rows) {
+      this.$confirm('是否确认删除？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        let ids = []
+        rows.forEach(row => {
+          ids.push(row.id)
+        })
+        deleteNotice({
+          ids: ids.join(','),
+          state: 2
+        }).then(({ data }) => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.search.pageNo = 1
+          this.fetchList()
         })
       }).catch(() => {
       })
@@ -136,13 +165,7 @@ export default {
       this.flag = flag
       this.dialogVisible = true
       if (flag === 'edit') {
-        this.currentEditData = data
-        this.activityForm.title = data.title
-        this.activityForm.content = data.content
-      } else {
-        this.currentEditData = null
-        this.activityForm.title = ''
-        this.activityForm.content = ''
+        this.fetchItem(data.id)
       }
     },
     handleSelectionChange (val) {
@@ -150,32 +173,38 @@ export default {
     },
     handleSizeChange (val) {
       this.search.pageSize = val
+      this.fetchList()
     },
     handleCurrentChange (val) {
       this.search.pageNo = val
+      this.fetchList()
     },
     handleClose () {
-      Object.keys(this.activityForm).forEach(item => {
-        this.activityForm[item] = ''
-      })
       this.dialogVisible = false
     },
     handleConfirm () {
-      editNotice({
-        id: this.flag === 'add' ? 0 : this.currentEditData.id,
-        ...this.activityForm,
-        state: 1
-      }).then(({ data }) => {
-        this.dialogVisible = false
-        this.$message.success('操作成功')
-        this.search.pageNo = 1
-        this.search.pageSize = 10
-        this.fetchList()
+      if (this.submitting) {
+        return
+      }
+      this.$refs['ruleForm'].validate((valid) => {
+        if (valid) {
+          this.submitting = true
+          editNotice({
+            ...this.activityForm,
+            state: 1
+          }).then(({ data }) => {
+            this.dialogVisible = false
+            this.$message.success('操作成功')
+            this.search.pageNo = 1
+            this.search.pageSize = 10
+            this.fetchList()
+            this.submitting = false
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
       })
-    },
-    getContent (content) {
-      console.log(content)
-      this.activityForm.content = content
     }
   }
 }

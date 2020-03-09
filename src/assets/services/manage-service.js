@@ -117,6 +117,22 @@ export const fetchNotice = (options) => Fetch({
   }
 })
 
+// 查询单个notice
+export const fetchNoticeItem = (options) => Fetch({
+  url: URL.notice.item,
+  data: {
+    ...options
+  }
+})
+
+// 删除
+export const deleteNotice = (options) => Fetch({
+  url: URL.notice.changeState,
+  data: {
+    ...options
+  }
+})
+
 // 获取单个楼盘信息
 export const fetchHouseItem = (options) => Fetch({
   url: URL.house.houseItem,

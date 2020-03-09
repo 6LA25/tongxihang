@@ -30,7 +30,9 @@ export default {
   },
   notice: {
     edit: `${domain}/api/admin/notices/edit`,
-    list: `${domain}/api/admin/notices/items`
+    list: `${domain}/api/admin/notices/items`,
+    item: `${domain}/api/admin/notices/item`,
+    changeState: `${domain}/api/admin/notices/changeState`
   },
   searchWord: {
     list: `${domain}/api/admin/searchWord/items`,
