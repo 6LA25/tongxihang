@@ -3,7 +3,7 @@
     <div class="content-title">搜索词列表</div>
     <div class="operate-btn-box">
       <el-button type="primary" size="small" @click="handleAddWord('add')">新建搜索词</el-button>
-      <el-button type="danger" size="small" @click="handleDelete">批量删除</el-button>
+      <el-button type="danger" size="small" @click="handleDelete(multipleSelection)">批量删除</el-button>
     </div>
     <div class="search-head-box">
       <div class="ilb-top search-item-box">
@@ -33,7 +33,7 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleAddWord('edit', scope.row)">编辑</el-button>
-          <el-button type="danger" size="mini" @click.stop="handleDelete(scope.row, '下架')">删除</el-button>
+          <el-button type="danger" size="mini" @click.stop="handleDelete([scope.row])">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -53,12 +53,30 @@
       :visible.sync="dialogVisible"
       :before-close="handleClose"
       width="50%">
-      <el-form ref="wordForm" :model="wordForm" label-width="130px">
-        <el-form-item label="搜索词名称：">
+      <el-form v-if="dialogVisible" :rules="rules" ref="wordForm" :model="wordForm" label-width="130px">
+        <el-form-item label="搜索词名称：" prop="word">
           <el-input style="width: 400px" size="mini" v-model="wordForm.word"></el-input>
         </el-form-item>
-        <el-form-item label="指向楼盘：">
-          <el-input style="width: 400px" size="mini" v-model="wordForm.houseId"></el-input>
+        <el-form-item label="指向楼盘：" prop="houseId">
+          <!-- <el-input style="width: 400px" size="mini" v-model="wordForm.houseId"></el-input> -->
+          <el-select
+            style="width: 400px"
+            size="mini"
+            v-model="wordForm.houseId"
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入完整楼盘名称"
+            :remote-method="fetchHouses"
+            :loading="searching">
+          <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
+
         </el-form-item>
         <el-form-item label="优先级排序：">
           <el-input style="width: 400px" type="number" size="mini" v-model="wordForm.sort"></el-input>
@@ -73,11 +91,13 @@
 </template>
 
 <script>
-import { fetchSearchWord, editSearchWord } from '../../assets/services/manage-service'
+import { fetchSearchWord, editSearchWord, deleteSearchWord, fetchHouseList, fetchHotWordItem } from '../../assets/services/manage-service'
 export default {
   name: 'manage-hot-word',
   data () {
     return {
+      options: [], // 楼盘选择
+      searching: false,
       dialogVisible: false,
       loading: false,
       total: 0,
@@ -87,7 +107,12 @@ export default {
         id: '',
         word: '',
         houseId: '',
+        houseName: '',
         sort: ''
+      },
+      rules: {
+        word: [{ required: true, message: '请输入搜索词' }],
+        houseId: [{ required: true, message: '请输入楼盘名称' }]
       },
       keyword: '',
       search: {
@@ -104,11 +129,31 @@ export default {
     }
   },
   watch: {
+    dialogVisible (nv) {
+      if (!nv) {
+        Object.keys(this.wordForm).forEach(item => {
+          this.wordForm[item] = ''
+        })
+        this.options = []
+      }
+    }
   },
   mounted () {
     this.fetchList()
   },
   methods: {
+    fetchHouses (query) {
+      console.log(query)
+      this.searching = true
+      fetchHouseList({
+        keyword: query,
+        pageSize: 20,
+        pageNo: 1
+      }).then(({ data }) => {
+        this.options = data.items
+        this.searching = false
+      })
+    },
     handleSearch () {
       this.search.pageNo = 1
       this.fetchList()
@@ -130,16 +175,23 @@ export default {
     checkSelectable () {
       return true
     },
-    handleDelete () {
+    handleDelete (rows) {
+      let ids = []
+      rows.map(row => {
+        ids.push(row.id)
+      })
       this.$confirm('是否确认删除？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
+        deleteSearchWord({
+          ids
+        }).then(({ data }) => {
+          this.$message.success('删除成功')
+          this.search.pageNo = 1
+          this.fetchList()
+        }).catch(() => {})
       }).catch(() => {
       })
     },
@@ -153,9 +205,16 @@ export default {
       this.flag = flag
       this.dialogVisible = true
       if (flag === 'edit') {
-        this.wordForm.word = data.word
-        this.wordForm.houseId = data.houseId
-        this.wordForm.sort = data.sort
+        fetchHotWordItem({
+          id: data.id
+        }).then(({ data }) => {
+          this.wordForm.id = data.id
+          this.wordForm.word = data.word
+          this.wordForm.houseId = data.houseId
+          this.wordForm.houseName = data.houseName
+          this.wordForm.sort = data.sort
+          this.fetchHouses(data.houseName)
+        })
       }
     },
     handleSelectionChange (val) {
@@ -193,9 +252,6 @@ export default {
       this.dialogVisible = false
     },
     handleClose () {
-      Object.keys(this.wordForm).forEach(item => {
-        this.wordForm[item] = ''
-      })
       this.dialogVisible = false
     }
   }

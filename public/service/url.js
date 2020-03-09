@@ -34,6 +34,8 @@ export default {
   },
   searchWord: {
     list: `${domain}/api/admin/searchWord/items`,
-    edit: `${domain}/api/admin/searchWord/edit`
+    edit: `${domain}/api/admin/searchWord/edit`,
+    delete: `${domain}/api/admin/searchWord/del`,
+    item: `${domain}/api/admin/searchWord/item`
   }
 }

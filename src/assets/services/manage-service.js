@@ -140,3 +140,19 @@ export const editSearchWord = (options) => Fetch({
     ...options
   }
 })
+
+// 删除热词
+export const deleteSearchWord = (options) => Fetch({
+  url: URL.searchWord.delete,
+  data: {
+    ...options
+  }
+})
+
+// 获取单个热词
+export const fetchHotWordItem = (options) => Fetch({
+  url: URL.searchWord.item,
+  data: {
+    ...options
+  }
+})
