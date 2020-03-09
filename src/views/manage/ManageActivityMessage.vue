@@ -186,9 +186,9 @@ export default {
       if (this.submitting) {
         return
       }
+      this.submitting = true
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
-          this.submitting = true
           editNotice({
             ...this.activityForm,
             state: 1
@@ -199,9 +199,13 @@ export default {
             this.search.pageSize = 10
             this.fetchList()
             this.submitting = false
+          }).catch(() => {
+            this.submitting = false
+            this.$message.error('操作失败')
           })
         } else {
           console.log('error submit!!')
+          this.submitting = false
           return false
         }
       })

@@ -96,6 +96,7 @@ export default {
   name: 'manage-hot-word',
   data () {
     return {
+      submitting: false,
       options: [], // 楼盘选择
       searching: false,
       dialogVisible: false,
@@ -229,6 +230,10 @@ export default {
       this.fetchList()
     },
     handleSubmit () {
+      if (this.submitting) {
+        return
+      }
+      this.submitting = true
       this.$refs['wordForm'].validate((valid) => {
         if (valid) {
           editSearchWord(this.wordForm).then(({ data }) => {
@@ -239,11 +244,14 @@ export default {
             } else {
               this.fetchList()
             }
+            this.submitting = false
           }).catch(() => {
+            this.submitting = false
             this.$message.error('操作失败')
           })
         } else {
           console.log('error submit!!')
+          this.submitting = false
           return false
         }
       })

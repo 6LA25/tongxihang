@@ -86,6 +86,7 @@ export default {
   name: 'add-advertisement-position',
   data () {
     return {
+      submitting: false,
       positions: [
         {
           value: 1,
@@ -194,6 +195,10 @@ export default {
       return (isJPG || isPNG || isJPEG) && isLt2M
     },
     handleSubmit () {
+      if (this.submitting) {
+        return
+      }
+      this.submitting = true
       this.$refs['advForm'].validate((valid) => {
         if (valid) {
           editAdvertise({
@@ -208,9 +213,13 @@ export default {
           }).then(({ data }) => {
             this.$message.success('操作成功')
             this.handleCancel()
+          }).catch(() => {
+            this.$message.error('操作失败')
+            this.submitting = false
           })
         } else {
           console.log('error submit!!')
+          this.submitting = false
           return false
         }
       })

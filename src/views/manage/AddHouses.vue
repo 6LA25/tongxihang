@@ -365,6 +365,7 @@ export default {
   name: 'add-houses',
   data () {
     return {
+      submitting: false,
       rules: {
         name: [{ required: true, message: '请输入楼盘名称', trigger: 'blur' }],
         price: [{ required: true, message: '请输入楼盘定价', trigger: 'blur' }],
@@ -705,6 +706,10 @@ export default {
       return (isJPG || isPNG || isJPEG) && isLt2M
     },
     handleSubmit () {
+      if (this.submitting) {
+        return
+      }
+      this.submitting = true
       this.$refs['housesForm'].validate((valid) => {
         if (valid) {
           let housesForm = JSON.parse(JSON.stringify(this.housesForm))
@@ -737,11 +742,14 @@ export default {
           }).then((data) => {
             console.log(data)
             this.$message.success('提交成功')
+            this.submitting = false
             this.$router.go(-1)
           }).catch(() => {
+            this.submitting = false
             this.$message.error('提交失败')
           })
         } else {
+          this.submitting = false
           console.log('error submit!!')
           return false
         }

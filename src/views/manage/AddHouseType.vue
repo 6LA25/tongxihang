@@ -114,6 +114,7 @@ export default {
   name: 'add-house-type',
   data () {
     return {
+      submitting: false,
       loading: false,
       editDialogVisible: false,
       dialogStatus: '',
@@ -291,6 +292,10 @@ export default {
       this.editDialogVisible = false
     },
     handleConfirm () {
+      if (this.submitting) {
+        return
+      }
+      this.submitting = true
       this.$refs['editForm'].validate((valid) => {
         if (valid) {
           let addImages = []
@@ -315,10 +320,15 @@ export default {
             this.editDialogVisible = false
             this.search.pageNo = 1
             this.search.pageSize = 10
+            this.submitting = false
             this.fetchTypes()
+          }).catch(() => {
+            this.$message.error('操作失败')
+            this.submitting = false
           })
         } else {
           console.log('error submit!!')
+          this.submitting = false
           return false
         }
       })
