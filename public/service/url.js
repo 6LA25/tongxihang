@@ -39,5 +39,8 @@ export default {
     edit: `${domain}/api/admin/searchWord/edit`,
     delete: `${domain}/api/admin/searchWord/del`,
     item: `${domain}/api/admin/searchWord/item`
+  },
+  customer: {
+    list: `${domain}/api/admin/customer/items`
   }
 }

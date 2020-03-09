@@ -172,3 +172,11 @@ export const fetchHotWordItem = (options) => Fetch({
     ...options
   }
 })
+
+// 意向客户公海
+export const fetchCustomerSea = (options) => Fetch({
+  url: URL.customer.list,
+  data: {
+    ...options
+  }
+})
