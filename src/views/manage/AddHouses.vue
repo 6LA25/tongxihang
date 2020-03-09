@@ -1,7 +1,7 @@
 <template>
   <div class="add-houses-page">
     <div class="content-title">{{titleText}}</div>
-    <el-form :rules="rules" ref="housesForm" :model="housesForm" label-width="130px">
+    <el-form :disabled="$route.query.tag === 'preview'" :rules="rules" ref="housesForm" :model="housesForm" label-width="130px">
       <div class="form-divide-title">楼盘信息</div>
       <el-form-item label="楼盘名称：" prop="name">
         <el-input style="width: 400px" size="mini" v-model="housesForm.name"></el-input>
@@ -542,7 +542,7 @@ export default {
     fetchArea({ parent: '' }).then(({ data }) => {
       this.provinceList = data.items
     })
-    if (this.$route.query.tag === 'edit') {
+    if (this.$route.query.tag === 'edit' || this.$route.query.tag === 'preview') {
       this.getHouseaItem()
     }
     this.$store.dispatch('initUpload')
