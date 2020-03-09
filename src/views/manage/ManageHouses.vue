@@ -11,7 +11,7 @@
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">楼盘名称：</div>
         <div class="ilb-top">
-          <el-input v-model="search.name" placeholder="请输入内容" size="mini"></el-input>
+          <el-input v-model="search.keyword" placeholder="请输入内容" size="mini"></el-input>
         </div>
       </div>
       <div class="ilb-top search-item-box">
@@ -30,7 +30,7 @@
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">楼盘状态：</div>
         <div class="ilb-top">
-          <el-select v-model="search.houseStatus" placeholder="请选择" size="mini">
+          <el-select v-model="search.status" placeholder="请选择" size="mini">
             <el-option
               v-for="item in houseStatus"
               :key="item.value"
@@ -43,7 +43,7 @@
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">上架状态：</div>
         <div class="ilb-top">
-          <el-select v-model="search.putawayStatus" placeholder="请选择" size="mini">
+          <el-select v-model="search.state" placeholder="请选择" size="mini">
             <el-option
               v-for="item in putawayStatus"
               :key="item.value"
@@ -74,6 +74,7 @@
         </div>
       </div>
       <div class="ilb-top search-item-box search-btns-box">
+        <el-button type="primary" size="mini" @click="fetchList">搜索</el-button>
         <el-button type="warning" size="mini" @click="handleReset">重置</el-button>
       </div>
     </div>
@@ -134,47 +135,47 @@ export default {
     return {
       houseTypes: [
         {
-          value: '',
+          value: -1,
           label: '全部'
         },
         {
-          value: '0',
+          value: 1,
           label: '新房'
         },
         {
-          value: '1',
+          value: 2,
           label: '二手房'
         }
       ],
       houseStatus: [
         {
-          value: '0',
+          value: -1,
           label: '全部'
         },
         {
-          value: '1',
+          value: 1,
           label: '热销中'
         },
         {
-          value: '2',
+          value: 2,
           label: '即将开盘'
         },
         {
-          value: '3',
+          value: 3,
           label: '售罄'
         }
       ],
       putawayStatus: [
         {
-          value: '0',
+          value: -1,
           label: '全部'
         },
         {
-          value: '1',
+          value: 1,
           label: '上架中'
         },
         {
-          value: '2',
+          value: 0,
           label: '已下架'
         }
       ],
@@ -199,53 +200,38 @@ export default {
         }
       },
       search: {
-        name: '',
+        keyword: '',
         type: '',
-        houseStatus: '',
-        putawayStatus: '',
+        status: '', // 楼盘状态
+        state: '', // 上下架
         time: '',
+        area: '', // 所在地
         pageSize: 10,
         pageNo: 1
       },
       total: 0,
       loading: false,
-      tableData: [
-        {
-          id: 1,
-          name: '大唐芋圆',
-          price: 12000,
-          location: '江苏省无锡滨湖区',
-          houseType: '新房',
-          houseStatus: '热销中',
-          putawayStatus: '上架'
-        },
-        {
-          id: 2,
-          name: '大唐芋圆',
-          price: 12000,
-          location: '江苏省无锡滨湖区',
-          houseType: '新房',
-          houseStatus: '热销中',
-          putawayStatus: '上架'
-        }
-      ],
+      tableData: [],
       multipleSelection: []
     }
   },
   watch: {
-    search: {
-      handler (nv) {
-        console.log(nv.name)
-        this.fetchList()
-      },
-      deep: true
-    }
   },
   methods: {
     fetchList () {
       this.loading = true
-      fetchHouseList(this.search).then(({ data }) => {
-        console.log(data)
+      let post = {
+        keyword: this.search.keyword,
+        type: this.search.type,
+        status: this.search.status, // 楼盘状态
+        state: this.search.state, // 上下架
+        pageSize: this.search.pageSize,
+        pageNo: this.search.pageNo,
+        areaid: this.search.area ? this.search.area[2] : '',
+        startTime: this.search.time ? this.search.time[0] : '',
+        endTime: this.search.time ? this.search.time[1] : ''
+      }
+      fetchHouseList(post).then(({ data }) => {
         this.total = data.totalCount
         this.tableData = data.items
         this.loading = false
@@ -259,6 +245,7 @@ export default {
         this.search.pageSize = 10
         this.search.pageNo = 1
       })
+      this.fetchList()
     },
     checkSelectable (row) {
       return true
@@ -268,9 +255,11 @@ export default {
     },
     handleSizeChange (val) {
       this.search.pageSize = val
+      this.fetchList()
     },
     handleCurrentChange (val) {
       this.search.pageNo = val
+      this.fetchList()
     },
     handleClickCell (row, column, cell, event) {
       this.$router.push({
@@ -314,6 +303,7 @@ export default {
             type: 'success',
             message: `${state === 1 ? '上架' : '下架'}成功!`
           })
+          this.search.pageNo = 1
           this.fetchList()
         })
       }).catch(() => {
@@ -332,6 +322,7 @@ export default {
           type: 'success',
           message: '设为热门成功'
         })
+        this.search.pageNo = 1
         this.fetchList()
       })
     },

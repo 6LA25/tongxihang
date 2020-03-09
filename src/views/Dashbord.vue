@@ -20,7 +20,7 @@
               </template>
               <el-menu-item-group>
                 <el-menu-item index="2-1">楼盘管理</el-menu-item>
-                <el-menu-item index="2-2">标签管理</el-menu-item>
+                <!-- <el-menu-item index="2-2">标签管理</el-menu-item> -->
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="3">
