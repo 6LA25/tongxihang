@@ -32,6 +32,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "AddHouses" */ '../views/manage/AddHouses.vue')
       },
       {
+        path: '/add-role',
+        name: 'add-role',
+        component: () => import(/* webpackChunkName: "AddRole" */ '../views/manage/AddRole.vue')
+      },
+      {
         path: '/add-house-type',
         name: 'add-house-type',
         component: () => import(/* webpackChunkName: "AddHouseType" */ '../views/manage/AddHouseType.vue')

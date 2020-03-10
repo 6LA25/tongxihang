@@ -140,8 +140,7 @@
             remote
             reserve-keyword
             placeholder="请输入需要指派的用户名"
-            :remote-method="fetchUsers"
-            :loading="searching">
+            :remote-method="fetchUsers">
             <el-option
               v-for="item in options"
               :key="item.account"
@@ -220,6 +219,7 @@ export default {
   },
   mounted () {
     this.fetchList()
+    this.fetchUsers()
   },
   methods: {
     handleSearch () {

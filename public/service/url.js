@@ -4,10 +4,17 @@ let domain = process.env.NODE_ENV === 'development' ? '' : 'http://txh.17zxiu.co
 export default {
   login: {
     keys: `${domain}/api/member/admin/login/publickey`,
-    login: `${domain}/api/member/admin/login`
+    login: `${domain}/api/member/admin/login`,
+    permission: `${domain}/api/admin/common/permissions/all`
   },
   user: {
-    all: `${domain}/api/admin/adminuser/items`
+    all: `${domain}/api/admin/adminuser/items`,
+    commonUser: `${domain}/api/admin/common/authorization/users`
+  },
+  role: {
+    edit: `${domain}/api/admin/roles/edit`,
+    all: `${domain}/api/admin/roles/items`,
+    item: `${domain}/api/admin/roles/item`
   },
   public: {
     area: `${domain}/api/admin/common/area/children`

@@ -2,7 +2,39 @@ import { Fetch } from '@public/service/http'
 import URL from '@public/service/url'
 // 获取所有管理用户
 export const fetchAllUsers = (options) => Fetch({
-  url: URL.user.all,
+  url: URL.user.commonUser,
+  data: {
+    ...options
+  }
+})
+
+// 获取所有菜单权限
+export const fetchAllPermissions = (options) => Fetch({
+  url: URL.login.permission,
+  data: {
+    ...options
+  }
+})
+
+// 新增角色
+export const addRole = (options) => Fetch({
+  url: URL.role.edit,
+  data: {
+    ...options
+  }
+})
+
+// 获取所有角色
+export const fetchAllRoles = (options) => Fetch({
+  url: URL.role.all,
+  data: {
+    ...options
+  }
+})
+
+// 获取单个角色
+export const fetchRoleItem = (options) => Fetch({
+  url: URL.role.item,
   data: {
     ...options
   }
