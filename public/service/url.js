@@ -14,7 +14,8 @@ export default {
   staff: {
     add: `${domain}/api/admin/adminuser/edit`,
     all: `${domain}/api/admin/adminuser/items`,
-    item: `${domain}`
+    item: `${domain}`,
+    permissions: `${domain}/api/admin/common/user/permissions`
   },
   role: {
     edit: `${domain}/api/admin/roles/edit`,

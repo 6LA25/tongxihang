@@ -8,11 +8,15 @@ export default new Vuex.Store({
     userInfo: JSON.parse(sessionStorage.getItem('userInfo')) || {},
     uploadUrl: '',
     uploadData: {},
-    uploadHeaders: {}
+    uploadHeaders: {},
+    userPermissions: JSON.parse(sessionStorage.getItem('permissions')) || []
   },
   mutations: {
     UPDATE_USER_INFO (state, payload) {
       state.userInfo = payload
+    },
+    UPDATE_USER_PERMISSIONS (state, payload) {
+      state.userPermissions = payload
     }
   },
   actions: {

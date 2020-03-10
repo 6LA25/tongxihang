@@ -14,7 +14,7 @@
             <el-menu-item index="1">
               <span slot="title">工作台</span>
             </el-menu-item>
-            <el-submenu index="2">
+            <el-submenu index="2" v-if="$store.state.userPermissions.includes('mange-houses')">
               <template slot="title">
                 <span>房源管理</span>
               </template>

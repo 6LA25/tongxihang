@@ -13,3 +13,11 @@ export const login = (options) => Fetch({
     ...options
   }
 })
+
+// 获取用户权限
+export const fetchStaffPermissions = (options) => Fetch({
+  url: URL.staff.permissions,
+  data: {
+    ...options
+  }
+})
