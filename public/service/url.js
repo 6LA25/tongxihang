@@ -41,6 +41,8 @@ export default {
     item: `${domain}/api/admin/searchWord/item`
   },
   customer: {
-    list: `${domain}/api/admin/customer/items`
+    list: `${domain}/api/admin/customer/items`,
+    close: `${domain}/api/admin/customer/close`,
+    add: `${domain}/api/admin/customer/add`
   }
 }

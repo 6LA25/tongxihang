@@ -180,3 +180,19 @@ export const fetchCustomerSea = (options) => Fetch({
     ...options
   }
 })
+
+// 关单
+export const closeCustomerCase = (options) => Fetch({
+  url: URL.customer.close,
+  data: {
+    ...options
+  }
+})
+
+// 新增意向客户公海
+export const addCustomerSea = (options) => Fetch({
+  url: URL.customer.add,
+  data: {
+    ...options
+  }
+})

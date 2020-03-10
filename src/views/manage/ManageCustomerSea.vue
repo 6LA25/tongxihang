@@ -70,12 +70,13 @@
       <el-table-column prop="intro" label="备注" width="200" show-overflow-tooltip></el-table-column>
       <el-table-column prop="recommendUser" label="推荐人" width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="recommendTime" label="推荐时间" width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="followUser" label="跟进人" width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="followStatus" label="跟进状态" width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="followRealname" label="跟进人" width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="followStatusName" label="跟进状态" width="100" show-overflow-tooltip></el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click.stop="handleDispatchCase(scope.row)">派单</el-button>
-          <el-button type="danger" size="mini" @click.stop="handleCloseCase(scope.row)">关单</el-button>
+          <el-button type="primary" v-if="scope.row.followStatus === 1" size="mini" @click.stop="handleDispatchCase(scope.row, 1)">派单</el-button>
+          <el-button type="warning" v-if="scope.row.followStatus === 0" size="mini" @click.stop="handleDispatchCase(scope.row, 0)">重新派单</el-button>
+          <el-button type="danger" v-if="scope.row.followStatus === 1 || scope.row.followStatus === 2 || scope.row.followStatus === 3 || scope.row.followStatus === 4 || scope.row.followStatus === 5" size="mini" @click.stop="handleCloseCase(scope.row)">关单</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -90,23 +91,48 @@
         :total="total"
       ></el-pagination>
     </div>
+    <el-dialog
+      title="关单理由"
+      :visible.sync="closeDialogVisible"
+      width="50%">
+      <el-form v-if="closeDialogVisible" :model="closeForm" ref="closeForm" label-width="100px">
+        <el-form-item
+          label="理由"
+          prop="intro"
+          :rules="[
+            { required: true, message: '理由不能为空'},
+          ]"
+        >
+          <el-input style="width: 400px;" type="text" size="mini" v-model="closeForm.intro" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="mini" type="primary" @click="submitForm('closeForm')">提交</el-button>
+          <el-button size="mini" type="primary" @click="handleClose">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchCustomerSea } from '../../assets/services/manage-service'
+import { fetchCustomerSea, closeCustomerCase } from '../../assets/services/manage-service'
 export default {
   name: 'manage-customer-sea-page',
   data () {
     return {
       loading: false,
       total: 0,
+      closeDialogVisible: false,
       search: {
         keyword: '',
         type: -1,
         time: '',
         pageSize: 10,
         pageNo: 1
+      },
+      closeForm: {
+        id: '',
+        intro: ''
       },
       identities: [
         {
@@ -147,6 +173,20 @@ export default {
       this.search.pageNo = 1
       this.fetchList()
     },
+    submitForm (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          closeCustomerCase(this.closeForm).then(({ data }) => {
+            this.$message.success('关单成功')
+            this.handleReset()
+            this.closeDialogVisible = false
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
     fetchList () {
       this.loading = true
       let post = {
@@ -181,8 +221,14 @@ export default {
     handleDispatchCase (row) {
       console.log(row)
     },
+    // 关单
     handleCloseCase (row) {
       console.log(row)
+      this.closeDialogVisible = true
+      this.closeForm.id = row.id
+    },
+    handleClose () {
+      this.closeDialogVisible = false
     },
     handleSizeChange (val) {
       this.search.pageSize = val

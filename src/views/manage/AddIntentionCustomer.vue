@@ -2,34 +2,33 @@
   <div class="add-intention-customer-page">
     <div class="content-title">新增意向客户</div>
     <el-form :rules="rules" ref="customerForm" :model="customerForm" label-width="130px">
-      <el-form-item label="客户姓名：" prop="name">
+      <el-form-item label="客户姓名：" prop="realname">
         <el-input
           style="width: 400px"
           placeholder="请输入客户姓名"
           size="mini"
-          v-model="customerForm.name"
+          v-model="customerForm.realname"
         ></el-input>
       </el-form-item>
       <el-form-item label="客户性别：" prop="gender">
         <el-radio-group v-model="customerForm.gender" @change="handleChangeGender">
           <el-radio :label="1">男</el-radio>
-          <el-radio :label="0">女</el-radio>
+          <el-radio :label="2">女</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="电话号码：" prop="name">
+      <el-form-item label="电话号码：" prop="mobile">
         <el-input
           style="width: 400px"
           placeholder="请输入电话号码"
           size="mini"
-          v-model="customerForm.phone"
+          v-model="customerForm.mobile"
         ></el-input>
       </el-form-item>
-      <el-form-item label="推荐楼盘：" prop="house">
+      <el-form-item label="推荐楼盘：" prop="houseId">
         <el-select
           size="mini"
-          v-model="customerForm.house"
+          v-model="customerForm.houseId"
           :multiple-limit="1"
-          multiple
           filterable
           remote
           reserve-keyword
@@ -46,8 +45,8 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="备注：" prop="desc">
-        <el-input type="textarea" style="width: 400px" size="mini" resize="none" v-model="customerForm.remark"></el-input>
+      <el-form-item label="备注：" prop="intro">
+        <el-input type="textarea" style="width: 400px" size="mini" resize="none" v-model="customerForm.intro"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button size="mini" type="primary" @click="handleSubmit">确定</el-button>
@@ -58,23 +57,24 @@
 </template>
 
 <script>
+import { addCustomerSea, fetchHouseList } from '../../assets/services/manage-service'
 export default {
   name: 'add-intention-customer',
   data () {
     return {
       loading: false,
       rules: {
-        name: [{ required: true, message: '请输入客户姓名', trigger: 'blur' }],
-        phone: [{ required: true, message: '请输入电话号码', trigger: 'blur' }],
+        realname: [{ required: true, message: '请输入客户姓名', trigger: 'blur' }],
+        mobile: [{ required: true, message: '请输入电话号码', trigger: 'blur' }],
         gender: [{ required: true, message: '请选择性别', trigger: 'blur' }],
-        house: [{ required: true, message: '请输入推荐楼盘', trigger: 'blur' }]
+        houseId: [{ required: true, message: '请输入推荐楼盘', trigger: 'blur' }]
       },
       customerForm: {
-        name: '',
+        realname: '',
         gender: '',
-        phone: '',
-        house: [],
-        remark: ''
+        mobile: '',
+        houseId: '',
+        intro: ''
       },
       options: [],
       list: [
@@ -89,7 +89,10 @@ export default {
     handleSubmit () {
       this.$refs['customerForm'].validate(valid => {
         if (valid) {
-          alert('submit!')
+          addCustomerSea(this.customerForm).then(({ data }) => {
+            this.$message.success('操作成功')
+            this.$router.go(-1)
+          })
         } else {
           console.log('error submit!!')
           return false
@@ -106,13 +109,14 @@ export default {
       console.log(query)
       if (query !== '') {
         this.loading = true
-        setTimeout(() => {
+        fetchHouseList({
+          keyword: query,
+          pageSize: 20,
+          pageNo: 1
+        }).then(({ data }) => {
+          this.options = data.items
           this.loading = false
-          this.options = this.list.filter(item => {
-            console.log(item)
-            return item.name.includes(query)
-          })
-        }, 200)
+        })
       } else {
         this.options = []
       }
