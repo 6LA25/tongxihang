@@ -268,3 +268,19 @@ export const fetchFollowLogs = (options) => Fetch({
     ...options
   }
 })
+
+// 新增员工
+export const addStaff = (options) => Fetch({
+  url: URL.staff.add,
+  data: {
+    ...options
+  }
+})
+
+// 获取员工
+export const fetchAlllStaff = (options) => Fetch({
+  url: URL.staff.all,
+  data: {
+    ...options
+  }
+})

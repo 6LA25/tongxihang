@@ -127,6 +127,16 @@ const routes = [
         component: () => import(/* webpackChunkName: "ManageRole" */ '../views/manage/ManageRole.vue')
       },
       {
+        path: '/manage-staff',
+        name: 'manage-staff',
+        component: () => import(/* webpackChunkName: "ManageStaff" */ '../views/manage/ManageStaff.vue')
+      },
+      {
+        path: '/add-staff',
+        name: 'add-staff',
+        component: () => import(/* webpackChunkName: "AddStaff" */ '../views/manage/AddStaff.vue')
+      },
+      {
         path: '/manage-permission',
         name: 'manage-permission',
         component: () => import(/* webpackChunkName: "ManagePermission" */ '../views/manage/ManagePermission.vue')

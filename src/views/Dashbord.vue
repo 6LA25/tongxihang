@@ -68,7 +68,8 @@
               </template>
               <el-menu-item-group>
                 <el-menu-item index="7-1">角色管理</el-menu-item>
-                <el-menu-item index="7-2">角色权限管理</el-menu-item>
+                <!-- <el-menu-item index="7-2">角色权限管理</el-menu-item> -->
+                <el-menu-item index="7-3">员工管理</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>
@@ -109,7 +110,8 @@ export default {
         '6-2': 'manage-hot-word',
         '6-3': 'manage-activity-message',
         '7-1': 'manage-role',
-        '7-2': 'manage-permission'
+        '7-2': 'manage-permission',
+        '7-3': 'manage-staff'
       }
     }
   },
