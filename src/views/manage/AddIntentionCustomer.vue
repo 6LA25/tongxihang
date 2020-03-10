@@ -92,6 +92,9 @@ export default {
           addCustomerSea(this.customerForm).then(({ data }) => {
             this.$message.success('操作成功')
             this.$router.go(-1)
+          }).catch(error => {
+            console.log(error)
+            this.$message.error(`操作失败：${error.result_msg}`)
           })
         } else {
           console.log('error submit!!')

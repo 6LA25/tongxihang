@@ -2,8 +2,8 @@
   <div class="add-following-record-page">
     <div class="content-title">添加跟进记录</div>
     <el-form :rules="rules" ref="followingForm" :model="followingForm" label-width="130px">
-      <el-form-item label="客户姓名：" prop="name">
-        <el-select size="mini" v-model="followingForm.status" placeholder="请选择跟进状态">
+      <el-form-item label="跟进状态：" prop="followStatus">
+        <el-select size="mini" v-model="followingForm.followStatus" placeholder="请选择跟进状态">
           <el-option
             v-for="item in followingStatus"
             :key="item.status"
@@ -12,42 +12,56 @@
           ></el-option>
         </el-select>
       </el-form-item>
-       <el-form-item label="跟进时间：" prop="time">
+       <el-form-item label="跟进时间：" prop="followTime">
          <el-date-picker
-            value-format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd"
             size="mini"
-            v-model="followingForm.time"
-            type="datetime"
+            v-model="followingForm.followTime"
+            type="date"
             placeholder="选择日期">
           </el-date-picker>
       </el-form-item>
-      <el-form-item label="操作人：">
-        <el-input style="width: 400px" size="mini" disabled v-model="followingForm.operator"></el-input>
-      </el-form-item>
-      <el-form-item label="下次跟进时间：" prop="time">
+      <el-form-item v-if="followingForm.followStatus === 2 || followingForm.followStatus === 3 || followingForm.followStatus === 4 || followingForm.followStatus === 5 || followingForm.followStatus === 6" label="下次跟进时间：" prop="nextFollowTime">
          <el-date-picker
-            value-format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd"
             size="mini"
-            v-model="followingForm.nextTime"
-            type="datetime"
+            v-model="followingForm.nextFollowTime"
+            type="date"
             placeholder="选择日期">
           </el-date-picker>
       </el-form-item>
-      <el-form-item label="备注：" prop="remark">
-        <el-input type="textarea" style="width: 400px" size="mini" resize="none" v-model="followingForm.remark"></el-input>
+      <el-form-item label="备注：" prop="intro">
+        <el-input type="textarea" style="width: 400px" size="mini" resize="none" v-model="followingForm.intro"></el-input>
       </el-form-item>
-      <el-form-item label="发放奖励金：" prop="money">
-        <el-input style="width: 300px" type="number" size="mini" v-model="followingForm.money"></el-input><span class="form-label">元</span>
+      <el-form-item v-if="followingForm.followStatus === 2 || followingForm.followStatus === 3 || followingForm.followStatus === 4 || followingForm.followStatus === 5" label="发放奖励金：" prop="reward">
+        <el-input style="width: 300px" type="number" size="mini" v-model="followingForm.reward"></el-input><span class="form-label">元</span>
       </el-form-item>
-      <template v-if="followingForm.status === 5">
-        <el-form-item label="购买楼盘：" prop="buyHouse">
-          <el-input style="width: 400px" size="mini" v-model="followingForm.buyHouse"></el-input>
+      <template v-if="followingForm.followStatus === 6">
+        <el-form-item label="购买楼盘：" prop="houseId">
+          <!-- <el-input style="width: 400px" size="mini" v-model="followingForm.houseId"></el-input> -->
+          <el-select
+            style="width: 400px"
+            size="mini"
+            v-model="followingForm.houseId"
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入完整楼盘名称"
+            :remote-method="fetchHouses"
+            :loading="searching">
+            <el-option
+              v-for="item in options"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="合同号：" prop="contractNum">
+        <el-form-item label="合同编号：" prop="contractNum">
           <el-input style="width: 400px" size="mini" v-model="followingForm.contractNum"></el-input>
         </el-form-item>
-        <el-form-item label="合同金额：" prop="contractMoney">
-          <el-input style="width: 400px" size="mini" v-model="followingForm.contractMoney"></el-input>
+        <el-form-item label="合同金额：" prop="contractAmount">
+          <el-input style="width: 400px" size="mini" v-model="followingForm.contractAmount"></el-input>
         </el-form-item>
         <el-form-item label="合同照片：" prop="contractImgs">
           <el-upload
@@ -67,6 +81,9 @@
         <div class="form-item-hint-text">支持jpg/jpeg/png格式图片，大小不超过2M</div>
       </el-form-item>
       </template>
+      <el-form-item v-if="followingForm.followStatus === 7" label="回款金额：" prop="amount">
+        <el-input type="text" style="width: 400px" size="mini" v-model="followingForm.amount"></el-input>
+      </el-form-item>
       <el-form-item>
         <el-button size="mini" type="primary" @click="handleSubmit">确定</el-button>
         <el-button size="mini" @click="handleCancel">取消</el-button>
@@ -74,63 +91,135 @@
     </el-form>
     <div class="following-list-box">
       <div class="title">跟进日志：</div>
-      <ul>
-        <li>
-          <div>2019.09.08 12:31:23   操作人：曾诚</div>
-          <div>跟进状态"联系中"，跟进时间“2019.09.08 12:30”，下次跟进时间为“2019.09.18 12:30”，备注“未打通客户电话，下次继续联系”</div>
-        </li>
-        <li>
-          <div>2019.09.08 12:31:23   操作人：曾诚</div>
-          <div>跟进状态"联系中"，跟进时间“2019.09.08 12:30”，下次跟进时间为“2019.09.18 12:30”，备注“未打通客户电话，下次继续联系”</div>
-        </li>
-        <li>
-          <div>2019.09.08 12:31:23   操作人：曾诚</div>
-          <div>跟进状态"联系中"，跟进时间“2019.09.08 12:30”，下次跟进时间为“2019.09.18 12:30”，备注“未打通客户电话，下次继续联系”</div>
+      <ul v-loading="loading">
+        <li v-for="(log, index) in logList" :key="index">
+          <div>2019.09.08 12:31:23   操作人：{{log.operator}}</div>
+          <div>跟进状态"{{log.followStatusName}}"，跟进时间“{{log.followTime}}”，下次跟进时间为“{{log.nextFollowTime}}”，备注“{{log.intro}}”</div>
         </li>
       </ul>
+      <div class="pager-box">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageNo"
+          :page-sizes="[10, 20, 30, 40]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+        ></el-pagination>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { addFollowLog, fetchHouseList, fetchFollowLogs } from '../../assets/services/manage-service'
 export default {
   name: 'add-following-record',
   data () {
     return {
       rules: {},
+      submitting: false,
+      logList: [],
       followingStatus: [
-        { status: 1, text: '联系中' },
-        { status: 2, text: '已到访' },
-        { status: 3, text: '已认筹' },
-        { status: 4, text: '已认购' },
-        { status: 5, text: '已签约' },
-        { status: 6, text: '已回款' },
-        { status: 7, text: '关单' }
+        { status: 0, text: '关单' },
+        { status: 2, text: '联系中' },
+        { status: 3, text: '已到访' },
+        { status: 4, text: '已认筹' },
+        { status: 5, text: '已认购' },
+        { status: 6, text: '已签约' },
+        { status: 7, text: '已回款' }
       ],
       followingForm: {
-        status: 5,
-        time: '',
-        nextTime: '',
-        operator: '张三',
-        remark: '',
-        money: '',
-        buyHouse: '',
+        customerId: '',
+        followStatus: '',
+        followTime: '',
+        nextFollowTime: '',
+        intro: '',
+        reward: '',
+        amount: '', // 回款金额
+        houseId: '',
         contractNum: '',
-        contractMoney: '',
+        contractAmount: '',
         contractImgs: []
-      }
+      },
+      pageSize: 10,
+      pageNo: 1,
+      searching: false,
+      options: [],
+      loading: false,
+      total: 0
+    }
+  },
+  watch: {
+    'followingForm.followStatus' (nv) {
+      this.followingForm.followTime = ''
+      this.followingForm.nextFollowTime = ''
+      this.followingForm.intro = ''
+      this.followingForm.reward = ''
+      this.followingForm.amount = ''
+      this.followingForm.houseId = ''
+      this.followingForm.contractNum = ''
+      this.followingForm.contractAmount = ''
+      this.followingForm.contractImgs = []
+      this.options = []
     }
   },
   mounted () {
+    this.followingForm.customerId = this.$route.query.id
+    this.fetchLogs()
     this.$store.dispatch('initUpload')
   },
   methods: {
+    fetchHouses (query) {
+      console.log(query)
+      this.searching = true
+      fetchHouseList({
+        keyword: query,
+        pageSize: 20,
+        pageNo: 1
+      }).then(({ data }) => {
+        this.options = data.items
+        this.searching = false
+      })
+    },
     handleSubmit () {
+      if (this.submitting) {
+        return
+      }
+      this.submitting = true
       this.$refs['followingForm'].validate(valid => {
         if (valid) {
-          alert('submit!')
+          let post = {
+            customerId: this.followingForm.customerId,
+            followStatus: this.followingForm.followStatus,
+            followTime: this.followingForm.followTime,
+            nextFollowTime: this.followingForm.nextFollowTime,
+            intro: this.followingForm.intro,
+            reward: this.followingForm.reward,
+            amount: this.followingForm.amount, // 回款金额
+            houseId: this.followingForm.houseId,
+            contractNum: this.followingForm.contractNum,
+            contractAmount: this.followingForm.contractAmount
+          }
+          let fileList = []
+          this.followingForm.contractImgs.forEach(item => {
+            fileList.push(item.response.filename)
+          })
+          addFollowLog({
+            ...post,
+            fileList
+          }).then(({ data }) => {
+            this.submitting = false
+            this.$message.success('操作成功')
+            this.$router.go(-1)
+          }).catch((error) => {
+            this.submitting = false
+            this.$message.error(`操作失败：${error.result_msg}`)
+          })
         } else {
           console.log('error submit!!')
+          this.submitting = false
           return false
         }
       })
@@ -161,6 +250,28 @@ export default {
     removeRealImg (file, fileList) {
       console.log(file, fileList)
       this.followingForm.contractImgs = fileList
+    },
+    fetchLogs () {
+      this.loading = true
+      fetchFollowLogs({
+        pageSize: this.pageSize,
+        pageNo: this.pageNo,
+        customerId: this.$route.query.id
+      }).then(({ data }) => {
+        this.total = data.totalCount
+        this.logList = data.items
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
+    },
+    handleSizeChange (val) {
+      this.pageSize = val
+      this.fetchLogs()
+    },
+    handleCurrentChange (val) {
+      this.pageNo = val
+      this.fetchLogs()
     }
   }
 }

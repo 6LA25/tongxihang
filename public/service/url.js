@@ -6,6 +6,9 @@ export default {
     keys: `${domain}/api/member/admin/login/publickey`,
     login: `${domain}/api/member/admin/login`
   },
+  user: {
+    all: `${domain}/api/admin/adminuser/items`
+  },
   public: {
     area: `${domain}/api/admin/common/area/children`
   },
@@ -43,6 +46,10 @@ export default {
   customer: {
     list: `${domain}/api/admin/customer/items`,
     close: `${domain}/api/admin/customer/close`,
-    add: `${domain}/api/admin/customer/add`
+    send: `${domain}/api/admin/customer/distribute`,
+    add: `${domain}/api/admin/customer/add`,
+    myList: `${domain}/api/admin/mycustomer/items`,
+    addLog: `${domain}/api/admin/mycustomer/follow/edit`,
+    logs: `${domain}/api/admin/mycustomer/follow/items`
   }
 }

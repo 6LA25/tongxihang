@@ -28,7 +28,7 @@
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
-          <img v-if="advForm.image" :src="advForm.image" class="cover-img">
+          <img v-if="advForm.image" :src="advForm.image.path" class="cover-img">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         <div class="form-item-hint-text">支持jpg/jpeg/png格式图片，大小不超过2M</div>
@@ -125,7 +125,7 @@ export default {
       advForm: {
         title: '',
         postion: '',
-        image: '',
+        image: null,
         link_type: '',
         outLink: '',
         inLink: '',
@@ -142,7 +142,10 @@ export default {
       }).then(({ data }) => {
         this.advForm.title = data.title
         this.advForm.postion = data.postion
-        this.advForm.image = data.imageLink
+        this.advForm.image = {
+          filename: '',
+          path: data.imageLink
+        }
         this.advForm.link_type = data.link_type
         this.advForm.status = data.status
         this.advForm.sort = data.sort
@@ -176,7 +179,10 @@ export default {
       }
       this.$refs['advForm'].clearValidate('image')
       // this.advForm.image = res.filename
-      this.advForm.image = res.http_path
+      this.advForm.image = {
+        path: res.http_path,
+        filename: res.filename
+      }
     },
     beforeAvatarUpload (file) {
       console.log(file)
@@ -205,7 +211,7 @@ export default {
             id: this.$route.query.id || 0,
             title: this.advForm.title,
             postion: this.advForm.postion,
-            image: this.advForm.image,
+            image: this.advForm.image ? this.advForm.image.filename : '',
             link_type: this.advForm.link_type,
             status: this.advForm.status,
             link: this.advForm.link_type === 0 ? this.advForm.outLink : this.advForm.inLink,

@@ -92,7 +92,7 @@
       ></el-pagination>
     </div>
     <el-dialog
-      title="关单理由"
+      title="关单"
       :visible.sync="closeDialogVisible"
       width="50%">
       <el-form v-if="closeDialogVisible" :model="closeForm" ref="closeForm" label-width="100px">
@@ -111,18 +111,66 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog
+      title="派单"
+      :visible.sync="sendDialogVisible"
+      width="50%">
+      <el-form v-if="sendDialogVisible" :model="sendForm" ref="sendForm" label-width="100px">
+        <el-form-item
+          label="理由"
+          prop="intro"
+          :rules="[
+            { required: true, message: '理由不能为空'},
+          ]"
+        >
+          <el-input style="width: 400px;" type="text" size="mini" v-model="sendForm.intro" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item
+          label="跟进人"
+          prop="followUser"
+          :rules="[
+            { required: true, message: '跟进人不能为空'},
+          ]"
+        >
+          <el-select
+            style="width: 400px"
+            size="mini"
+            v-model="sendForm.followUser"
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入需要指派的用户名"
+            :remote-method="fetchUsers"
+            :loading="searching">
+            <el-option
+              v-for="item in options"
+              :key="item.account"
+              :label="item.account"
+              :value="item.account">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="mini" type="primary" @click="handleSendForm('sendForm')">提交</el-button>
+          <el-button size="mini" type="primary" @click="handleClose">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchCustomerSea, closeCustomerCase } from '../../assets/services/manage-service'
+import { fetchCustomerSea, closeCustomerCase, fetchAllUsers, sendCustomerCase } from '../../assets/services/manage-service'
 export default {
   name: 'manage-customer-sea-page',
   data () {
     return {
       loading: false,
+      searching: false,
       total: 0,
       closeDialogVisible: false,
+      sendDialogVisible: false,
+      options: [],
       search: {
         keyword: '',
         type: -1,
@@ -133,6 +181,11 @@ export default {
       closeForm: {
         id: '',
         intro: ''
+      },
+      sendForm: {
+        id: '',
+        intro: '',
+        followUser: ''
       },
       identities: [
         {
@@ -187,6 +240,25 @@ export default {
         }
       })
     },
+    handleSendForm (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          sendCustomerCase(this.sendForm).then(({ data }) => {
+            this.$message.success('派单成功')
+            this.handleReset()
+            this.sendDialogVisible = false
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    fetchUsers (query) {
+      fetchAllUsers({}).then(({ data }) => {
+        this.options = data.items
+      })
+    },
     fetchList () {
       this.loading = true
       let post = {
@@ -220,6 +292,8 @@ export default {
     },
     handleDispatchCase (row) {
       console.log(row)
+      this.sendForm.id = row.id
+      this.sendDialogVisible = true
     },
     // 关单
     handleCloseCase (row) {
@@ -229,6 +303,7 @@ export default {
     },
     handleClose () {
       this.closeDialogVisible = false
+      this.sendDialogVisible = false
     },
     handleSizeChange (val) {
       this.search.pageSize = val

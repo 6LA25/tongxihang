@@ -1,5 +1,13 @@
 import { Fetch } from '@public/service/http'
 import URL from '@public/service/url'
+// 获取所有管理用户
+export const fetchAllUsers = (options) => Fetch({
+  url: URL.user.all,
+  data: {
+    ...options
+  }
+})
+
 // 获取地区
 export const fetchArea = (options) => Fetch({
   url: URL.public.area,
@@ -192,6 +200,38 @@ export const closeCustomerCase = (options) => Fetch({
 // 新增意向客户公海
 export const addCustomerSea = (options) => Fetch({
   url: URL.customer.add,
+  data: {
+    ...options
+  }
+})
+
+// 获取我的客户列表
+export const fetchMyCustomer = (options) => Fetch({
+  url: URL.customer.myList,
+  data: {
+    ...options
+  }
+})
+
+// 派单
+export const sendCustomerCase = (options) => Fetch({
+  url: URL.customer.send,
+  data: {
+    ...options
+  }
+})
+
+// 新增跟进日志
+export const addFollowLog = (options) => Fetch({
+  url: URL.customer.addLog,
+  data: {
+    ...options
+  }
+})
+
+// 获取跟进日志
+export const fetchFollowLogs = (options) => Fetch({
+  url: URL.customer.logs,
   data: {
     ...options
   }

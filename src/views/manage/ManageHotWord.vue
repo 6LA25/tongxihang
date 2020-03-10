@@ -58,7 +58,6 @@
           <el-input style="width: 400px" size="mini" v-model="wordForm.word"></el-input>
         </el-form-item>
         <el-form-item label="指向楼盘：" prop="houseId">
-          <!-- <el-input style="width: 400px" size="mini" v-model="wordForm.houseId"></el-input> -->
           <el-select
             style="width: 400px"
             size="mini"
@@ -69,13 +68,13 @@
             placeholder="请输入完整楼盘名称"
             :remote-method="fetchHouses"
             :loading="searching">
-          <el-option
-            v-for="item in options"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id">
-          </el-option>
-        </el-select>
+            <el-option
+              v-for="item in options"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
 
         </el-form-item>
         <el-form-item label="优先级排序：">
