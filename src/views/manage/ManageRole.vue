@@ -2,7 +2,7 @@
   <div class="manage-role-page">
     <div class="content-title">角色列表</div>
     <div class="operate-btn-box">
-      <el-button type="primary" size="small" @click="handleEdit('add')">新建角色</el-button>
+      <el-button type="primary" v-permission="'新建角色'" size="small" @click="handleEdit('add')">新建角色</el-button>
     </div>
     <el-table
       ref="multipleTable"

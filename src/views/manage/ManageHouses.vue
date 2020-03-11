@@ -2,10 +2,10 @@
   <div class="manage-houses-page">
     <div class="content-title">楼盘列表</div>
     <div class="operate-btn-box">
-      <el-button type="primary" size="small" @click="handleAddHouses('add')">新建楼盘</el-button>
-      <el-button type="primary" size="small" @click="handlePutaway(multipleSelection, 1)">批量上架</el-button>
-      <el-button type="danger" size="small" @click="handlePutaway(multipleSelection, 0)">批量下架</el-button>
-      <el-button type="warning" size="mini" @click="handleSetHot(multipleSelection)">批量设为热门</el-button>
+      <el-button type="primary" size="small" v-permission="'新建楼盘'" @click="handleAddHouses('add')">新建楼盘</el-button>
+      <el-button type="primary" size="small" v-permission="'楼盘上下架'" @click="handlePutaway(multipleSelection, 1)">批量上架</el-button>
+      <el-button type="danger" size="small" v-permission="'楼盘上下架'" @click="handlePutaway(multipleSelection, 0)">批量下架</el-button>
+      <el-button type="warning" size="mini" v-permission="'楼盘设为热门'" @click="handleSetHot(multipleSelection)">批量设为热门</el-button>
     </div>
     <div class="search-head-box">
       <div class="ilb-top search-item-box">
@@ -103,10 +103,10 @@
       <el-table-column label="操作" width="340">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleEditHouses(scope.$index, scope.row)">编辑</el-button>
-          <el-button v-if="scope.row.state === 1" size="mini" type="danger" @click.stop="handlePutaway([scope.row], 0)">下架</el-button>
-          <el-button v-if="scope.row.state === 0" size="mini" type="primary" @click.stop="handlePutaway([scope.row], 1)">上架</el-button>
+          <el-button v-if="scope.row.state === 1" v-permission="'楼盘上下架'" size="mini" type="danger" @click.stop="handlePutaway([scope.row], 0)">下架</el-button>
+          <el-button v-if="scope.row.state === 0" v-permission="'楼盘上下架'" size="mini" type="primary" @click.stop="handlePutaway([scope.row], 1)">上架</el-button>
           <el-button type="primary" size="mini" @click.stop="handleAddHouseType(scope.$index, scope.row)">新增户型</el-button>
-          <el-button type="warning" size="mini" @click.stop="handleSetHot([scope.row])">设为热门</el-button>
+          <el-button type="warning" size="mini" v-permission="'楼盘设为热门'" @click.stop="handleSetHot([scope.row])">设为热门</el-button>
         </template>
       </el-table-column>
     </el-table>

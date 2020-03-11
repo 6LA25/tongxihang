@@ -2,8 +2,8 @@
   <div class="manage-hot-word-page">
     <div class="content-title">搜索词列表</div>
     <div class="operate-btn-box">
-      <el-button type="primary" size="small" @click="handleAddWord('add')">新建搜索词</el-button>
-      <el-button type="danger" size="small" @click="handleDelete(multipleSelection)">批量删除</el-button>
+      <el-button type="primary" size="small" v-permission="'新建搜索词'" @click="handleAddWord('add')">新建搜索词</el-button>
+      <el-button type="danger" size="small" v-permission="'删除搜索词'" @click="handleDelete(multipleSelection)">批量删除</el-button>
     </div>
     <div class="search-head-box">
       <div class="ilb-top search-item-box">
@@ -33,7 +33,7 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleAddWord('edit', scope.row)">编辑</el-button>
-          <el-button type="danger" size="mini" @click.stop="handleDelete([scope.row])">删除</el-button>
+          <el-button type="danger" v-permission="'删除搜索词'" size="mini" @click.stop="handleDelete([scope.row])">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

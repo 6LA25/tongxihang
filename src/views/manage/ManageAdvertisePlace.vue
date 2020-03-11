@@ -2,8 +2,8 @@
   <div class="manage-advertise-place-page">
     <div class="content-title">广告位列表</div>
     <div class="operate-btn-box">
-      <el-button type="primary" size="small" @click="handleAddAdvertisement('add')">新建广告</el-button>
-      <el-button type="danger" size="small" @click="handleSet(multipleSelection, '下架')">批量下架</el-button>
+      <el-button type="primary" size="small" v-permission="'新建广告'" @click="handleAddAdvertisement('add')">新建广告</el-button>
+      <el-button type="danger" size="small" v-permission="'广告上下架'" @click="handleSet(multipleSelection, '下架')">批量下架</el-button>
     </div>
     <div class="search-head-box">
       <div class="ilb-top search-item-box">
@@ -63,8 +63,8 @@
       <el-table-column label="操作" width="280">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleAddAdvertisement('edit', scope.row)">编辑</el-button>
-          <el-button type="danger" v-if="scope.row.status === 1" size="mini" @click.stop="handleSet([scope.row], '下架')">下架</el-button>
-          <el-button type="success" v-if="scope.row.status === 0" size="mini" @click.stop="handleSet([scope.row], '上架')">上架</el-button>
+          <el-button type="danger" v-permission="'广告上下架'" v-if="scope.row.status === 1" size="mini" @click.stop="handleSet([scope.row], '下架')">下架</el-button>
+          <el-button type="success" v-permission="'广告上下架'" v-if="scope.row.status === 0" size="mini" @click.stop="handleSet([scope.row], '上架')">上架</el-button>
         </template>
       </el-table-column>
     </el-table>

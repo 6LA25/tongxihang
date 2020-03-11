@@ -2,7 +2,7 @@
   <div class="manage-customer-sea-page">
     <div class="content-title">意向客户列表</div>
     <div class="operate-btn-box">
-      <el-button type="primary" size="small" @click="handleAddCustomer('add')">新增意向客户</el-button>
+      <el-button type="primary" size="small" v-permission="'新增意向客户'" @click="handleAddCustomer('add')">新增意向客户</el-button>
     </div>
     <div class="search-head-box">
       <div class="ilb-top search-item-box">

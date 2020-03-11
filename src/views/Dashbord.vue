@@ -19,7 +19,7 @@
                 <span>房源管理</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="2-1" v-permission="'manage-houses'">楼盘管理</el-menu-item>
+                <el-menu-item index="2-1" v-permission="'楼盘管理'">楼盘管理</el-menu-item>
                 <!-- <el-menu-item index="2-2">标签管理</el-menu-item> -->
               </el-menu-item-group>
             </el-submenu>
@@ -28,8 +28,8 @@
                 <span>意向客户管理</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="3-1" v-permission="'manage-customer-sea'">意向客户公海</el-menu-item>
-                <el-menu-item index="3-2" v-permission="'manage-customer-following'">意向客户跟进</el-menu-item>
+                <el-menu-item index="3-1" v-permission="'意向客户公海'">意向客户公海</el-menu-item>
+                <el-menu-item index="3-2" v-permission="'意向客户跟进'">意向客户跟进</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="4">
@@ -37,10 +37,10 @@
                 <span>财务管理</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="4-1" v-permission="'manage-commission'">分销佣金审核</el-menu-item>
-                <el-menu-item index="4-2" v-permission="'confirm-transfer-account'">财务确认打款</el-menu-item>
-                <el-menu-item index="4-3" v-permission="'check-final-statement'">结算单查询</el-menu-item>
-                <el-menu-item index="4-4" v-permission="'manage-financial-statistics'">财务统计表</el-menu-item>
+                <el-menu-item index="4-1" v-permission="'分销佣金审核'">分销佣金审核</el-menu-item>
+                <el-menu-item index="4-2" v-permission="'财务确认打款'">财务确认打款</el-menu-item>
+                <el-menu-item index="4-3" v-permission="'结算单查询'">结算单查询</el-menu-item>
+                <el-menu-item index="4-4" v-permission="'财务统计表'">财务统计表</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="5">
@@ -48,8 +48,8 @@
                 <span>用户管理</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="5-1" v-permission="'manage-register-user'">注册用户管理</el-menu-item>
-                <el-menu-item index="5-2" v-permission="'broker-info'">经纪人信息统计</el-menu-item>
+                <el-menu-item index="5-1" v-permission="'注册用户管理'">注册用户管理</el-menu-item>
+                <el-menu-item index="5-2" v-permission="'经纪人信息统计'">经纪人信息统计</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="6">
@@ -57,9 +57,9 @@
                 <span>广告位维护</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="6-1" v-permission="'manage-advertise-place'">广告位管理</el-menu-item>
-                <el-menu-item index="6-2" v-permission="'manage-hot-word'">热门搜索词管理</el-menu-item>
-                <el-menu-item index="6-3" v-permission="'manage-activity-message'">活动信息管理</el-menu-item>
+                <el-menu-item index="6-1" v-permission="'广告位管理'">广告位管理</el-menu-item>
+                <el-menu-item index="6-2" v-permission="'热门搜索词管理'">热门搜索词管理</el-menu-item>
+                <el-menu-item index="6-3" v-permission="'活动信息管理'">活动信息管理</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="7">
@@ -67,9 +67,9 @@
                 <span>系统设置</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="7-1" v-permission="'manage-role'">角色管理</el-menu-item>
+                <el-menu-item index="7-1" v-permission="'角色管理'">角色管理</el-menu-item>
                 <!-- <el-menu-item index="7-2">角色权限管理</el-menu-item> -->
-                <el-menu-item index="7-3" v-permission="'manage-staff'">员工管理</el-menu-item>
+                <el-menu-item index="7-3" v-permission="'员工管理'">员工管理</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>

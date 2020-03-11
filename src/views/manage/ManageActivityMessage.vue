@@ -2,8 +2,8 @@
   <div class="manage-activity-message">
     <div class="content-title">活动信息列表</div>
     <div class="operate-btn-box">
-      <el-button type="primary" size="small" @click="handleAddWord('add')">新建活动通知</el-button>
-      <el-button type="danger" :disabled="multipleSelection.length === 0" size="small" @click="handleDelete(multipleSelection)">批量删除</el-button>
+      <el-button type="primary" size="small" v-permission="'新建活动通知'" @click="handleAddWord('add')">新建活动通知</el-button>
+      <el-button type="danger" v-permission="'删除活动通知'" :disabled="multipleSelection.length === 0" size="small" @click="handleDelete(multipleSelection)">批量删除</el-button>
     </div>
     <el-table
       ref="multipleTable"
@@ -22,7 +22,7 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleAddWord('edit', scope.row)">编辑</el-button>
-          <el-button type="danger" size="mini" @click.stop="handleDelete([scope.row], '下架')">删除</el-button>
+          <el-button type="danger" v-permission="'删除活动通知'" size="mini" @click.stop="handleDelete([scope.row], '下架')">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

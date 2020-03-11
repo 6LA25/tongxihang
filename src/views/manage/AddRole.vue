@@ -43,7 +43,7 @@ export default {
       },
       defaultProps: {
         children: 'children',
-        label: 'title'
+        label: 'name'
       }
     }
   },

@@ -79,11 +79,11 @@ export default {
           console.log(data)
           sessionStorage.setItem('permissions', JSON.stringify(data.permissions))
           this.$store.commit('UPDATE_USER_PERMISSIONS', data.permissions)
-        })
-        this.logining = false
-        loading.close()
-        this.$router.push({
-          name: 'manage-houses'
+          this.logining = false
+          loading.close()
+          this.$router.push({
+            name: 'manage-houses'
+          })
         })
       }).catch(error => {
         this.$message.error(`登陆失败：${error.result_msg || '系统错误'}`)

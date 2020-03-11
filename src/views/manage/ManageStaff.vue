@@ -2,7 +2,7 @@
   <div class="manage-staff-page">
     <div class="content-title">员工列表</div>
     <div class="operate-btn-box">
-      <el-button type="primary" size="small" @click="handleEdit('add')">新建员工</el-button>
+      <el-button type="primary" size="small" v-permission="'新建员工'" @click="handleEdit('add')">新建员工</el-button>
     </div>
     <el-table
       ref="multipleTable"
