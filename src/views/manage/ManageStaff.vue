@@ -62,7 +62,7 @@ export default {
         name: 'add-staff',
         query: {
           tag,
-          id: data ? data.uid : ''
+          account: data ? data.account : ''
         }
       })
     },

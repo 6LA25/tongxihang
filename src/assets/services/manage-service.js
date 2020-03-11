@@ -284,3 +284,11 @@ export const fetchAlllStaff = (options) => Fetch({
     ...options
   }
 })
+
+// 获取单个员工信息
+export const fetchStaffItem = (options) => Fetch({
+  url: URL.staff.item,
+  data: {
+    ...options
+  }
+})

@@ -8,9 +8,9 @@
       label-width="100px"
     >
       <el-form-item label="用户名" prop="account">
-        <el-input maxlength="100" style="width: 400px;" size="mini" autocomplete="off" v-model="userForm.account"></el-input>
+        <el-input maxlength="100" :readonly="$route.query.tag !== 'add'" style="width: 400px;" size="mini" autocomplete="off" v-model="userForm.account"></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="password">
+      <el-form-item label="密码" prop="password" v-if="$route.query.tag === 'add'">
         <el-input
           maxlength="100"
           auto-complete="new-password"
@@ -21,7 +21,7 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="姓名" prop="realname">
-        <el-input maxlength="100" style="width: 400px;" size="mini" v-model="userForm.realname"></el-input>
+        <el-input maxlength="100" :readonly="$route.query.tag !== 'add'" style="width: 400px;" size="mini" v-model="userForm.realname"></el-input>
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
         <el-input maxlength="100" style="width: 400px;" size="mini" v-model="userForm.email"></el-input>
@@ -47,7 +47,7 @@
         <el-button size="mini" @click="handleCancel">取消</el-button>
       </el-form-item>
     </el-form>
-    <el-dialog class="select-role-dialog" title="选择角色" :visible.sync="dialogVisible" :before-close="handleClose" width="50%">
+    <el-dialog class="select-role-dialog" title="选择角色" :visible.sync="dialogVisible" :before-close="handleClose">
       <el-table
         ref="multipleTable"
         :data="tableData"
@@ -62,12 +62,6 @@
           </template>
         </el-table-column>
         <el-table-column prop="name" label="角色名称" width="500"></el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click.stop="handleEdit('edit', scope.row)">编辑</el-button>
-            <el-button size="mini" @click.stop="handleEdit('preview', scope.row)">查看</el-button>
-          </template>
-        </el-table-column>
       </el-table>
       <div class="pager-box">
         <el-pagination
@@ -89,7 +83,7 @@
 </template>
 
 <script>
-import { addStaff, fetchAllRoles } from '../../assets/services/manage-service'
+import { addStaff, fetchAllRoles, fetchStaffItem } from '../../assets/services/manage-service'
 export default {
   name: 'add-staff',
   data () {
@@ -135,7 +129,21 @@ export default {
       }
     }
   },
-  mounted () {},
+  mounted () {
+    if (this.$route.query.tag !== 'add') {
+      fetchStaffItem({
+        account: this.$route.query.account
+      }).then(({ data }) => {
+        this.userForm.account = data.item.account
+        this.userForm.role = data.item.roleId
+        this.roleName = data.item.roleName
+        this.userForm.jobnum = data.item.jobnum
+        this.userForm.realname = data.item.realname
+        this.userForm.mobile = data.item.mobile
+        this.userForm.email = data.item.email
+      })
+    }
+  },
   methods: {
     handleSelectRole (index, row) {
       console.log(row)
