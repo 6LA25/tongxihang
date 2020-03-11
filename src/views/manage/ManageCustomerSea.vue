@@ -221,6 +221,21 @@ export default {
     this.fetchList()
     this.fetchUsers()
   },
+  watch: {
+    closeDialogVisible (nv) {
+      if (!nv) {
+        this.closeForm.intro = ''
+        this.closeForm.id = ''
+      }
+    },
+    sendDialogVisible (nv) {
+      if (!nv) {
+        this.sendForm.id = ''
+        this.sendForm.intro = ''
+        this.sendForm.followUser = ''
+      }
+    }
+  },
   methods: {
     handleSearch () {
       this.search.pageNo = 1

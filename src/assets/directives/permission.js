@@ -9,11 +9,11 @@ export default {
     // 暂时从前台session中取
     let permissions = sessionStorage.getItem('permissions')
     if (!permissions || !permission) {
-      el.style.display = 'none'
+      // el.style.display = 'none'
       return
     }
     if (permissions.indexOf(permission) === -1) {
-      el.style.display = 'none'
+      // el.style.display = 'none'
     }
   }
 

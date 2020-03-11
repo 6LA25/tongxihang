@@ -464,32 +464,32 @@ export default {
         }
       ],
       housesForm: {
-        name: '协信未来城', // 楼盘名称
-        price: 22000, // 定价
-        status: 1, // 楼盘状态
-        type: 1, // 楼盘类型
-        intro: '相当不错的房子', // 简介
-        tags: '很好,大方,美丽', // 楼盘标签
-        feature: '这是特色文字', // 楼盘特色
-        buildingType: '混凝土', // 建筑类型
-        standard: 2000, // 装修标准
-        propertyYears: 70, // 产权年限
-        developer: '启迪', // 开发商
-        mainType: '80平小户型', // 主力户型
-        acreage: '70', // 建筑面积
-        fitment: 2, // 装修
-        floorType: 1, // 楼型
-        openTime: '2020-03-03', // 开盘时间
-        finishTime: '2020-04-03', // 交房时间
-        floorSpace: 200000, // 占地面积
-        planNum: 1000, // 规划户数
-        plotRatio: 2.1, // 容积率
-        greetingRate: 2.1, // 绿化率
-        carport: '1:2', // 车位占比
-        managementCompany: '好的公司', // 物业公司
-        managementPrice: 2.32, // 物业费用
-        lightspot: '亮点非常大', // 楼盘亮点
-        rim: '好的，不错，东西多', // 周边介绍
+        name: '', // 楼盘名称
+        price: '', // 定价
+        status: '', // 楼盘状态
+        type: '', // 楼盘类型
+        intro: '', // 简介
+        tags: '', // 楼盘标签
+        feature: '', // 楼盘特色
+        buildingType: '', // 建筑类型
+        standard: '', // 装修标准
+        propertyYears: '', // 产权年限
+        developer: '', // 开发商
+        mainType: '', // 主力户型
+        acreage: '', // 建筑面积
+        fitment: '', // 装修
+        floorType: '', // 楼型
+        openTime: '', // 开盘时间
+        finishTime: '', // 交房时间
+        floorSpace: '', // 占地面积
+        planNum: '', // 规划户数
+        plotRatio: '', // 容积率
+        greetingRate: '', // 绿化率
+        carport: '', // 车位占比
+        managementCompany: '', // 物业公司
+        managementPrice: '', // 物业费用
+        lightspot: '', // 楼盘亮点
+        rim: '', // 周边介绍
         coverImg: null, // 封面
         shareImg: null, // 分享封面图
         province: '', // 省id
@@ -498,9 +498,9 @@ export default {
         address: '', // 楼盘具体地址
         lng: '', // 经度
         lat: '', // 纬度
-        revenueCommissionType: 0, // 营收佣金类别
-        revenueCommission: 1, // 佣金设置
-        adviser: 1, // 置业顾问id
+        revenueCommissionType: '', // 营收佣金类别
+        revenueCommission: '', // 佣金设置
+        adviser: '', // 置业顾问id
         sort: '', // 排序
         state: '', // 上下架
         hot: '',
@@ -508,11 +508,11 @@ export default {
         delRealImgs: [],
         addRenderImgs: [], // 效果图
         delRenderImgs: [],
-        distribution: 1, // 是否支持分销
+        distribution: '', // 是否支持分销
         distributionType: 0, // 分销佣金类别
-        level1: 1.1, // 一级佣金比例
-        level2: 2.1, // 二级佣金比例
-        level3: 3.1, // 三级佣金比例
+        level1: '', // 一级佣金比例
+        level2: '', // 二级佣金比例
+        level3: '', // 三级佣金比例
         houseLocation: []
         // houseLocation: [
         //   { id: 10, initials: 'J', name: '江苏', parent: 0 },
@@ -779,6 +779,7 @@ export default {
   }
   .cover-img {
     width 100%
+    height 100%
   }
 }
 </style>

@@ -246,5 +246,8 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
+.cover-img {
+  width 100%
+  height 100%
+}
 </style>

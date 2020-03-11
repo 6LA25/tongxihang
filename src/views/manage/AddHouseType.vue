@@ -78,7 +78,7 @@
           </div>
         </div>
         <el-form-item label="标签：" prop="tags">
-          <el-input type="textarea" placeholder="多个标签请以“，”分开，最多填写3个标签，每个标签不超过5个汉字" style="width: 400px" size="mini" resize="none" v-model="editForm.tags"></el-input>
+          <el-input type="textarea" placeholder="多个标签请以英文逗号“,”分开，最多填写3个标签，每个标签不超过5个汉字" style="width: 400px" size="mini" resize="none" v-model="editForm.tags"></el-input>
         </el-form-item>
         <el-form-item label="户型图：" prop="editForm">
           <el-upload
@@ -167,7 +167,7 @@ export default {
           {
             validator: (rule, value, callback) => {
               let _err = false
-              let tags = value.split('，')
+              let tags = value.split(',')
               if (tags.length > 3) { _err = true }
               tags.forEach(tag => {
                 if (tag.length > 5) {
