@@ -11,15 +11,15 @@
             :text-color="'#fff'"
             @select="handleSelectNav"
           >
-            <el-menu-item index="1">
+            <el-menu-item index="1" v-permission="'dashboard-work-bench'">
               <span slot="title">工作台</span>
             </el-menu-item>
-            <el-submenu index="2" v-if="$store.state.userPermissions.includes('manage-houses')">
+            <el-submenu index="2">
               <template slot="title">
                 <span>房源管理</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="2-1">楼盘管理</el-menu-item>
+                <el-menu-item index="2-1" v-permission="'manage-houses'">楼盘管理</el-menu-item>
                 <!-- <el-menu-item index="2-2">标签管理</el-menu-item> -->
               </el-menu-item-group>
             </el-submenu>
@@ -28,8 +28,8 @@
                 <span>意向客户管理</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="3-1">意向客户公海</el-menu-item>
-                <el-menu-item index="3-2">意向客户跟进</el-menu-item>
+                <el-menu-item index="3-1" v-permission="'manage-customer-sea'">意向客户公海</el-menu-item>
+                <el-menu-item index="3-2" v-permission="'manage-customer-following'">意向客户跟进</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="4">
@@ -37,10 +37,10 @@
                 <span>财务管理</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="4-1">分销佣金审核</el-menu-item>
-                <el-menu-item index="4-2">财务确认打款</el-menu-item>
-                <el-menu-item index="4-3">结算单查询</el-menu-item>
-                <el-menu-item index="4-4">财务统计表</el-menu-item>
+                <el-menu-item index="4-1" v-permission="'manage-commission'">分销佣金审核</el-menu-item>
+                <el-menu-item index="4-2" v-permission="'confirm-transfer-account'">财务确认打款</el-menu-item>
+                <el-menu-item index="4-3" v-permission="'check-final-statement'">结算单查询</el-menu-item>
+                <el-menu-item index="4-4" v-permission="'manage-financial-statistics'">财务统计表</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="5">
@@ -48,8 +48,8 @@
                 <span>用户管理</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="5-1">注册用户管理</el-menu-item>
-                <el-menu-item index="5-2">经纪人信息统计</el-menu-item>
+                <el-menu-item index="5-1" v-permission="'manage-register-user'">注册用户管理</el-menu-item>
+                <el-menu-item index="5-2" v-permission="'broker-info'">经纪人信息统计</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="6">
@@ -57,9 +57,9 @@
                 <span>广告位维护</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="6-1">广告位管理</el-menu-item>
-                <el-menu-item index="6-2">热门搜索词管理</el-menu-item>
-                <el-menu-item index="6-3">活动信息管理</el-menu-item>
+                <el-menu-item index="6-1" v-permission="'manage-advertise-place'">广告位管理</el-menu-item>
+                <el-menu-item index="6-2" v-permission="'manage-hot-word'">热门搜索词管理</el-menu-item>
+                <el-menu-item index="6-3" v-permission="'manage-activity-message'">活动信息管理</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="7">
@@ -67,9 +67,9 @@
                 <span>系统设置</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="7-1">角色管理</el-menu-item>
+                <el-menu-item index="7-1" v-permission="'manage-role'">角色管理</el-menu-item>
                 <!-- <el-menu-item index="7-2">角色权限管理</el-menu-item> -->
-                <el-menu-item index="7-3">员工管理</el-menu-item>
+                <el-menu-item index="7-3" v-permission="'manage-staff'">员工管理</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>
@@ -78,7 +78,8 @@
       <el-container>
         <el-header style="height: 50px;">
           <div class="user-info-box">
-            {{$store.state.userInfo.account}}
+            <span class="text">{{$store.state.userInfo.account}}</span>
+            <i @click="handleLogout" class="text logout-box el-icon-switch-button"></i>
           </div>
         </el-header>
         <el-main>
@@ -128,10 +129,17 @@ export default {
   },
   methods: {
     handleSelectNav (key, keyPath) {
-      console.log(key, keyPath)
-      console.log(this.rootMap[key])
       this.$router.push({
         name: this.rootMap[key]
+      })
+    },
+    handleLogout () {
+      this.$confirm('即将退出登录, 是否继续？', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+      }).catch(() => {
       })
     }
   }
@@ -167,6 +175,23 @@ export default {
     .el-header {
       padding 0 40px
       .user-info-box {
+        float right
+        .text {
+          display inline-block
+          vertical-align top
+          height 50px
+          line-height 50px
+          margin-left 20px
+          &.logout-box {
+            font-size 18px
+            &:hover {
+              cursor pointer
+              color #409eff
+            }
+          }
+        }
+      }
+      .logout-box {
         float right
         height 50px
         line-height 50px

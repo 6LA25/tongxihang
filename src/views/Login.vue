@@ -78,7 +78,7 @@ export default {
         fetchStaffPermissions().then(({ data }) => {
           console.log(data)
           sessionStorage.setItem('permissions', JSON.stringify(data.permissions))
-          this.$store.commit('UPDATE_USER_PERMISSIONS', data.items)
+          this.$store.commit('UPDATE_USER_PERMISSIONS', data.permissions)
         })
         this.logining = false
         loading.close()
