@@ -75,6 +75,7 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+          this.selectedKeys = this.$refs.tree.getCheckedKeys()
           addRole({
             ...this.roleForm,
             permissions: this.selectedKeys.join(',')

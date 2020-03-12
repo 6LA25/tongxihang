@@ -1,6 +1,5 @@
 const path = require('path')
 var CssSplitWebpackPlugin = require('css-split-webpack-plugin').default
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 module.exports = {
   devServer: {
     port: 8099,
@@ -17,17 +16,6 @@ module.exports = {
         size: 4000
       })
     ],
-    optimization: {
-      minimizer: [
-        new UglifyJsPlugin({
-          uglifyOptions: {
-            compress: {
-              drop_console: false // console
-            }
-          }
-        })
-      ]
-    },
     module: {
       rules: [
         {
