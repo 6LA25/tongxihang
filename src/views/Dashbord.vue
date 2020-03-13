@@ -91,6 +91,7 @@
   </div>
 </template>
 <script>
+import { logout } from '../assets/services/login-service'
 export default {
   name: 'App',
   data () {
@@ -139,6 +140,18 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        logout().then(({ data }) => {
+          this.$message.success('退出登录成功')
+          sessionStorage.removeItem('publickey')
+          sessionStorage.removeItem('rsakey')
+          sessionStorage.removeItem('userInfo')
+          sessionStorage.removeItem('ticket')
+          this.$store.commit('UPDATE_USER_INFO', {})
+          this.$store.commit('UPDATE_USER_PERMISSIONS', [])
+          this.$router.push({
+            name: 'login'
+          })
+        })
       }).catch(() => {
       })
     }

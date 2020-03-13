@@ -5,6 +5,7 @@ export default {
   login: {
     keys: `${domain}/api/member/admin/login/publickey`,
     login: `${domain}/api/member/admin/login`,
+    logout: `${domain}/api/member/admin/logout`,
     permission: `${domain}/api/admin/common/permissions/all`
   },
   user: {

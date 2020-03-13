@@ -21,3 +21,11 @@ export const fetchStaffPermissions = (options) => Fetch({
     ...options
   }
 })
+
+// 退出登录
+export const logout = (options) => Fetch({
+  url: URL.login.logout,
+  data: {
+    ...options
+  }
+})
