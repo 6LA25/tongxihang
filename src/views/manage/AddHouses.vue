@@ -86,7 +86,7 @@
         </div>
         <div class="ilb-top">
           <el-form-item label="楼型：" prop="floorType">
-            <el-select size="mini" v-model="housesForm.floorType" placeholder="请选择">
+            <el-select style="width: 400px;" size="mini" multiple v-model="housesForm.floorType" placeholder="请选择">
               <el-option
                 v-for="item in floorTypes"
                 :key="item.value"
@@ -335,9 +335,20 @@
         <div class="warn" style="padding-left: 20px;">合计：计算3级佣金或佣金比例总和，注意，佣金比例是根据实际放款计算</div>
       </div>
       <el-form-item label="置业顾问：" prop="adviser">
-        <el-select size="mini" v-model="housesForm.adviser" placeholder="请选择置业顾问">
-          <el-option label="张三" :value="1"></el-option>
-          <el-option label="李四" :value="2"></el-option>
+        <el-select
+          size="mini"
+          v-model="housesForm.adviser"
+          filterable
+          remote
+          reserve-keyword
+          placeholder="请选择置业顾问"
+          :remote-method="fetchUsers">
+          <el-option
+            v-for="item in options"
+            :key="item.uid"
+            :label="item.account"
+            :value="item.uid">
+          </el-option>
         </el-select>
       </el-form-item>
       <div class="form-divide-title">楼盘状态：</div>
@@ -360,7 +371,7 @@
 </template>
 
 <script>
-import { fetchArea, editHouse, fetchHouseItem } from '../../../src/assets/services/manage-service'
+import { fetchArea, editHouse, fetchHouseItem, fetchAllUsers } from '../../../src/assets/services/manage-service'
 export default {
   name: 'add-houses',
   data () {
@@ -401,6 +412,7 @@ export default {
       provinceList: [], // 省
       cityList: [],
       regionList: [],
+      options: [],
       // 装修类型
       fitments: [
         {
@@ -478,7 +490,7 @@ export default {
         mainType: '', // 主力户型
         acreage: '', // 建筑面积
         fitment: '', // 装修
-        floorType: '', // 楼型
+        floorType: [], // 楼型
         openTime: '', // 开盘时间
         finishTime: '', // 交房时间
         floorSpace: '', // 占地面积
@@ -545,10 +557,16 @@ export default {
     })
     if (this.$route.query.tag === 'edit' || this.$route.query.tag === 'preview') {
       this.getHouseaItem()
+      this.fetchUsers()
     }
     this.$store.dispatch('initUpload')
   },
   methods: {
+    fetchUsers (query) {
+      fetchAllUsers({}).then(({ data }) => {
+        this.options = data.items
+      })
+    },
     handleSelectProvince (val) {
       console.log(val)
       this.housesForm.city = ''
@@ -566,7 +584,14 @@ export default {
     getHouseaItem () {
       fetchHouseItem({ id: this.$route.query.id }).then(({ data }) => {
         Object.keys(this.housesForm).forEach(item => {
-          if (item === 'coverImg') {
+          if (item === 'floorType') {
+            let arr = data.floorType.split(',')
+            arr.forEach(val => {
+              if (val) {
+                this.housesForm.floorType.push(val / 1)
+              }
+            })
+          } else if (item === 'coverImg') {
             this.housesForm.coverImg = {
               filename: data.coverImg,
               filepath: data.coverImageLink
@@ -713,6 +738,7 @@ export default {
       this.$refs['housesForm'].validate((valid) => {
         if (valid) {
           let housesForm = JSON.parse(JSON.stringify(this.housesForm))
+          housesForm.floorType = housesForm.floorType.join(',')
           // 编辑背景图
           housesForm.coverImg = housesForm.coverImg.filename
           // 编辑分享图片
