@@ -45,6 +45,7 @@
             <el-select
               style="width: 400px"
               size="mini"
+              :disabled="advForm.link_type !== 1"
               v-model="advForm.inLink"
               filterable
               remote

@@ -29,7 +29,7 @@ export function Fetch (ajaxOptions = {}, name = '') {
   return new Promise((resolve, reject) => {
     axios(ajaxOptions).then((response) => {
       // 登录报错及登录失效区分
-      if (response.data.result_code !== 1000) {
+      if (response.data.result_code === 401) {
         MessageBox.alert('请重新登录！', '提示', {
           confirmButtonText: '确定',
           callback: () => {
@@ -41,6 +41,8 @@ export function Fetch (ajaxOptions = {}, name = '') {
           }
         })
         reject(response.data)
+      } else if (response.data.result_code === 10001) {
+        reject(response.data)
       } else {
         if (response.data.data && typeof response.data.data === 'string') {
           response.data.data = JSON.parse(response.data.data)
@@ -48,6 +50,7 @@ export function Fetch (ajaxOptions = {}, name = '') {
         resolve(response.data)
       }
     }).catch(error => {
+      console.log(error)
       reject(error)
     })
   })

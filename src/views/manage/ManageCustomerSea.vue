@@ -244,10 +244,16 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          closeCustomerCase(this.closeForm).then(({ data }) => {
-            this.$message.success('关单成功')
-            this.handleReset()
-            this.closeDialogVisible = false
+          this.$confirm('确定关单吗？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            closeCustomerCase(this.closeForm).then(({ data }) => {
+              this.$message.success('关单成功')
+              this.handleReset()
+              this.closeDialogVisible = false
+            })
           })
         } else {
           console.log('error submit!!')
