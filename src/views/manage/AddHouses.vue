@@ -166,7 +166,7 @@
         <el-input style="width: 400px" type="textarea" resize="none" size="mini" v-model="housesForm.lightspot"></el-input>
       </el-form-item>
       <el-form-item label="周边介绍：" prop="rim">
-        <el-input style="width: 400px" placeholder="请用英文逗号','分隔周边信息" type="textarea" resize="none" size="mini" v-model="housesForm.rim"></el-input>
+        <el-input style="width: 400px" type="textarea" resize="none" size="mini" v-model="housesForm.rim"></el-input>
       </el-form-item>
       <el-form-item label="楼盘封面：" prop="coverImg">
         <el-upload
@@ -183,7 +183,7 @@
           <img v-if="housesForm.coverImg" :src="housesForm.coverImg.filepath" class="cover-img">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div class="form-item-hint-text">支持jpg/jpeg/png格式图片，大小不超过2M</div>
+        <div class="form-item-hint-text"><span v-if="$route.query.tag === 'edit'">点击图片修改封面，</span>支持jpg/jpeg/png格式图片，大小不超过2M</div>
       </el-form-item>
       <el-form-item label="实景图：" prop="addRealImgs">
         <el-upload
@@ -238,7 +238,7 @@
           <img v-if="housesForm.shareImg" :src="housesForm.shareImg.filepath" class="cover-img">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div class="form-item-hint-text">支持jpg/jpeg/png格式图片，大小不超过2M</div>
+        <div class="form-item-hint-text"><span v-if="$route.query.tag === 'edit'">点击图片修改封面，</span>支持jpg/jpeg/png格式图片，大小不超过2M</div>
       </el-form-item>
       <div class="form-divide-title">楼盘位置</div>
       <el-form-item label="楼盘所属区域：" prop="region">
@@ -296,13 +296,13 @@
         <div class="ilb-top">
           <el-form-item label="佣金设置：" prop="revenueCommission">
             <el-input style="width: 100px" type="number" size="mini" v-model="housesForm.revenueCommission"></el-input>
-            <span class="form-label">{{housesForm.revenueCommissionType ? '元' : '%'}}</span>
+            <span class="form-label" v-if="housesForm.revenueCommissionType !== ''">{{housesForm.revenueCommissionType ? '元' : '%'}}</span>
           </el-form-item>
         </div>
       </div>
       <div class="form-divide-title">分销设置：</div>
       <el-form-item label="是否支持分销：" prop="distribution">
-        <el-radio-group v-model="housesForm.distribution">
+        <el-radio-group v-model="housesForm.distribution" @change="handleChangeDistribution">
           <el-radio :label="1">是</el-radio>
           <el-radio :label="0">否</el-radio>
         </el-radio-group>
@@ -313,23 +313,23 @@
           <el-radio :label="1">固定金额</el-radio>
         </el-radio-group>
       </el-form-item>
-      <div>
+      <div v-if="housesForm.distribution !== 0">
         <div class="ilb-top">
           <el-form-item label="1级佣金比例：" prop="">
             <el-input style="width: 100px" size="mini" v-model="housesForm.level1"></el-input>
-            <span class="form-label">{{housesForm.distributionType ? '元' : '%'}}</span>
+            <span class="form-label" v-if="housesForm.distributionType !== ''">{{housesForm.distributionType ? '元' : '%'}}</span>
           </el-form-item>
         </div>
         <div class="ilb-top">
           <el-form-item label="2级佣金比例：" prop="">
             <el-input style="width: 100px" size="mini" v-model="housesForm.level2"></el-input>
-            <span class="form-label">{{housesForm.distributionType ? '元' : '%'}}</span>
+            <span class="form-label" v-if="housesForm.distributionType !== ''">{{housesForm.distributionType ? '元' : '%'}}</span>
           </el-form-item>
         </div>
         <div class="ilb-top">
           <el-form-item label="3级佣金比例：" prop="">
             <el-input style="width: 100px" size="mini" v-model="housesForm.level3"></el-input>
-            <span class="form-label">{{housesForm.distributionType ? '元' : '%'}}</span>
+            <span class="form-label" v-if="housesForm.distributionType !== ''">{{housesForm.distributionType ? '元' : '%'}}</span>
           </el-form-item>
         </div>
         <div class="warn" style="padding-left: 20px;">合计：计算3级佣金或佣金比例总和，注意，佣金比例是根据实际放款计算</div>
@@ -359,7 +359,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="排序：" prop="sort">
-        <el-input style="width: 100px" size="mini" v-model="housesForm.sort"></el-input>
+        <el-input style="width: 100px" size="mini" type="number" v-model="housesForm.sort"></el-input>
         <span class="form-item-hint-text" style="margin-left: 10px;">数字越大，优先级越高；如优先级相同，则根据创建时间排序</span>
       </el-form-item>
       <el-form-item>
@@ -521,7 +521,7 @@ export default {
         addRenderImgs: [], // 效果图
         delRenderImgs: [],
         distribution: '', // 是否支持分销
-        distributionType: 0, // 分销佣金类别
+        distributionType: '', // 分销佣金类别
         level1: '', // 一级佣金比例
         level2: '', // 二级佣金比例
         level3: '', // 三级佣金比例
@@ -547,6 +547,8 @@ export default {
   },
   created () {
   },
+  watch: {
+  },
   mounted () {
     this.map = new qq.maps.Map(document.getElementById('mapContainer'), {
       // center: new qq.maps.LatLng(4.397, 150.644),
@@ -566,6 +568,15 @@ export default {
       fetchAllUsers({}).then(({ data }) => {
         this.options = data.items
       })
+    },
+    handleChangeDistribution (val) {
+      console.log(val)
+      if (!val) {
+        this.housesForm.distributionType = ''
+        this.housesForm.level1 = ''
+        this.housesForm.level2 = ''
+        this.housesForm.level3 = ''
+      }
     },
     handleSelectProvince (val) {
       console.log(val)

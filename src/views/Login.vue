@@ -26,8 +26,8 @@ export default {
     return {
       logining: false,
       loginForm: {
-        account: 'admin',
-        password: 'admin'
+        account: '',
+        password: ''
       },
       rules: {
         account: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -82,7 +82,7 @@ export default {
           this.logining = false
           loading.close()
           this.$router.push({
-            name: 'manage-houses'
+            name: 'dashboard-work-bench'
           })
         })
       }).catch(error => {

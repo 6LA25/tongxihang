@@ -28,6 +28,7 @@ export function Fetch (ajaxOptions = {}, name = '') {
   ajaxOptions.method = ajaxOptions.method || 'post'
   return new Promise((resolve, reject) => {
     axios(ajaxOptions).then((response) => {
+      // 登录报错及登录失效区分
       if (response.data.result_code !== 1000) {
         MessageBox.alert('请重新登录！', '提示', {
           confirmButtonText: '确定',

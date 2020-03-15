@@ -57,7 +57,7 @@
         <el-form-item label="搜索词名称：" prop="word">
           <el-input style="width: 400px" size="mini" v-model="wordForm.word"></el-input>
         </el-form-item>
-        <el-form-item label="指向楼盘：" prop="houseId">
+        <el-form-item label="指向楼盘：" prop="houseId" v-if="false">
           <el-select
             style="width: 400px"
             size="mini"
@@ -106,13 +106,13 @@ export default {
       wordForm: {
         id: '',
         word: '',
-        houseId: '',
-        houseName: '',
+        // houseId: '',
+        // houseName: '',
         sort: ''
       },
       rules: {
-        word: [{ required: true, message: '请输入搜索词' }],
-        houseId: [{ required: true, message: '请输入楼盘名称' }]
+        word: [{ required: true, message: '请输入搜索词' }]
+        // houseId: [{ required: true, message: '请输入楼盘名称' }]
       },
       keyword: '',
       search: {

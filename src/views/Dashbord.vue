@@ -11,7 +11,7 @@
             :text-color="'#fff'"
             @select="handleSelectNav"
           >
-            <el-menu-item index="1" v-permission="'dashboard-work-bench'">
+            <el-menu-item index="1" v-permission="'工作台'">
               <span slot="title">工作台</span>
             </el-menu-item>
             <el-submenu index="2">

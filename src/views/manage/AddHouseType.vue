@@ -166,6 +166,7 @@ export default {
         tags: [
           {
             validator: (rule, value, callback) => {
+              // 强制转换成英文','切割
               let _err = false
               let tags = value.split(',')
               if (tags.length > 3) { _err = true }

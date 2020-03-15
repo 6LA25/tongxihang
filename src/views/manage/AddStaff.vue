@@ -8,29 +8,28 @@
       label-width="100px"
     >
       <el-form-item label="用户名" prop="account">
-        <el-input maxlength="100" :readonly="$route.query.tag !== 'add'" style="width: 400px;" size="mini" autocomplete="off" v-model="userForm.account"></el-input>
+        <el-input maxlength="100" :readonly="$route.query.tag !== 'add'" style="width: 400px;" size="mini" autocomplete="off" v-model.trim="userForm.account"></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="password" v-if="$route.query.tag === 'add'">
+      <el-form-item label="密码" prop="password">
         <el-input
           maxlength="100"
           auto-complete="new-password"
-          type="password"
           style="width: 400px;"
           size="mini"
-          v-model="userForm.password"
+          v-model.trim="userForm.password"
         ></el-input>
       </el-form-item>
       <el-form-item label="姓名" prop="realname">
-        <el-input maxlength="100" :readonly="$route.query.tag !== 'add'" style="width: 400px;" size="mini" v-model="userForm.realname"></el-input>
+        <el-input maxlength="100" :readonly="$route.query.tag !== 'add'" style="width: 400px;" size="mini" v-model.trim="userForm.realname"></el-input>
       </el-form-item>
-      <el-form-item label="邮箱" prop="email">
-        <el-input maxlength="100" style="width: 400px;" size="mini" v-model="userForm.email"></el-input>
+      <el-form-item label="邮箱" prop="email" v-if="false">
+        <el-input maxlength="100" style="width: 400px;" size="mini" v-model.trim="userForm.email"></el-input>
       </el-form-item>
       <el-form-item label="手机号码" prop="mobile">
-        <el-input maxlength="100" style="width: 400px;" size="mini" v-model="userForm.mobile"></el-input>
+        <el-input maxlength="100" style="width: 400px;" size="mini" v-model.trim="userForm.mobile"></el-input>
       </el-form-item>
       <el-form-item label="员工编号" prop="jobnum">
-        <el-input maxlength="100" style="width: 400px;" size="mini" v-model="userForm.jobnum"></el-input>
+        <el-input maxlength="100" style="width: 400px;" size="mini" v-model.trim="userForm.jobnum"></el-input>
       </el-form-item>
       <el-form-item label="设置角色" prop="role">
         <el-input
@@ -112,7 +111,7 @@ export default {
         account: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
         password: [{ required: true, message: '请设置密码', trigger: 'blur' }],
         realname: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
-        email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
+        // email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
         mobile: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
         role: [{ required: true, message: '请设置角色', trigger: 'blur' }]
       }
@@ -127,10 +126,16 @@ export default {
         this.selectRole.id = ''
         this.selectRole.name = ''
       }
+    },
+    'userForm.account': {
+      handler (nv) {
+        this.userForm.account = this.userForm.account.replace(/\s+/g, '')
+      }
     }
   },
   mounted () {
     if (this.$route.query.tag !== 'add') {
+      this.rules.password[0].required = false
       fetchStaffItem({
         account: this.$route.query.account
       }).then(({ data }) => {
