@@ -292,3 +292,11 @@ export const fetchStaffItem = (options) => Fetch({
     ...options
   }
 })
+
+// 删除户型
+export const deleteHouseType = (options) => Fetch({
+  url: URL.house.deleteType,
+  data: {
+    ...options
+  }
+})

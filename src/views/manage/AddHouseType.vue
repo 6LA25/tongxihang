@@ -109,7 +109,7 @@
 </template>
 
 <script>
-import { fetchHouseTypes, editHouseTypes, fetchHouseTypeItem } from '../../../src/assets/services/manage-service'
+import { fetchHouseTypes, editHouseTypes, fetchHouseTypeItem, deleteHouseType } from '../../../src/assets/services/manage-service'
 export default {
   name: 'add-house-type',
   data () {
@@ -234,20 +234,23 @@ export default {
       })
     },
     handleDelete (index, row) {
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+      console.log(row.id)
+      this.$confirm('确定删除该户型吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        deleteHouseType({
+          ids: row.id
+        }).then(({ data }) => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.search.pageNo = 1
+          this.fetchTypes()
         })
       }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
       })
     },
     handleSizeChange (val) {

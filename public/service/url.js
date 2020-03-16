@@ -37,7 +37,8 @@ export default {
     changeHot: `${domain}/api/admin/house/changeHot`,
     houseTypes: `${domain}/api/admin/apartment/items`,
     editHouseTypes: `${domain}/api/admin/apartment/edit`,
-    apartmentItem: `${domain}/api/admin/apartment/item`
+    apartmentItem: `${domain}/api/admin/apartment/item`,
+    deleteType: `${domain}/api/admin/apartment/del`
   },
   advertise: {
     list: `${domain}/api/admin/promote/items`,
