@@ -66,5 +66,17 @@ export default {
     myList: `${domain}/api/admin/mycustomer/items`,
     addLog: `${domain}/api/admin/mycustomer/follow/edit`,
     logs: `${domain}/api/admin/mycustomer/follow/items`
+  },
+  distribution: {
+    list: `${domain}/api/admin/distribution/items`,
+    pass: `${domain}/api/admin/distribution/pass`,
+    reset: `${domain}/api/admin/distribution/reset`,
+    reject: `${domain}/api/admin/distribution/reject`
+  },
+  commission: {
+    list: `${domain}/api/admin/commission/payments`,
+    user: `${domain}/api/admin/commission/user`,
+    item: `${domain}/api/admin/commission/item`,
+    items: `${domain}/api/admin/commission/items`
   }
 }

@@ -300,3 +300,65 @@ export const deleteHouseType = (options) => Fetch({
     ...options
   }
 })
+
+// 分销审核
+export const fetchDistributionList = (options) => Fetch({
+  url: URL.distribution.list,
+  data: {
+    ...options
+  }
+})
+
+// 审核分销
+export const rejectDistribution = (options) => Fetch({
+  url: URL.distribution.reject,
+  data: {
+    ...options
+  }
+})
+
+export const passDistribution = (options) => Fetch({
+  url: URL.distribution.pass,
+  data: {
+    ...options
+  }
+})
+
+export const resetDistribution = (options) => Fetch({
+  url: URL.distribution.reset,
+  data: {
+    ...options
+  }
+})
+
+// 打款列表
+export const fetchCommissionList = (options) => Fetch({
+  url: URL.commission.list,
+  data: {
+    ...options
+  }
+})
+
+// 查询用户基础信息
+export const fetchCommissionUser = (options) => Fetch({
+  url: URL.commission.user,
+  data: {
+    ...options
+  }
+})
+
+// 查询单个用户打款记录
+export const fetchCommissionItem = (options) => Fetch({
+  url: URL.commission.item,
+  data: {
+    ...options
+  }
+})
+
+// 结算单查询
+export const fetchCommissionItems = (options) => Fetch({
+  url: URL.commission.items,
+  data: {
+    ...options
+  }
+})

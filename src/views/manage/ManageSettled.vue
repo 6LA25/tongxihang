@@ -2,9 +2,9 @@
   <div class="manage-settled-page">
     <div class="content-title">待结算佣金</div>
     <div class="settled-detail-box">
-      <div><span>结算人：老王</span><span>身份证号：320405111111111111</span><span>手机号：13011111111</span></div>
-      <div><span>结算方式：支付宝</span><span>结算账号：zengcheng@126.com</span></div>
-      <div class="money-box"><span>佣金总额：10000</span><span>待结算金额：1000</span></div>
+      <div><span>结算人：{{userInfo.realname}}</span><span>身份证号：--</span><span>手机号：{{userInfo.mobile}}</span></div>
+      <div><span>结算方式：--</span><span>结算账号：--</span></div>
+      <div class="money-box"><span>佣金总额：{{userInfo.totalAmount}}</span><span>待结算金额：{{userInfo.stayAmount}}</span></div>
     </div>
     <div class="operate-btn-box" v-if="$route.query.flag !== 'preview'">
       <el-button type="primary" size="small" @click="handleConfirmPay">批量确认打款</el-button>
@@ -84,6 +84,7 @@
 </template>
 
 <script>
+import { fetchCommissionUser, fetchCommissionItem } from '../../assets/services/manage-service'
 import moment from 'moment'
 export default {
   name: 'manage-settled',
@@ -153,10 +154,29 @@ export default {
         realMoney: '',
         time: null,
         remark: ''
-      }
+      },
+      userInfo: {}
     }
   },
+  mounted () {
+    this.fetchUser()
+  },
   methods: {
+    fetchUser () {
+      fetchCommissionUser({
+        username: this.$route.query.username
+      }).then(({ data }) => {
+        this.userInfo = data.item
+        this.fetchItem(data.item.id)
+      })
+    },
+    fetchItem () {
+      fetchCommissionItem({
+        id: 1
+      }).then(({ data }) => {
+        this.userInfo = data.item
+      })
+    },
     handleSelectionChange (val) {
       this.multipleSelection = val
     },

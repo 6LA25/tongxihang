@@ -22,6 +22,7 @@
         </div>
       </div>
       <div class="ilb-top search-item-box search-btns-box">
+        <el-button type="primary" size="mini" @click="handleSearch">搜索</el-button>
         <el-button type="warning" size="mini" @click="handleReset">重置</el-button>
       </div>
     </div>
@@ -35,9 +36,9 @@
       <el-table-column prop="person" label="结算人" width="100"></el-table-column>
       <el-table-column prop="idCode" label="身份证号码" width="150"></el-table-column>
       <el-table-column prop="mobile" label="手机号" width="100"></el-table-column>
-      <el-table-column prop="commission" label="获取佣金总额" width="100"></el-table-column>
-      <el-table-column prop="settled" label="已结算金额" width="100"></el-table-column>
-      <el-table-column prop="money" label="待结算金额" width="100"></el-table-column>
+      <el-table-column prop="totalAmount" label="获取佣金总额" width="100"></el-table-column>
+      <el-table-column prop="completionAmount" label="已结算金额" width="100"></el-table-column>
+      <el-table-column prop="stayAmount" label="待结算金额" width="100"></el-table-column>
       <el-table-column prop="status" label="结算状态" width="100"></el-table-column>
       <el-table-column prop="way" label="打款方式" width="100"></el-table-column>
       <el-table-column prop="account" label="打款帐号" width="150"></el-table-column>
@@ -62,62 +63,101 @@
 </template>
 
 <script>
+import { fetchCommissionList } from '../../assets/services/manage-service'
 export default {
   name: 'confirm-transfer-account',
   data () {
     return {
       commissions: [
         {
-          value: '',
+          value: -1,
           label: '全部'
         },
         {
-          value: '1',
+          value: 0,
           label: '待结算'
         },
         {
-          value: '2',
+          value: 1,
           label: '已结算'
         }
       ],
       search: {
-        name: '',
+        keyword: '',
         status: '',
         pageSize: 10,
-        pageNum: 1
+        pageNo: 1
       },
       loading: false,
       total: 10,
       tableData: [
-        {
-          person: '老王',
-          idCode: 320202222222222222,
-          mobile: 15111111111,
-          commission: 10000,
-          settled: 8000,
-          money: 2000,
-          status: 1,
-          way: 'alipay',
-          account: 'zengcheng@126.com'
-        }
       ]
     }
   },
+  mounted () {
+    this.fetchList()
+  },
   methods: {
-    handleReset () {},
-    handleCheck () {
+    handleReset () {
+      this.search.pageSize = 10
+      this.search.pageNo = 1
+      this.search.status = ''
+      this.search.keyword = ''
+      this.fetchList()
+    },
+    handleCheck (row) {
       this.$router.push({
         name: 'manage-settled',
         query: {
-          flag: 'settled'
+          flag: 'settled',
+          username: row.username
         }
       })
     },
+    handleSearch () {
+      this.search.pageNo = 1
+      this.fetchList()
+    },
     handleSizeChange (val) {
       this.search.pageSize = val
+      this.fetchList()
     },
     handleCurrentChange (val) {
-      this.search.pageNum = val
+      this.search.pageNo = val
+      this.fetchList()
+    },
+    fetchList () {
+      this.loading = true
+      fetchCommissionList({
+        pageSize: this.search.pageSize,
+        pageNo: this.search.pageNo,
+        status: this.search.status,
+        keyword: this.search.keyword
+      }).then(({ data }) => {
+        this.total = data.totalCount
+        this.tableData = data.items
+        this.tableData = [
+          {
+            username: 'wx1582548819965',
+            mobile: '110',
+            realname: 'syc',
+            totalAmount: '22',
+            stayAmount: '22',
+            completionAmount: 0
+          },
+          {
+            username: 'wx1582548819965',
+            mobile: '110',
+            realname: 'syc',
+            totalAmount: '22',
+            stayAmount: '22',
+            completionAmount: 0
+          }
+        ]
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     }
   }
 }

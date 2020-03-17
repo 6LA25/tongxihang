@@ -49,6 +49,7 @@
         </div>
       </div>
       <div class="ilb-top search-item-box search-btns-box">
+        <el-button type="primary" size="mini" @click="handleSearch">搜索</el-button>
         <el-button type="warning" size="mini" @click="handleReset">重置</el-button>
       </div>
     </div>
@@ -59,22 +60,22 @@
       size="mini"
       v-loading="loading"
     >
-      <el-table-column prop="contractNum" label="合同号" width="100"></el-table-column>
+      <el-table-column prop="contractNum" label="合同号" width="120"></el-table-column>
       <el-table-column prop="customer" label="客户姓名" width="100"></el-table-column>
-      <el-table-column prop="phone" label="手机号" width="100"></el-table-column>
-      <el-table-column prop="buyHouse" label="购买楼盘" width="100"></el-table-column>
-      <el-table-column prop="contractPrice" label="合同总价" width="80"></el-table-column>
-      <el-table-column prop="signTime" label="签约时间" width="100"></el-table-column>
-      <el-table-column prop="aDevide" label="一级分成" width="80"></el-table-column>
-      <el-table-column prop="bDevide" label="二级分成" width="80"></el-table-column>
-      <el-table-column prop="cDevide" label="三级分成" width="80"></el-table-column>
-      <el-table-column prop="total" label="总计" width="80"></el-table-column>
-      <el-table-column prop="status" label="财务状态" width="80"></el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column prop="customerMobile" label="手机号" width="120"></el-table-column>
+      <el-table-column prop="houseName" label="购买楼盘" width="120"></el-table-column>
+      <el-table-column prop="contractAmount" label="合同总价" width="100"></el-table-column>
+      <el-table-column prop="contractTime" label="签约时间" width="150"></el-table-column>
+      <el-table-column prop="leve1Price" label="一级分成" width="80"></el-table-column>
+      <el-table-column prop="leve2Price" label="二级分成" width="80"></el-table-column>
+      <el-table-column prop="leve3Price" label="三级分成" width="80"></el-table-column>
+      <el-table-column prop="totalPrice" label="总计" width="80"></el-table-column>
+      <el-table-column prop="statusName" label="财务状态" width="80"></el-table-column>
+      <el-table-column label="操作" width="220">
         <template slot-scope="scope">
-          <el-button type="success" size="mini" @click="handleCheck(scope.row)">审核通过</el-button>
-          <el-button type="danger" size="mini" @click="handleCheck(scope.row)">审核驳回</el-button>
-          <el-button type="primary" size="mini" @click="handleCheck(scope.row)">重启审核</el-button>
+          <el-button v-if="scope.row.status === 0" type="success" size="mini" @click="handlePass(scope.row)">审核通过</el-button>
+          <el-button v-if="scope.row.status === 0" type="danger" size="mini" @click="handleReject(scope.row)">审核驳回</el-button>
+          <el-button v-if="scope.row.status === 1" type="primary" size="mini" @click="handleResetDis(scope.row)">重启审核</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -93,6 +94,7 @@
 </template>
 
 <script>
+import { fetchDistributionList, rejectDistribution, passDistribution, resetDistribution } from '../../assets/services/manage-service'
 export default {
   name: 'manage-commission',
   data () {
@@ -132,33 +134,70 @@ export default {
         bought: '',
         pageSize: 10,
         time: '',
-        pageNum: 1
+        pageNo: 1
       },
-      tableData: [
-        {
-          contractNum: 1,
-          customer: 11111,
-          phone: 11111,
-          buyHouse: 'wang',
-          contractPrice: 100,
-          signTime: '2010-1-1',
-          aDevide: 100,
-          bDevide: 100,
-          cDevide: 100,
-          total: 300,
-          status: '待审核'
-        }
-      ],
+      totalCount: 0,
+      tableData: [],
       total: 0
     }
   },
+  mounted () {
+    this.fetchList()
+  },
   methods: {
-    handleReset () {},
+    handlePass (row) {
+      passDistribution({
+        id: row.id
+      }).then(({ data }) => {
+        this.$message.success('操作成功')
+        this.handleReset()
+      })
+    },
+    handleReject (row) {
+      rejectDistribution({
+        id: row.id
+      }).then(({ data }) => {
+        this.$message.success('操作成功')
+        this.handleReset()
+      })
+    },
+    handleResetDis (row) {
+      resetDistribution({
+        id: row.id
+      }).then(({ data }) => {
+        this.$message.success('操作成功')
+        this.handleReset()
+      })
+    },
+    handleSearch () {
+      this.search.pageNo = 1
+      this.fetchList()
+    },
+    handleReset () {
+      this.search.pageNo = 1
+      this.search.pageSize = 10
+      this.fetchList()
+    },
     handleSizeChange (val) {
       this.search.pageSize = val
+      this.fetchList()
     },
     handleCurrentChange (val) {
       this.search.pageNum = val
+      this.fetchList()
+    },
+    fetchList () {
+      this.loading = true
+      fetchDistributionList({
+        pageSize: this.search.pageSize,
+        pageNo: this.search.pageNo
+      }).then(({ data }) => {
+        this.total = data.totalCount
+        this.tableData = data.items
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     },
     handleCheck () {}
   }

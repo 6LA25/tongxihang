@@ -9,6 +9,7 @@
         </div>
       </div>
       <div class="ilb-top search-item-box search-btns-box">
+        <el-button type="primary" size="mini" @click="handleSearch">搜索</el-button>
         <el-button type="warning" size="mini" @click="handleReset">重置</el-button>
       </div>
     </div>
@@ -20,9 +21,9 @@
       v-loading="loading"
     >
       <el-table-column prop="code" label="结算单号" width="200"></el-table-column>
-      <el-table-column prop="money" label="结算金额" width="200"></el-table-column>
+      <el-table-column prop="completionAmount" label="结算金额" width="200"></el-table-column>
       <el-table-column prop="time" label="结算时间" width="200"></el-table-column>
-      <el-table-column prop="person" label="结算人" width="200"></el-table-column>
+      <el-table-column prop="username" label="结算人" width="200"></el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleCheckDetail(scope.row)">结算详情</el-button>
@@ -44,6 +45,7 @@
 </template>
 
 <script>
+import { fetchCommissionItems } from '../../assets/services/manage-service'
 export default {
   name: 'check-final-statement',
   data () {
@@ -53,7 +55,7 @@ export default {
       search: {
         code: '',
         pageSize: 10,
-        pageNum: 1
+        pageNo: 1
       },
       tableData: [
         {
@@ -66,13 +68,39 @@ export default {
       ]
     }
   },
+  mounted () {
+    this.fetchList()
+  },
   methods: {
-    handleReset () {},
+    handleReset () {
+      this.search.pageNo = 1
+      this.search.pageSize = 10
+      this.fetchList()
+    },
+    handleSearch () {
+      this.search.pageNo = 1
+      this.fetchList()
+    },
     handleSizeChange (val) {
       this.search.pageSize = val
+      this.fetchList()
     },
     handleCurrentChange (val) {
-      this.search.pageNum = val
+      this.search.pageNo = val
+      this.fetchList()
+    },
+    fetchList () {
+      this.loading = true
+      fetchCommissionItems({
+        pageSize: this.search.pageSize,
+        pageNo: this.search.pageNo
+      }).then(({ data }) => {
+        this.total = data.totalCount
+        this.tableData = data.items
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     },
     handleCheckDetail () {
       this.$router.push({
