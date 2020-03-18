@@ -74,9 +74,9 @@
       <el-table-column label="操作" width="220">
         <template slot-scope="scope">
           <!-- status  0待审核，1通过，2驳回 -->
-          <el-button v-if="scope.row.status === 0" type="success" size="mini" @click="handlePass(scope.row)">审核通过</el-button>
-          <el-button v-if="scope.row.status === 0" type="danger" size="mini" @click="handleReject(scope.row)">审核驳回</el-button>
-          <el-button v-if="scope.row.status === 2" type="primary" size="mini" @click="handleResetDis(scope.row)">重启审核</el-button>
+          <el-button v-if="scope.row.status === 0" type="success" size="mini" @click="handleCheck(scope.row, 'pass')">审核通过</el-button>
+          <el-button v-if="scope.row.status === 0" type="danger" size="mini" @click="handleCheck(scope.row, 'reject')">审核驳回</el-button>
+          <el-button v-if="scope.row.status === 2" type="primary" size="mini" @click="handleCheck(scope.row, 'reset')">重启审核</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -91,6 +91,26 @@
         :total="total"
       ></el-pagination>
     </div>
+    <el-dialog
+      title="审核理由"
+      :visible.sync="intrFormDialogVisiable"
+      width="50%">
+      <el-form v-if="intrFormDialogVisiable" :model="intrForm" ref="intrForm" label-width="100px">
+        <el-form-item
+          label="理由"
+          prop="intro"
+          :rules="[
+            { required: true, message: '理由不能为空'},
+          ]"
+        >
+          <el-input style="width: 400px;" type="text" size="mini" v-model="intrForm.intro" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="mini" type="primary" @click="submitForm('intrForm')">提交</el-button>
+          <el-button size="mini" type="primary" @click="handleClose">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -129,10 +149,16 @@ export default {
           label: '无'
         }
       ],
+      tag: '',
       search: {
         keyword: '',
         pageSize: 10,
         pageNo: 1
+      },
+      intrFormDialogVisiable: false,
+      intrForm: {
+        id: '',
+        intro: ''
       },
       totalCount: 0,
       tableData: [],
@@ -142,29 +168,71 @@ export default {
   mounted () {
     this.fetchList()
   },
+  watch: {
+    intrFormDialogVisiable (nv) {
+      if (!nv) {
+        this.intrForm.id = ''
+        this.intrForm.intro = ''
+        this.tag = ''
+      }
+    }
+  },
   methods: {
-    handlePass (row) {
+    submitForm (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          if (this.tag === 'pass') {
+            this.handlePass()
+          } else if (this.tag === 'reject') {
+            this.handleReject()
+          } else if (this.tag === 'reset') {
+            this.handleResetDis()
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    handleClose () {
+      this.intrForm.id = ''
+      this.intrForm.intro = ''
+      this.tag = ''
+      this.intrFormDialogVisiable = false
+    },
+    handleCheck (row, tag) {
+      this.intrForm.id = row.id
+      this.tag = tag
+      this.intrFormDialogVisiable = true
+    },
+    handlePass () {
       passDistribution({
-        id: row.id
+        id: this.intrForm.id,
+        intro: this.intrForm.intro
       }).then(({ data }) => {
         this.$message.success('操作成功')
         this.handleReset()
+        this.handleClose()
       })
     },
-    handleReject (row) {
+    handleReject () {
       rejectDistribution({
-        id: row.id
+        id: this.intrForm.id,
+        intro: this.intrForm.intro
       }).then(({ data }) => {
         this.$message.success('操作成功')
         this.handleReset()
+        this.handleClose()
       })
     },
-    handleResetDis (row) {
+    handleResetDis () {
       resetDistribution({
-        id: row.id
+        id: this.intrForm.id,
+        intro: this.intrForm.intro
       }).then(({ data }) => {
         this.$message.success('操作成功')
         this.handleReset()
+        this.handleClose()
       })
     },
     handleSearch () {
@@ -198,8 +266,7 @@ export default {
       }).catch(() => {
         this.loading = false
       })
-    },
-    handleCheck () {}
+    }
   }
 }
 </script>
