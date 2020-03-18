@@ -74,9 +74,11 @@ export default {
     reject: `${domain}/api/admin/distribution/reject`
   },
   commission: {
-    list: `${domain}/api/admin/commission/payments`,
-    user: `${domain}/api/admin/commission/user`,
-    item: `${domain}/api/admin/commission/item`,
-    items: `${domain}/api/admin/commission/items`
+    list: `${domain}/api/admin/commission/items`,
+    user: `${domain}/api/admin/commission/user/items`,
+    item: `${domain}/api/admin/commission/user`,
+    items: `${domain}/api/admin/commission/payments`,
+    singleItem: `${domain}/api/admin/commission/item`,
+    pay: `${domain}/api/admin/commission/pay`
   }
 }

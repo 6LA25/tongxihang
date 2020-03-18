@@ -5,10 +5,10 @@
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">用户搜索：</div>
         <div class="ilb-top">
-          <el-input v-model="search.name" placeholder="请输入内容" size="mini"></el-input>
+          <el-input v-model="search.keyword" placeholder="请输入内容" size="mini"></el-input>
         </div>
       </div>
-      <div class="ilb-top search-item-box">
+      <!-- <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">身份：</div>
         <div class="ilb-top">
           <el-select v-model="search.identity" placeholder="请选择" size="mini">
@@ -20,8 +20,8 @@
             ></el-option>
           </el-select>
         </div>
-      </div>
-      <div class="ilb-top search-item-box">
+      </div> -->
+      <!-- <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">已购房客户：</div>
         <div class="ilb-top">
           <el-select v-model="search.bought" placeholder="请选择" size="mini">
@@ -33,8 +33,8 @@
             ></el-option>
           </el-select>
         </div>
-      </div>
-      <div class="ilb-top search-item-box">
+      </div> -->
+      <!-- <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">最近登录日期：</div>
         <div class="ilb-top">
           <el-date-picker
@@ -47,7 +47,7 @@
             end-placeholder="结束日期"
           ></el-date-picker>
         </div>
-      </div>
+      </div> -->
       <div class="ilb-top search-item-box search-btns-box">
         <el-button type="primary" size="mini" @click="handleSearch">搜索</el-button>
         <el-button type="warning" size="mini" @click="handleReset">重置</el-button>
@@ -61,7 +61,7 @@
       v-loading="loading"
     >
       <el-table-column prop="contractNum" label="合同号" width="120"></el-table-column>
-      <el-table-column prop="customer" label="客户姓名" width="100"></el-table-column>
+      <el-table-column prop="customerName" label="客户姓名" width="100"></el-table-column>
       <el-table-column prop="customerMobile" label="手机号" width="120"></el-table-column>
       <el-table-column prop="houseName" label="购买楼盘" width="120"></el-table-column>
       <el-table-column prop="contractAmount" label="合同总价" width="100"></el-table-column>
@@ -73,9 +73,10 @@
       <el-table-column prop="statusName" label="财务状态" width="80"></el-table-column>
       <el-table-column label="操作" width="220">
         <template slot-scope="scope">
+          <!-- status  0待审核，1通过，2驳回 -->
           <el-button v-if="scope.row.status === 0" type="success" size="mini" @click="handlePass(scope.row)">审核通过</el-button>
           <el-button v-if="scope.row.status === 0" type="danger" size="mini" @click="handleReject(scope.row)">审核驳回</el-button>
-          <el-button v-if="scope.row.status === 1" type="primary" size="mini" @click="handleResetDis(scope.row)">重启审核</el-button>
+          <el-button v-if="scope.row.status === 2" type="primary" size="mini" @click="handleResetDis(scope.row)">重启审核</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -129,11 +130,8 @@ export default {
         }
       ],
       search: {
-        name: '',
-        identity: '',
-        bought: '',
+        keyword: '',
         pageSize: 10,
-        time: '',
         pageNo: 1
       },
       totalCount: 0,
@@ -176,6 +174,7 @@ export default {
     handleReset () {
       this.search.pageNo = 1
       this.search.pageSize = 10
+      this.search.keyword = ''
       this.fetchList()
     },
     handleSizeChange (val) {
@@ -190,7 +189,8 @@ export default {
       this.loading = true
       fetchDistributionList({
         pageSize: this.search.pageSize,
-        pageNo: this.search.pageNo
+        pageNo: this.search.pageNo,
+        keyword: this.search.keyword
       }).then(({ data }) => {
         this.total = data.totalCount
         this.tableData = data.items

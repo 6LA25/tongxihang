@@ -362,3 +362,19 @@ export const fetchCommissionItems = (options) => Fetch({
     ...options
   }
 })
+
+// 查询某个付款数据
+export const fetchCommissionSingle = (options) => Fetch({
+  url: URL.commission.singleItem,
+  data: {
+    ...options
+  }
+})
+
+// 添加打款
+export const commissionPay = (options) => Fetch({
+  url: URL.commission.pay,
+  data: {
+    ...options
+  }
+})

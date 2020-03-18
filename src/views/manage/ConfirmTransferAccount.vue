@@ -5,7 +5,7 @@
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">用户搜索：</div>
         <div class="ilb-top">
-          <el-input style="width: 250px;" v-model="search.name" placeholder="请输入结算人姓名、身份证或手机号" size="mini"></el-input>
+          <el-input style="width: 250px;" v-model="search.keyword" placeholder="请输入结算人姓名、身份证或手机号" size="mini"></el-input>
         </div>
       </div>
       <div class="ilb-top search-item-box">
@@ -33,18 +33,18 @@
       size="mini"
       v-loading="loading"
     >
-      <el-table-column prop="person" label="结算人" width="100"></el-table-column>
-      <el-table-column prop="idCode" label="身份证号码" width="150"></el-table-column>
-      <el-table-column prop="mobile" label="手机号" width="100"></el-table-column>
-      <el-table-column prop="totalAmount" label="获取佣金总额" width="100"></el-table-column>
-      <el-table-column prop="completionAmount" label="已结算金额" width="100"></el-table-column>
-      <el-table-column prop="stayAmount" label="待结算金额" width="100"></el-table-column>
-      <el-table-column prop="status" label="结算状态" width="100"></el-table-column>
-      <el-table-column prop="way" label="打款方式" width="100"></el-table-column>
-      <el-table-column prop="account" label="打款帐号" width="150"></el-table-column>
+      <el-table-column prop="realname" label="结算人" width="120"></el-table-column>
+      <!-- <el-table-column prop="idCode" label="身份证号码" width="150"></el-table-column> -->
+      <el-table-column prop="mobile" label="手机号" width="120"></el-table-column>
+      <el-table-column prop="totalAmount" label="获取佣金总额" width="120"></el-table-column>
+      <el-table-column prop="completionAmount" label="已结算金额" width="120"></el-table-column>
+      <el-table-column prop="stayAmount" label="待结算金额" width="120"></el-table-column>
+      <!-- <el-table-column prop="status" label="结算状态" width="100"></el-table-column> -->
+      <!-- <el-table-column prop="way" label="打款方式" width="100"></el-table-column> -->
+      <!-- <el-table-column prop="account" label="打款帐号" width="150"></el-table-column> -->
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
-          <el-button type="success" size="mini" @click="handleCheck(scope.row)">结算</el-button>
+          <el-button type="success" v-if="scope.row.stayAmount > 0" size="mini" @click="handleCheck(scope.row)">结算</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -136,24 +136,6 @@ export default {
       }).then(({ data }) => {
         this.total = data.totalCount
         this.tableData = data.items
-        this.tableData = [
-          {
-            username: 'wx1582548819965',
-            mobile: '110',
-            realname: 'syc',
-            totalAmount: '22',
-            stayAmount: '22',
-            completionAmount: 0
-          },
-          {
-            username: 'wx1582548819965',
-            mobile: '110',
-            realname: 'syc',
-            totalAmount: '22',
-            stayAmount: '22',
-            completionAmount: 0
-          }
-        ]
         this.loading = false
       }).catch(() => {
         this.loading = false

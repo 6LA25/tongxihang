@@ -5,7 +5,7 @@
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">结算单号：</div>
         <div class="ilb-top">
-          <el-input style="width: 250px;" v-model="search.code" placeholder="结算单号" size="mini"></el-input>
+          <el-input style="width: 250px;" v-model="search.keyword" placeholder="结算单号" size="mini"></el-input>
         </div>
       </div>
       <div class="ilb-top search-item-box search-btns-box">
@@ -20,10 +20,10 @@
       size="mini"
       v-loading="loading"
     >
-      <el-table-column prop="code" label="结算单号" width="200"></el-table-column>
-      <el-table-column prop="completionAmount" label="结算金额" width="200"></el-table-column>
-      <el-table-column prop="time" label="结算时间" width="200"></el-table-column>
-      <el-table-column prop="username" label="结算人" width="200"></el-table-column>
+      <el-table-column prop="tradeNo" label="结算单号" width="200"></el-table-column>
+      <el-table-column prop="totalAmount" label="结算金额" width="200"></el-table-column>
+      <el-table-column prop="created" label="结算时间" width="200"></el-table-column>
+      <el-table-column prop="auditorRealname" label="结算人" width="200"></el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleCheckDetail(scope.row)">结算详情</el-button>
@@ -53,19 +53,11 @@ export default {
       loading: false,
       total: 0,
       search: {
-        code: '',
+        keyword: '',
         pageSize: 10,
         pageNo: 1
       },
-      tableData: [
-        {
-          id: 1,
-          code: 20111111111,
-          money: 10000,
-          time: '2010-10-10 10:10',
-          person: '财务a'
-        }
-      ]
+      tableData: []
     }
   },
   mounted () {
@@ -75,6 +67,7 @@ export default {
     handleReset () {
       this.search.pageNo = 1
       this.search.pageSize = 10
+      this.search.keyword = ''
       this.fetchList()
     },
     handleSearch () {
@@ -93,7 +86,8 @@ export default {
       this.loading = true
       fetchCommissionItems({
         pageSize: this.search.pageSize,
-        pageNo: this.search.pageNo
+        pageNo: this.search.pageNo,
+        keyword: this.search.keyword
       }).then(({ data }) => {
         this.total = data.totalCount
         this.tableData = data.items
@@ -102,11 +96,12 @@ export default {
         this.loading = false
       })
     },
-    handleCheckDetail () {
+    handleCheckDetail (row) {
       this.$router.push({
         name: 'manage-settled',
         query: {
-          flag: 'preview'
+          flag: 'preview',
+          username: row.username
         }
       })
     }
