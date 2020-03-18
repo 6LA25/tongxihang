@@ -250,7 +250,7 @@ export default {
       this.fetchList()
     },
     handleCurrentChange (val) {
-      this.search.pageNum = val
+      this.search.pageNo = val
       this.fetchList()
     },
     fetchList () {
