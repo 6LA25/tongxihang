@@ -38,7 +38,7 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="search.pageNum"
+        :current-page="search.pageNo"
         :page-sizes="[10, 20, 30, 40]"
         :page-size="search.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
@@ -122,6 +122,9 @@ export default {
     dialogVisible (nv) {
       if (!nv) {
         this.currentItem = {}
+        this.settled.finalAmount = ''
+        this.settled.time = null
+        this.settled.remark = ''
       }
     }
   },

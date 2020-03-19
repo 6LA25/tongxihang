@@ -82,8 +82,9 @@
             <i @click="handleLogout" class="text logout-box el-icon-switch-button"></i>
           </div>
         </el-header>
-        <el-main>
+        <el-main :style="{background: $route.name === 'dashboard-work-bench' ? '#f0f2f5' : '#fff'}">
           <router-view />
+          <!-- #f0f2f5 -->
         </el-main>
         <!-- <el-footer>Footer</el-footer> -->
       </el-container>
@@ -238,6 +239,9 @@ export default {
         font-size 16px
         background: #eee;
         padding: 5px;
+      }
+      .el-tabs__header {
+        margin-bottom 0
       }
     }
   }
