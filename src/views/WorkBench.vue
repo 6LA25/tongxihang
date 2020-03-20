@@ -1,37 +1,37 @@
 <template>
   <div class="work-bench-page">
     <div class="container">
-      <div class="top-box">
+      <div class="top-box" v-if="baseIntr">
         <div class="inner-item">
           <div class="title">本月销售额</div>
-          <div class="num">¥12134</div>
+          <div class="num">¥{{baseIntr.month.amount}}</div>
           <div class="text">
             昨日销售额
-            <span>¥12134</span>
+            <span>¥{{baseIntr.day.amount}}</span>
           </div>
         </div>
         <div class="inner-item">
           <div class="title">本月新增意向客户</div>
-          <div class="num">8888</div>
+          <div class="num">{{baseIntr.month.customer}}</div>
           <div class="text">
             昨日新增意向客户
-            <span>8888</span>
+            <span>{{baseIntr.day.customer}}</span>
           </div>
         </div>
         <div class="inner-item">
           <div class="title">本月收入佣金</div>
-          <div class="num">¥12134</div>
+          <div class="num">¥{{baseIntr.month.commission}}</div>
           <div class="text">
             昨日收入佣金
-            <span>¥12134</span>
+            <span>¥{{baseIntr.day.commission}}</span>
           </div>
         </div>
         <div class="inner-item">
           <div class="title">本月成单量</div>
-          <div class="num">12121</div>
+          <div class="num">{{baseIntr.month.validCount}}</div>
           <div class="text">
             昨日成单量
-            <span>12121</span>
+            <span>{{baseIntr.day.validCount}}</span>
           </div>
         </div>
       </div>
@@ -43,45 +43,38 @@
           </el-tabs>
           <div class="time-filter-box">
             <el-radio-group size="mini" v-model="time" style="margin-right: 10px;">
-              <el-radio-button label="1">本周</el-radio-button>
-              <el-radio-button label="2">本月</el-radio-button>
-              <el-radio-button label="3">本年</el-radio-button>
+              <el-radio-button label="week">本周</el-radio-button>
+              <el-radio-button label="month">本月</el-radio-button>
+              <el-radio-button label="year">本年</el-radio-button>
             </el-radio-group>
-            <el-date-picker
-              v-model="rangeTime"
-              size="mini"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            ></el-date-picker>
           </div>
         </div>
         <div class="content-box">
-          <div class="charts-box">
+          <div class="charts-box" v-loading="loading">
             <v-chart style="width: 800px;" :options="orgOptions" />
           </div>
           <div class="list-box">
             <div class="title">经纪人销售排行榜</div>
-            <div class="list-item" v-for="(item, index) in saleList" :key="item.id">
-              <span class="index" :class="{'active': index < 3}">{{index}}</span>
-              <span class="name">{{item.name}}</span>
-              <span class="num">{{item.money}}</span>
+            <div style="font-size: 14px;color: #aaa;text-align: center;" v-if="saleList.length === 0">暂无数据</div>
+            <div class="list-item" v-for="(item, index) in saleList" :key="item.realname">
+              <span class="index" :class="{'active': index < 3}">{{index + 1}}</span>
+              <span class="name">{{item.realname}}</span>
+              <span class="num">¥{{item.amount}}</span>
             </div>
           </div>
         </div>
       </div>
       <div class="bottom-box">
-        <div class="lf-box">
+        <div class="lf-box" v-if="viewData">
           <div class="title">线上热门楼盘</div>
           <div class="intr-box">
             <div>
               <div>楼盘浏览量（月）</div>
-              <div class="num">99999</div>
+              <div class="num">{{viewData.views}}</div>
             </div>
             <div>
               <div>意向客户数（月）</div>
-              <div class="num">99999</div>
+              <div class="num">{{viewData.customer}}</div>
             </div>
           </div>
           <div class="rank-list">
@@ -91,37 +84,22 @@
               <span>浏览量</span>
               <span>本月意向客户数</span>
             </div>
-            <div class="rank-item">
-              <span>1</span>
-              <span class="house">xxxxx</span>
-              <span>2222222222222222222222222222</span>
-              <span>2222222</span>
-            </div>
-            <div class="rank-item">
-              <span>1</span>
-              <span class="house">xxxxx</span>
-              <span>2222222222222222222222222222</span>
-              <span>2222222</span>
-            </div>
-            <div class="rank-item">
-              <span>1</span>
-              <span class="house">xxxxx</span>
-              <span>2222222222222222222222222222</span>
-              <span>2222222</span>
-            </div>
-            <div class="rank-item">
-              <span>1</span>
-              <span class="house">xxxxx</span>
-              <span>2222222222222222222222222222</span>
-              <span>2222222</span>
+            <div style="font-size: 14px;color: #aaa;text-align: center;margin-top: 20px;" v-if="viewData.length === 0">暂无数据</div>
+            <div class="rank-item" v-for="(item, index) in viewData.items" :key="item.house_id">
+              <span>{{index + 1}}</span>
+              <span class="house">{{item.houseName}}</span>
+              <span>{{item.views}}</span>
+              <span>{{item.customer}}</span>
             </div>
           </div>
         </div>
-        <div class="rg-box">
+        <div class="rg-box" v-if="pieData">
           <div class="title">楼盘销售额占比</div>
-          <div>
-            <v-chart :options="saleOptions" />
+          <div class="pie-chart-box" v-if="pieData && pieData.items && pieData.items.length > 0">
+            <div class="totle-amount">销售额：¥{{pieData.totalAmount}}</div>
+            <v-chart style="width: 560px" :options="saleOptions" />
           </div>
+          <div style="font-size: 14px;color: #aaa;text-align: center;" v-else>暂无数据</div>
         </div>
       </div>
     </div>
@@ -134,22 +112,18 @@ import 'echarts/lib/chart/bar'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
+import { baseSheet, agentRank, hotView, salesRatio, chart } from '../assets/services/manage-service'
 
 export default {
   name: 'work-bench',
   data () {
     return {
-      saleList: [
-        { id: 1, name: 'xxxx', money: 20000 },
-        { id: 2, name: 'xxxx', money: 20000 },
-        { id: 3, name: 'xxxx', money: 20000 },
-        { id: 4, name: 'xxxx', money: 20000 },
-        { id: 5, name: 'xxxx', money: 20000 },
-        { id: 6, name: 'xxxx', money: 20000 },
-        { id: 7, name: 'xxxx', money: 20000 }
-      ],
-      time: '1',
-      rangeTime: '',
+      loading: false,
+      baseIntr: null,
+      saleList: [],
+      viewData: null,
+      pieData: null,
+      time: 'week',
       activeName: '1',
       orgOptions: {
         tooltip: {
@@ -158,40 +132,14 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data: [
-            '1月',
-            '1月',
-            '1月',
-            '1月',
-            '1月',
-            '1月',
-            '1月',
-            '1月',
-            '1月',
-            '1月',
-            '1月',
-            '1月'
-          ]
+          data: []
         },
         yAxis: {
           type: 'value'
         },
         series: [
           {
-            data: [
-              820,
-              932,
-              901,
-              934,
-              1290,
-              1330,
-              1320,
-              820,
-              932,
-              901,
-              934,
-              3000
-            ],
+            data: [],
             type: 'bar',
             smooth: true,
             barMaxWidth: 25,
@@ -209,8 +157,7 @@ export default {
         legend: {
           orient: 'vertical',
           left: 10,
-          show: true,
-          data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+          data: []
         },
         series: [
           {
@@ -232,21 +179,75 @@ export default {
                 show: true
               }
             },
-            data: [
-              { value: 335, name: '直接访问' },
-              { value: 310, name: '邮件营销' },
-              { value: 274, name: '联盟广告' },
-              { value: 235, name: '视频广告' },
-              { value: 400, name: '搜索引擎' }
-            ]
+            data: []
           }
         ]
       }
     }
   },
+  watch: {
+    time () {
+      this.fetchChart()
+    }
+  },
+  mounted () {
+    this.fetchBaseSheet()
+    this.fetchAgentRank()
+    this.fetchHotView()
+    this.fetchSalesRatio()
+    this.fetchChart()
+  },
   methods: {
     handleClick (tab, event) {
-      console.log(tab, event)
+      this.fetchChart()
+    },
+    fetchBaseSheet () {
+      baseSheet().then(({ data }) => {
+        this.baseIntr = data
+      })
+    },
+    fetchAgentRank () {
+      agentRank().then(({ data }) => {
+        this.saleList = data.items
+      })
+    },
+    fetchHotView () {
+      hotView().then(({ data }) => {
+        this.viewData = data
+      })
+    },
+    fetchSalesRatio () {
+      salesRatio().then(({ data }) => {
+        this.pieData = data
+        data.items.forEach(item => {
+          this.saleOptions.series[0].data.push({
+            value: item.amount,
+            name: item.houseName
+          })
+          this.saleOptions.legend.data.push(item.houseName)
+        })
+      })
+    },
+    fetchChart () {
+      this.loading = true
+      chart({
+        type: this.activeName,
+        timeType: this.time
+      }).then(({ data }) => {
+        this.loading = false
+        this.orgOptions.xAxis.data = []
+        this.orgOptions.series[0].data = []
+        data.items.forEach((item) => {
+          if (this.time === 'week') {
+            this.orgOptions.xAxis.data.push(item.day)
+          } else if (this.time === 'month') {
+            this.orgOptions.xAxis.data.push(item.day)
+          } else if (this.time === 'year') {
+            this.orgOptions.xAxis.data.push(item.month)
+          }
+          this.orgOptions.series[0].data.push(item.amount)
+        })
+      })
     }
   }
 }
@@ -397,6 +398,15 @@ export default {
         width 50%
         float left
         padding-left 20px
+        .pie-chart-box {
+          position relative
+          .totle-amount {
+            position absolute
+            top 50%
+            left 50%
+            transform translate(-50%, -50%)
+          }
+        }
       }
     }
   }

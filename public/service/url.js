@@ -2,6 +2,13 @@ let domain = process.env.NODE_ENV === 'development' ? '' : 'http://txh.17zxiu.co
 // let domain = 'http://txh.17zxiu.com'
 
 export default {
+  bench: {
+    base: `${domain}/api/admin/index/base`,
+    rank: `${domain}/api/admin/index/agent`,
+    hotView: `${domain}/api/admin/index/hotView`,
+    salesRatio: `${domain}/api/admin/index/salesRatio`,
+    chart: `${domain}/api/admin/index/items`
+  },
   login: {
     keys: `${domain}/api/member/admin/login/publickey`,
     login: `${domain}/api/member/admin/login`,

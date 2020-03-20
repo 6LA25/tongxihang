@@ -1,5 +1,46 @@
 import { Fetch } from '@public/service/http'
 import URL from '@public/service/url'
+
+// 获取首页基础报表
+export const baseSheet = (options) => Fetch({
+  url: URL.bench.base,
+  data: {
+    ...options
+  }
+})
+
+// 经纪人排行
+export const agentRank = (options) => Fetch({
+  url: URL.bench.rank,
+  data: {
+    ...options
+  }
+})
+
+// 获取首页浏览热门报表
+export const hotView = (options) => Fetch({
+  url: URL.bench.hotView,
+  data: {
+    ...options
+  }
+})
+
+// 获取楼盘柱状图
+export const chart = (options) => Fetch({
+  url: URL.bench.chart,
+  data: {
+    ...options
+  }
+})
+
+// 获取楼盘销售额比
+export const salesRatio = (options) => Fetch({
+  url: URL.bench.salesRatio,
+  data: {
+    ...options
+  }
+})
+
 // 获取所有管理用户
 export const fetchAllUsers = (options) => Fetch({
   url: URL.user.commonUser,
