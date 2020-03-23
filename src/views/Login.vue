@@ -103,8 +103,9 @@ export default {
   background-size cover
   .login-box {
     position fixed
-    top 200px
-    left 30%
+    top 50%
+    transform translate(0, -50%)
+    right 200px
     border-radius 6px
     padding 30px
     background #fff

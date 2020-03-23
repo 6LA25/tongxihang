@@ -307,7 +307,7 @@
           <el-radio :label="0">否</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="分销佣金类别：" prop="distributionType">
+      <el-form-item label="分销佣金类别：" prop="distributionType" v-if="housesForm.distribution !== 0">
         <el-radio-group v-model="housesForm.distributionType">
           <el-radio :label="0">百分比金额</el-radio>
           <el-radio :label="1">固定金额</el-radio>
@@ -391,6 +391,8 @@ export default {
         tags: [
           {
             validator: (rule, value, callback) => {
+              console.log(value)
+              value = value.replace(/，/g, ',')
               let _err = false
               let tags = value.split(',')
               if (tags.length > 3) { _err = true }
