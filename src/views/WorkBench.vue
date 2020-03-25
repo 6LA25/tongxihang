@@ -84,7 +84,7 @@
               <span>浏览量</span>
               <span>本月意向客户数</span>
             </div>
-            <div style="font-size: 14px;color: #aaa;text-align: center;margin-top: 20px;" v-if="viewData.length === 0">暂无数据</div>
+            <div style="font-size: 14px;color: #aaa;text-align: center;margin-top: 20px;" v-if="viewData.items.length === 0">暂无数据</div>
             <div class="rank-item" v-for="(item, index) in viewData.items" :key="item.house_id">
               <span>{{index + 1}}</span>
               <span class="house">{{item.houseName}}</span>

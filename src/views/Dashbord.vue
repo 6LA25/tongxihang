@@ -40,7 +40,7 @@
                 <el-menu-item index="4-1" v-permission="'分销佣金审核'">分销佣金审核</el-menu-item>
                 <el-menu-item index="4-2" v-permission="'财务确认打款'">财务确认打款</el-menu-item>
                 <el-menu-item index="4-3" v-permission="'结算单查询'">结算单查询</el-menu-item>
-                <el-menu-item index="4-4" v-permission="'财务统计表'">财务统计表</el-menu-item>
+                <!-- <el-menu-item index="4-4" v-permission="'财务统计表'">财务统计表</el-menu-item> -->
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="5">

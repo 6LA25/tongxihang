@@ -15,7 +15,6 @@
       <el-table-column prop="account" label="用户名" width="200" show-overflow-tooltip></el-table-column>
       <el-table-column prop="realname" label="姓名" width="200" show-overflow-tooltip></el-table-column>
       <el-table-column prop="mobile" label="手机号码" width="150" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="email" label="邮箱" width="200" show-overflow-tooltip></el-table-column>
       <el-table-column prop="jobnum" label="员工编号" width="150" show-overflow-tooltip></el-table-column>
       <el-table-column prop="roleName" label="角色名称" width="200" show-overflow-tooltip></el-table-column>
       <el-table-column prop="statusName" label="状态" width="100" show-overflow-tooltip></el-table-column>
