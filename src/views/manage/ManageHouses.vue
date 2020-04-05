@@ -90,9 +90,8 @@
     >
       <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
       <el-table-column prop="id" label="楼盘ID" width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="name" label="楼盘名称" width="180" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="name" label="楼盘名称" width="250" show-overflow-tooltip></el-table-column>
       <el-table-column prop="price" label="定价（元/平）" width="100"></el-table-column>
-      <el-table-column prop="location" label="所在地" width="180" show-overflow-tooltip></el-table-column>
       <el-table-column prop="typeName" label="楼盘类型" width="80" show-overflow-tooltip></el-table-column>
       <el-table-column prop="stateName" label="楼盘状态" width="80" show-overflow-tooltip></el-table-column>
       <el-table-column prop="state" label="上架状态" width="80">

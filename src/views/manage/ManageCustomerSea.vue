@@ -68,7 +68,7 @@
       <el-table-column prop="genderName" label="性别" width="80" show-overflow-tooltip></el-table-column>
       <el-table-column prop="houseName" label="推荐楼盘" width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="intro" label="备注" width="200" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="recommendUser" label="推荐人" width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="recommendName" label="推荐人" width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="recommendTime" label="推荐时间" width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="followRealname" label="跟进人" width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="followStatusName" label="跟进状态" width="100" show-overflow-tooltip></el-table-column>
