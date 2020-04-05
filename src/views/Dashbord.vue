@@ -2,7 +2,7 @@
   <div class="dashboard-page">
     <el-container>
       <el-aside width="200px">
-        <div class="logo-box"></div>
+        <div class="logo-box">同悦众联</div>
         <div class="menu-container">
           <el-menu
             :default-active="activeRoot"
@@ -217,7 +217,13 @@ export default {
       color: #fff;
       overflow-x hidden
       .logo-box {
+        display flex
+        justify-content center;
+        align-items center;
+        color #fff
+        letter-spacing 2px
         height 40px
+        font-size 18px
         background: #323441;
       }
       .menu-container {

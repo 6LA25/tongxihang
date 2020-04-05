@@ -53,12 +53,12 @@
       </el-form-item>
       <template v-if="followingForm.followStatus === 6">
         <el-form-item label="购买楼盘：" prop="houseId">
-          <!-- <el-input style="width: 400px" size="mini" v-model="followingForm.houseId"></el-input> -->
           <el-select
             style="width: 400px"
             size="mini"
             v-model="followingForm.houseId"
             filterable
+            @change="handleChangeHouse"
             remote
             reserve-keyword
             placeholder="请输入完整楼盘名称"
@@ -148,6 +148,9 @@ export default {
         contractAmount: [
           { required: true, message: '请填写合同金额', trigger: 'blur' }
         ],
+        houseId: [
+          { required: true, message: '请填写购买楼盘', trigger: 'blur' }
+        ],
         contractImgs: [{ required: true, message: '请上传楼盘封面' }]
       },
       submitting: false,
@@ -202,6 +205,9 @@ export default {
     this.$store.dispatch('initUpload')
   },
   methods: {
+    handleChangeHouse () {
+      this.$refs['followingForm'].clearValidate('houseId')
+    },
     fetchHouses (query) {
       console.log(query)
       this.searching = true

@@ -95,7 +95,7 @@
       title="关单"
       :visible.sync="closeDialogVisible"
       width="50%">
-      <el-form v-if="closeDialogVisible" :model="closeForm" ref="closeForm" label-width="100px">
+        <el-form v-if="closeDialogVisible" :model="closeForm" ref="closeForm" label-width="100px">
         <el-form-item
           label="理由"
           prop="intro"
@@ -116,15 +116,6 @@
       :visible.sync="sendDialogVisible"
       width="50%">
       <el-form v-if="sendDialogVisible" :model="sendForm" ref="sendForm" label-width="100px">
-        <el-form-item
-          label="理由"
-          prop="intro"
-          :rules="[
-            { required: true, message: '理由不能为空'},
-          ]"
-        >
-          <el-input style="width: 400px;" type="text" size="mini" v-model="sendForm.intro" autocomplete="off"></el-input>
-        </el-form-item>
         <el-form-item
           label="跟进人"
           prop="followUser"
@@ -148,6 +139,12 @@
               :value="item.account">
             </el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item
+          label="理由"
+          prop="intro"
+        >
+          <el-input style="width: 400px;" type="text" size="mini" v-model="sendForm.intro" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button size="mini" type="primary" @click="handleSendForm('sendForm')">提交</el-button>

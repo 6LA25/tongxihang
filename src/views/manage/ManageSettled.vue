@@ -60,7 +60,7 @@
         <div>
           <div style="margin-bottom: 20px;">
             <div class="ilb">实际打款金额：</div>
-            <div class="ilb"><el-input type="number" size="mini" style="width: 200px;" v-model="settled.finalAmount"></el-input></div>
+            <div class="ilb"><el-input-number :min="0" :max="currentItem.commission" type="number" size="mini" style="width: 200px;" v-model="settled.finalAmount"></el-input-number></div>
           </div>
           <div style="margin-bottom: 20px;">
             <div class="ilb">打款时间：</div>
