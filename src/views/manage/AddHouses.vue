@@ -223,6 +223,27 @@
         </el-upload>
         <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过2M</div>
       </el-form-item>
+
+      <el-form-item label="周边配套图：" prop="addAmbitusImgs">
+        <el-upload
+          v-if="$store.state.uploadUrl"
+          :headers="$store.state.uploadHeaders"
+          :data="$store.state.uploadData"
+          list-type="picture-card"
+          :name="'Filedata'"
+          style="display: inline-block;"
+          class="avatar-uploader"
+          :limit="6"
+          :on-success="uploadAmbitusImgSuccess"
+          :before-upload="beforeAvatarUpload"
+          :on-remove="removeAmbitusImg"
+          :file-list="housesForm.addAmbitusImgs"
+          :action="$store.state.uploadUrl">
+          <i class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+        <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过2M</div>
+      </el-form-item>
+
       <el-form-item label="分享封面图：" prop="shareImg">
         <el-upload
           v-if="$store.state.uploadUrl"
@@ -522,6 +543,8 @@ export default {
         delRealImgs: [],
         addRenderImgs: [], // 效果图
         delRenderImgs: [],
+        addAmbitusImgs: [], // 周边配套图
+        delAmbitusImgs: [],
         distribution: '', // 是否支持分销
         distributionType: '', // 分销佣金类别
         level1: '', // 一级佣金比例
@@ -628,11 +651,19 @@ export default {
                 url: img.filepath
               })
             })
+          } else if (item === 'addAmbitusImgs') {
+            data.ambitusImgList.forEach(img => {
+              this.housesForm.addAmbitusImgs.push({
+                name: img.filename,
+                url: img.filepath
+              })
+            })
           } else if (item !== 'houseLocation') {
             this.housesForm[item] = data[item]
           }
           this.housesForm.delRealImgs = []
           this.housesForm.delRenderImgs = []
+          this.housesForm.delAmbitusImgs = []
         })
         fetchArea({ parent: this.housesForm.province }).then(({ data }) => {
           this.cityList = data.items
@@ -703,6 +734,9 @@ export default {
       console.log(fileList)
       this.housesForm.addRealImgs = fileList
     },
+    uploadAmbitusImgSuccess (res, file, fileList) {
+      this.housesForm.addAmbitusImgs = fileList
+    },
     removeRealImg (file, fileList) {
       console.log(file, fileList)
       if (!this.$route.query.tag) {
@@ -724,6 +758,16 @@ export default {
       } else {
         if (!file.response && !this.housesForm.delRenderImgs.includes(file.name)) {
           this.housesForm.delRenderImgs.push(file.name)
+        }
+      }
+    },
+    removeAmbitusImg (file, fileList) {
+      console.log(file, fileList)
+      if (!this.$route.query.tag) {
+        this.housesForm.addAmbitusImgs = fileList
+      } else {
+        if (!file.response && !this.housesForm.delAmbitusImgs.includes(file.name)) {
+          this.housesForm.delAmbitusImgs.push(file.name)
         }
       }
     },
@@ -774,6 +818,14 @@ export default {
             }
           })
           housesForm.addRenderImgs = addRenderImgs
+          // 新增周边配套图
+          let addAmbitusImgs = []
+          housesForm.addAmbitusImgs.forEach(item => {
+            if (item.response) {
+              addAmbitusImgs.push(item.response.filename)
+            }
+          })
+          housesForm.addAmbitusImgs = addAmbitusImgs
 
           editHouse({
             ...housesForm,
