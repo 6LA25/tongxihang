@@ -5,10 +5,10 @@
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">用户搜索：</div>
         <div class="ilb-top">
-          <el-input v-model="search.name" placeholder="请输入内容" size="mini"></el-input>
+          <el-input v-model="search.keyword" placeholder="请输入内容" size="mini"></el-input>
         </div>
       </div>
-      <div class="ilb-top search-item-box">
+      <!-- <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">身份：</div>
         <div class="ilb-top">
           <el-select v-model="search.identity" placeholder="请选择" size="mini">
@@ -20,8 +20,8 @@
             ></el-option>
           </el-select>
         </div>
-      </div>
-      <div class="ilb-top search-item-box">
+      </div> -->
+      <!-- <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">已购房客户：</div>
         <div class="ilb-top">
           <el-select v-model="search.bought" placeholder="请选择" size="mini">
@@ -33,8 +33,8 @@
             ></el-option>
           </el-select>
         </div>
-      </div>
-      <div class="ilb-top search-item-box">
+      </div> -->
+      <!-- <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">最近登录日期：</div>
         <div class="ilb-top">
           <el-date-picker
@@ -47,8 +47,9 @@
             end-placeholder="结束日期"
           ></el-date-picker>
         </div>
-      </div>
+      </div> -->
       <div class="ilb-top search-item-box search-btns-box">
+        <el-button type="primary" size="mini" @click="handleSearch">搜索</el-button>
         <el-button type="warning" size="mini" @click="handleReset">重置</el-button>
       </div>
     </div>
@@ -60,14 +61,13 @@
       size="mini"
       v-loading="loading"
     >
-      <el-table-column prop="uid" label="UID" width="100"></el-table-column>
       <el-table-column prop="mobile" label="手机号" width="150"></el-table-column>
-      <el-table-column prop="name" label="姓名" width="200"></el-table-column>
-      <el-table-column prop="two" label="二级分销人" width="100"></el-table-column>
-      <el-table-column prop="three" label="三级分销人" width="150"></el-table-column>
-      <el-table-column prop="recommend" label="推荐客户数" width="150"></el-table-column>
-      <el-table-column prop="num" label="成单量"></el-table-column>
-      <el-table-column prop="all" label="佣金总额"></el-table-column>
+      <el-table-column prop="realname" label="姓名" width="150"></el-table-column>
+      <el-table-column prop="superiorOne.username" label="二级分销人" width="100"></el-table-column>
+      <el-table-column prop="superiorTow.username" label="三级分销人" width="150"></el-table-column>
+      <el-table-column prop="customerCount" label="推荐客户数" width="150"></el-table-column>
+      <el-table-column prop="successfulTradeCount" width="150" label="成单量"></el-table-column>
+      <el-table-column prop="totalCommission" width="150" label="佣金总额"></el-table-column>
     </el-table>
     <div class="pager-box">
       <el-pagination
@@ -84,6 +84,8 @@
 </template>
 
 <script>
+import { fetchAllAgents } from '../../assets/services/manage-service'
+
 export default {
   name: 'broker-info',
   data () {
@@ -118,12 +120,9 @@ export default {
         }
       ],
       search: {
-        name: '',
-        identity: '',
-        bought: '',
+        keyword: '',
         pageSize: 10,
-        time: '',
-        pageNum: 1
+        pageNo: 1
       },
       tableData: [
         {
@@ -140,13 +139,40 @@ export default {
       total: 0
     }
   },
+  mounted () {
+    this.fetchData()
+  },
   methods: {
-    handleReset () {},
+    handleSearch () {
+      this.fetchData()
+    },
+    handleReset () {
+      this.search.keyword = ''
+      this.search.pageSize = 10
+      this.search.pageNo = 1
+      this.handleSearch()
+    },
     handleSizeChange (val) {
       this.search.pageSize = val
+      this.fetchData()
     },
     handleCurrentChange (val) {
-      this.search.pageNum = val
+      this.search.pageNo = val
+      this.fetchData()
+    },
+    fetchData () {
+      this.loading = true
+      fetchAllAgents({
+        pageSize: this.search.pageSize,
+        pageNo: this.search.pageNo,
+        keyword: this.search.keyword
+      }).then(({ data }) => {
+        this.loading = false
+        this.tableData = data.items || []
+        this.total = data.totalCount || 0
+      }).catch(() => {
+        this.loading = false
+      })
     }
   }
 }

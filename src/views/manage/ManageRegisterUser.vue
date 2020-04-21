@@ -2,13 +2,13 @@
   <div class="manage-register-user-page">
     <div class="content-title">用户管理</div>
     <div class="search-head-box">
-      <div class="ilb-top search-item-box">
+      <!-- <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">用户搜索：</div>
         <div class="ilb-top">
-          <el-input v-model="search.name" placeholder="请输入内容" size="mini"></el-input>
+          <el-input v-model="search.keyword" placeholder="请输入内容" size="mini"></el-input>
         </div>
-      </div>
-      <div class="ilb-top search-item-box">
+      </div> -->
+      <!-- <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">身份：</div>
         <div class="ilb-top">
           <el-select v-model="search.identity" placeholder="请选择" size="mini">
@@ -20,8 +20,8 @@
             ></el-option>
           </el-select>
         </div>
-      </div>
-      <div class="ilb-top search-item-box">
+      </div> -->
+      <!-- <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">已购房客户：</div>
         <div class="ilb-top">
           <el-select v-model="search.bought" placeholder="请选择" size="mini">
@@ -33,7 +33,7 @@
             ></el-option>
           </el-select>
         </div>
-      </div>
+      </div> -->
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">最近登录日期：</div>
         <div class="ilb-top">
@@ -49,6 +49,7 @@
         </div>
       </div>
       <div class="ilb-top search-item-box search-btns-box">
+        <el-button type="primary" size="mini" @click="handleSearch">搜索</el-button>
         <el-button type="warning" size="mini" @click="handleReset">重置</el-button>
       </div>
     </div>
@@ -60,17 +61,17 @@
       size="mini"
       v-loading="loading"
     >
-      <el-table-column prop="uid" label="UID" width="100"></el-table-column>
+      <el-table-column prop="uid" label="UID" width="80"></el-table-column>
       <el-table-column prop="mobile" label="手机号" width="150"></el-table-column>
-      <el-table-column prop="identity" label="身份" width="100"></el-table-column>
-      <el-table-column prop="broker" label="所属经纪人" width="100"></el-table-column>
-      <el-table-column prop="staff" label="所属员工" width="100"></el-table-column>
-      <el-table-column prop="name" label="姓名" width="100"></el-table-column>
-      <el-table-column prop="loginTime" label="最近登录时间" width="150"></el-table-column>
-      <el-table-column prop="recentHouse" label="最近查看楼盘" width="150"></el-table-column>
-      <el-table-column prop="bought" label="已购房数">
+      <el-table-column prop="userTypeName" label="身份" width="80"></el-table-column>
+      <el-table-column prop="salesman" label="所属经纪人" width="100"></el-table-column>
+      <el-table-column prop="superior" label="所属员工" width="100"></el-table-column>
+      <el-table-column prop="username" label="姓名" width="150"></el-table-column>
+      <el-table-column prop="lastLoginTime" label="最近登录时间" width="150"></el-table-column>
+      <el-table-column prop="lastViewHouse" label="最近查看楼盘" width="150"></el-table-column>
+      <el-table-column prop="buyCount" label="已购房数">
         <template slot-scope="scope">
-          <span class="pointer table-cell-click-span" @click="handleCellClick(scope.row)">{{scope.row.bought}}</span>
+          <span class="pointer table-cell-click-span" @click="handleCellClick(scope.row)">{{scope.row.buyCount}}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -89,6 +90,8 @@
 </template>
 
 <script>
+import { fetchAllRegisters } from '../../assets/services/manage-service'
+
 export default {
   name: 'manage-register-user',
   data () {
@@ -123,41 +126,54 @@ export default {
         }
       ],
       search: {
-        name: '',
-        identity: '',
-        bought: '',
-        pageSize: 10,
         time: '',
-        pageNum: 1
+        pageSize: 10,
+        pageNo: 1
       },
-      tableData: [
-        {
-          uid: 1,
-          mobile: 11111,
-          identity: '游客',
-          broker: 'wang',
-          staff: 'lll',
-          name: 'xxx',
-          loginTime: '2010-1-1',
-          recentHouse: 'aaaaa',
-          bought: 10
-        }
-      ],
+      tableData: [],
       total: 0
     }
   },
+  mounted () {
+    this.fetchData()
+  },
   methods: {
-    handleReset () {},
+    handleSearch () {
+      this.fetchData()
+    },
+    handleReset () {
+      this.search.time = ''
+      this.search.pageSize = 10
+      this.search.pageNo = 1
+      this.handleSearch()
+    },
     handleSizeChange (val) {
       this.search.pageSize = val
+      this.handleSearch()
     },
     handleCurrentChange (val) {
-      this.search.pageNum = val
+      this.search.pageNo = val
+      this.handleSearch()
     },
     handleCellClick (row) {
       console.log(row)
       this.$router.push({
         name: 'manage-customer-sea'
+      })
+    },
+    fetchData () {
+      this.loading = true
+      fetchAllRegisters({
+        pageSize: this.search.pageSize,
+        pageNo: this.search.pageNo,
+        start_time: this.search.time ? this.search.time[0] : '',
+        end_time: this.search.time ? this.search.time[1] : ''
+      }).then(({ data }) => {
+        this.loading = false
+        this.tableData = data.items || []
+        this.total = data.totalCount || 0
+      }).catch(() => {
+        this.loading = false
       })
     }
   }

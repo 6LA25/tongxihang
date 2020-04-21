@@ -419,3 +419,19 @@ export const commissionPay = (options) => Fetch({
     ...options
   }
 })
+
+// 获取用户列表
+export const fetchAllRegisters = (options) => Fetch({
+  url: URL.user.items,
+  data: {
+    ...options
+  }
+})
+
+// 获取经纪人列表
+export const fetchAllAgents = (options) => Fetch({
+  url: URL.user.agents,
+  data: {
+    ...options
+  }
+})

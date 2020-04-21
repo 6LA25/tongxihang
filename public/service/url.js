@@ -17,7 +17,9 @@ export default {
   },
   user: {
     all: `${domain}/api/admin/adminuser/items`,
-    commonUser: `${domain}/api/admin/common/authorization/users`
+    commonUser: `${domain}/api/admin/common/authorization/users`,
+    items: `${domain}/api/admin/user/items`,
+    agents: `${domain}/api/admin/userAgent/items`
   },
   staff: {
     add: `${domain}/api/admin/adminuser/edit`,
