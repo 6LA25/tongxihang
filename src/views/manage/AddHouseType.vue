@@ -357,6 +357,4 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.add-house-type-page {
-}
 </style>

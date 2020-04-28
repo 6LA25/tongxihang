@@ -342,6 +342,4 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.manage-houses-page {
-}
 </style>
