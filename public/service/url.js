@@ -1,4 +1,4 @@
-let domain = process.env.NODE_ENV === 'development' ? '' : 'http://api.anxuanhouse.com'
+let domain = process.env.NODE_ENV === 'development' ? '' : 'http://anxuanhouse.com'
 
 export default {
   bench: {
