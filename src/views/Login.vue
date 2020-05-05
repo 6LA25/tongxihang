@@ -1,7 +1,7 @@
 <template>
   <div class="login-page">
     <div class="login-box">
-      <div class="title">同曦行后台管理系统</div>
+      <div class="title">安选好房后台管理系统</div>
       <el-form :rules="rules" ref="loginForm" :model="loginForm" label-width="100px" @submit.native.prevent>
         <el-form-item label="用户名：" prop="account">
           <el-input style="width: 300px" size="mini" v-model="loginForm.account"></el-input>
