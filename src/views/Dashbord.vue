@@ -2,7 +2,7 @@
   <div class="dashboard-page">
     <el-container>
       <el-aside width="200px">
-        <div class="logo-box">同悦众联</div>
+        <div class="logo-box">安选好房</div>
         <div class="menu-container">
           <el-menu
             :default-active="activeRoot"
