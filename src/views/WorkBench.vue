@@ -61,7 +61,7 @@
           <div class="charts-box" v-loading="loading">
             <v-chart style="width: 800px;" :options="orgOptions" />
           </div>
-          <div class="list-box">
+          <div class="list-box" v-loading="rankLoading">
             <div class="title">经纪人销售排行榜</div>
             <div style="font-size: 14px;color: #aaa;text-align: center;" v-if="saleList.length === 0">暂无数据</div>
             <div class="list-item" v-for="(item, index) in saleList" :key="item.realname">
@@ -129,6 +129,7 @@ export default {
   data () {
     return {
       loading: false,
+      rankLoading: false,
       baseIntr: null,
       saleList: [],
       viewData: null,
@@ -198,6 +199,7 @@ export default {
   watch: {
     time () {
       this.fetchChart()
+      this.fetchAgentRank()
     }
   },
   mounted () {
@@ -217,8 +219,12 @@ export default {
       })
     },
     fetchAgentRank () {
-      agentRank().then(({ data }) => {
+      this.rankLoading = true
+      agentRank({
+        timeType: this.time
+      }).then(({ data }) => {
         this.saleList = data.items
+        this.rankLoading = false
       })
     },
     fetchHotView () {
