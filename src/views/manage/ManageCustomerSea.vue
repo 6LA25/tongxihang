@@ -72,11 +72,12 @@
       <el-table-column prop="recommendTime" label="推荐时间" width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="followRealname" label="跟进人" width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="followStatusName" label="跟进状态" width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作" width="250">
         <template slot-scope="scope">
           <el-button type="primary" v-if="scope.row.followStatus === 1" size="mini" @click.stop="handleDispatchCase(scope.row, 1)">派单</el-button>
           <el-button type="warning" v-if="scope.row.followStatus === 0" size="mini" @click.stop="handleDispatchCase(scope.row, 0)">重新派单</el-button>
           <el-button type="danger" v-if="scope.row.followStatus === 1 || scope.row.followStatus === 2 || scope.row.followStatus === 3 || scope.row.followStatus === 4 || scope.row.followStatus === 5" size="mini" @click.stop="handleCloseCase(scope.row)">关单</el-button>
+          <el-button type="warning" size="mini" @click="handleJumpDetail(scope.row)">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -234,6 +235,16 @@ export default {
     }
   },
   methods: {
+    handleJumpDetail (data) {
+      console.log(data)
+      this.$router.push({
+        name: 'add-following-record',
+        query: {
+          id: data.id,
+          flag: 'preview'
+        }
+      })
+    },
     handleSearch () {
       this.search.pageNo = 1
       this.fetchList()

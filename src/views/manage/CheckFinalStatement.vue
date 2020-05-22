@@ -24,6 +24,7 @@
       <el-table-column prop="totalAmount" label="结算金额" width="200"></el-table-column>
       <el-table-column prop="created" label="结算时间" width="200"></el-table-column>
       <el-table-column prop="auditorRealname" label="结算人" width="200"></el-table-column>
+      <el-table-column prop="salesmanRealname" label="所属员工" width="100"></el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleCheckDetail(scope.row)">结算详情</el-button>

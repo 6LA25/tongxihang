@@ -34,6 +34,14 @@
             <span>{{baseIntr.day.validCount}}</span>
           </div>
         </div>
+        <div class="inner-item">
+          <div class="title">新增经纪人总量</div>
+          <div class="num">{{baseIntr.agentItem.total}}</div>
+          <div class="text">
+            本月
+            <span>{{baseIntr.agentItem.month}}</span>
+          </div>
+        </div>
       </div>
       <div class="sale-box">
         <div class="filter-box">
@@ -83,6 +91,7 @@
               <span>热门楼盘</span>
               <span>浏览量</span>
               <span>本月意向客户数</span>
+              <span>本月合作经纪人</span>
             </div>
             <div style="font-size: 14px;color: #aaa;text-align: center;margin-top: 20px;" v-if="viewData.items.length === 0">暂无数据</div>
             <div class="rank-item" v-for="(item, index) in viewData.items" :key="item.house_id">
@@ -90,6 +99,7 @@
               <span class="house">{{item.houseName}}</span>
               <span>{{item.views}}</span>
               <span>{{item.customer}}</span>
+              <span>{{item.agent}}</span>
             </div>
           </div>
         </div>
@@ -269,7 +279,7 @@ export default {
       background #fff
       color #333
       padding 20px
-      width 280px
+      width 230px
       border-radius 4px
       .title {
         margin-bottom 5px
@@ -358,7 +368,7 @@ export default {
         margin-bottom 20px
       }
       .lf-box {
-        width 50%
+        width 55%
         float left
         padding-right 20px
         .intr-box {
@@ -381,7 +391,7 @@ export default {
             border-bottom 1px solid #eee
             > span {
               float left
-              width 25%
+              width 20%
               padding 10px 5px
               font-size 15px
               text-overflow ellipsis
@@ -395,7 +405,7 @@ export default {
         }
       }
       .rg-box {
-        width 50%
+        width 45%
         float left
         padding-left 20px
         .pie-chart-box {

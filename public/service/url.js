@@ -24,7 +24,8 @@ export default {
     add: `${domain}/api/admin/adminuser/edit`,
     all: `${domain}/api/admin/adminuser/items`,
     item: `${domain}/api/admin/adminuser/item`,
-    permissions: `${domain}/api/admin/common/user/permissions`
+    permissions: `${domain}/api/admin/common/user/permissions`,
+    develop: `${domain}/api/admin/adminuser/report`
   },
   role: {
     edit: `${domain}/api/admin/roles/edit`,

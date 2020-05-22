@@ -22,9 +22,11 @@
       <el-table-column prop="customerMobile" label="手机号" width="120"></el-table-column>
       <el-table-column prop="houseName" label="购买楼盘" width="150"></el-table-column>
       <el-table-column prop="contractAmount" label="合同总价" width="100"></el-table-column>
-      <el-table-column prop="contractTime" label="签约合同时间" width="200"></el-table-column>
+      <el-table-column prop="contractTime" label="签约合同时间" width="150"></el-table-column>
       <el-table-column prop="commissionRate" label="佣金比例" width="70"></el-table-column>
       <el-table-column prop="commission" label="佣金费用" width="100"></el-table-column>
+      <el-table-column prop="finalAmount" label="实际发放" width="100"></el-table-column>
+      <el-table-column prop="salesmanRealname" label="所属员工" width="100"></el-table-column>
       <!-- <el-table-column prop="shyj" label="税后佣金" width="70"></el-table-column> -->
       <el-table-column prop="statusName" label="结算状态" width="100"></el-table-column>
       <!-- <el-table-column prop="code" label="结算单号"></el-table-column> -->
@@ -54,7 +56,7 @@
         <div class="title">请确认以下结算信息：</div>
         <div class="settled-detail-box">
           <div><span>结算人：{{currentItem.realname}}</span><span>手机号：13011111111</span></div>
-          <div><span>结算方式：{{currentItem.payTypeName}}</span><span>结算账号：{{currentItem.aliAccount}}</span></div>
+          <div><span>结算方式：{{currentItem.payTypeName}}</span><span>结算账号：{{currentItem.bankAccount}}</span></div>
           <div>已选中订单佣金金额：{{currentItem.commission}}</div>
         </div>
         <div>

@@ -142,6 +142,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "ManagePermission" */ '../views/manage/ManagePermission.vue')
       },
       {
+        path: '/user-develop',
+        name: 'user-develop',
+        component: () => import(/* webpackChunkName: "ManagePermission" */ '../views/manage/UserDevelop.vue')
+      },
+      {
         path: '/about',
         name: 'about',
         // route level code-splitting

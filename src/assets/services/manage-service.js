@@ -435,3 +435,11 @@ export const fetchAllAgents = (options) => Fetch({
     ...options
   }
 })
+
+// 员工发展
+export const fetchUserDevelop = (options) => Fetch({
+  url: URL.staff.develop,
+  data: {
+    ...options
+  }
+})

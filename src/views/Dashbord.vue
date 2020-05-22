@@ -70,6 +70,7 @@
                 <el-menu-item index="7-1" v-permission="'角色管理'">角色管理</el-menu-item>
                 <!-- <el-menu-item index="7-2">角色权限管理</el-menu-item> -->
                 <el-menu-item index="7-3" v-permission="'员工管理'">员工管理</el-menu-item>
+                <el-menu-item index="7-4" v-permission="'员工发展'">员工发展</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>
@@ -114,7 +115,8 @@ export default {
         '6-3': 'manage-activity-message',
         '7-1': 'manage-role',
         '7-2': 'manage-permission',
-        '7-3': 'manage-staff'
+        '7-3': 'manage-staff',
+        '7-4': 'user-develop'
       }
     }
   },

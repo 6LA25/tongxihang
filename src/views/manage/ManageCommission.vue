@@ -69,6 +69,7 @@
       <el-table-column prop="leve1Price" label="一级分成" width="80"></el-table-column>
       <el-table-column prop="leve2Price" label="二级分成" width="80"></el-table-column>
       <el-table-column prop="leve3Price" label="三级分成" width="80"></el-table-column>
+      <el-table-column prop="salesmanRealname" label="所属员工" width="100"></el-table-column>
       <el-table-column prop="totalPrice" label="总计" width="80"></el-table-column>
       <el-table-column prop="statusName" label="财务状态" width="80"></el-table-column>
       <el-table-column label="操作" width="220">

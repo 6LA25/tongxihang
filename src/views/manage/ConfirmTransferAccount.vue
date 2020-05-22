@@ -39,6 +39,7 @@
       <el-table-column prop="totalAmount" label="获取佣金总额" width="120"></el-table-column>
       <el-table-column prop="completionAmount" label="已结算金额" width="120"></el-table-column>
       <el-table-column prop="stayAmount" label="待结算金额" width="120"></el-table-column>
+      <el-table-column prop="salesmanRealname" label="所属员工" width="100"></el-table-column>
       <!-- <el-table-column prop="status" label="结算状态" width="100"></el-table-column> -->
       <!-- <el-table-column prop="way" label="打款方式" width="100"></el-table-column> -->
       <!-- <el-table-column prop="account" label="打款帐号" width="150"></el-table-column> -->
