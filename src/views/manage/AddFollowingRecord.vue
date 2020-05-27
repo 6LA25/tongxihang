@@ -158,7 +158,7 @@ export default {
         houseId: [
           { required: false, message: '请填写购买楼盘', trigger: 'blur' }
         ],
-        contractImgs: [{ required: true, message: '请上传楼盘封面' }]
+        contractImgs: [{ required: true, message: '请上传合同照片' }]
       },
       submitting: false,
       logList: [],

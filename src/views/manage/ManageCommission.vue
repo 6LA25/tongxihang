@@ -75,9 +75,21 @@
       <el-table-column label="操作" width="220">
         <template slot-scope="scope">
           <!-- status  0待审核，1通过，2驳回 -->
-          <el-button v-if="scope.row.status === 0" type="success" size="mini" @click="handleCheck(scope.row, 'pass')">审核通过</el-button>
+          <!-- <el-button v-if="scope.row.status === 0" type="success" size="mini" @click="handleCheck(scope.row, 'pass')">审核通过</el-button>
           <el-button v-if="scope.row.status === 0" type="danger" size="mini" @click="handleCheck(scope.row, 'reject')">审核驳回</el-button>
-          <el-button v-if="scope.row.status === 2" type="primary" size="mini" @click="handleCheck(scope.row, 'reset')">重启审核</el-button>
+          <el-button v-if="scope.row.status === 2" type="primary" size="mini" @click="handleCheck(scope.row, 'reset')">重启审核</el-button> -->
+          <div style="margin-bottom: 5px;" v-permission="'一级审核'">
+            <el-button v-if="scope.row.firstAuditStatus === 0" type="success" size="mini" @click="handleCheck(scope.row, 'pass', 1)">一审通过</el-button>
+            <el-button v-if="scope.row.firstAuditStatus === 0" type="danger" size="mini" @click="handleCheck(scope.row, 'reject', 1)">一审拒绝</el-button>
+          </div>
+          <div style="margin-bottom: 5px;" v-permission="'二级审核'">
+            <el-button v-if="scope.row.secondAuditStatus === 0 && scope.row.firstAuditStatus === 1" type="success" size="mini" @click="handleCheck(scope.row, 'pass', 2)">二审通过</el-button>
+            <el-button v-if="scope.row.secondAuditStatus === 0 && scope.row.firstAuditStatus === 1" type="danger" size="mini" @click="handleCheck(scope.row, 'reject', 2)">二审拒绝</el-button>
+          </div>
+          <div style="margin-bottom: 5px;" v-permission="'三级审核'">
+            <el-button v-if="scope.row.thirdAuditStatus === 0 && scope.row.firstAuditStatus === 1 && scope.row.secondAuditStatus === 1" type="success" size="mini" @click="handleCheck(scope.row, 'pass', 3)">三审通过</el-button>
+            <el-button v-if="scope.row.thirdAuditStatus === 0 && scope.row.firstAuditStatus === 1 && scope.row.secondAuditStatus === 1" type="danger" size="mini" @click="handleCheck(scope.row, 'reject', 3)">三审拒绝</el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -116,7 +128,7 @@
 </template>
 
 <script>
-import { fetchDistributionList, rejectDistribution, passDistribution, resetDistribution } from '../../assets/services/manage-service'
+import { fetchDistributionList, rejectDistribution, passDistribution } from '../../assets/services/manage-service'
 export default {
   name: 'manage-commission',
   data () {
@@ -163,7 +175,8 @@ export default {
       },
       totalCount: 0,
       tableData: [],
-      total: 0
+      total: 0,
+      currentLevel: ''
     }
   },
   mounted () {
@@ -175,6 +188,7 @@ export default {
         this.intrForm.id = ''
         this.intrForm.intro = ''
         this.tag = ''
+        this.currentLevel = ''
       }
     }
   },
@@ -186,8 +200,6 @@ export default {
             this.handlePass()
           } else if (this.tag === 'reject') {
             this.handleReject()
-          } else if (this.tag === 'reset') {
-            this.handleResetDis()
           }
         } else {
           console.log('error submit!!')
@@ -201,14 +213,16 @@ export default {
       this.tag = ''
       this.intrFormDialogVisiable = false
     },
-    handleCheck (row, tag) {
+    handleCheck (row, tag, level) {
       this.intrForm.id = row.id
       this.tag = tag
       this.intrFormDialogVisiable = true
+      this.currentLevel = level
     },
     handlePass () {
       passDistribution({
         id: this.intrForm.id,
+        level: this.currentLevel,
         intro: this.intrForm.intro
       }).then(({ data }) => {
         this.$message.success('操作成功')
@@ -219,16 +233,7 @@ export default {
     handleReject () {
       rejectDistribution({
         id: this.intrForm.id,
-        intro: this.intrForm.intro
-      }).then(({ data }) => {
-        this.$message.success('操作成功')
-        this.handleReset()
-        this.handleClose()
-      })
-    },
-    handleResetDis () {
-      resetDistribution({
-        id: this.intrForm.id,
+        level: this.currentLevel,
         intro: this.intrForm.intro
       }).then(({ data }) => {
         this.$message.success('操作成功')
