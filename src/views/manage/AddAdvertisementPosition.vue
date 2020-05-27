@@ -31,7 +31,7 @@
           <img v-if="advForm.image" :src="advForm.image.path" class="cover-img">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div class="form-item-hint-text">支持jpg/jpeg/png格式图片，大小不超过2M</div>
+        <div class="form-item-hint-text">支持jpg/jpeg/png格式图片，大小不超过1M</div>
       </el-form-item>
       <el-form-item label="广告内容：" prop="link_type">
         <el-radio-group v-model="advForm.link_type" @change="handleSelectLink">
@@ -190,16 +190,16 @@ export default {
       const isJPG = file.type === 'image/jpeg'
       const isPNG = file.type === 'image/png'
       const isJPEG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
+      const isLt1M = file.size / 1024 / 1024 < 1
       if (!isJPG && !isPNG && !isJPEG) {
         this.$message.error('上传封面只能是 JPG/PNG/JPEG 格式!')
         return false
       }
-      if (!isLt2M) {
-        this.$message.error('上传封面大小不能超过 2M!')
+      if (!isLt1M) {
+        this.$message.error('上传封面大小不能超过 1M!')
         return false
       }
-      return (isJPG || isPNG || isJPEG) && isLt2M
+      return (isJPG || isPNG || isJPEG) && isLt1M
     },
     handleSubmit () {
       if (this.submitting) {

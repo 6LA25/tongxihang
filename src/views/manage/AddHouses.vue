@@ -183,7 +183,7 @@
           <img v-if="housesForm.coverImg" :src="housesForm.coverImg.filepath" class="cover-img">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div class="form-item-hint-text"><span v-if="$route.query.tag === 'edit'">点击图片修改封面，</span>支持jpg/jpeg/png格式图片，大小不超过2M</div>
+        <div class="form-item-hint-text"><span v-if="$route.query.tag === 'edit'">点击图片修改封面，</span>支持jpg/jpeg/png格式图片，大小不超过1M</div>
       </el-form-item>
       <el-form-item label="实景图：" prop="addRealImgs">
         <el-upload
@@ -202,7 +202,7 @@
           :action="$store.state.uploadUrl">
           <i class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过2M</div>
+        <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过1M</div>
       </el-form-item>
       <el-form-item label="效果图：" prop="addRenderImgs">
         <el-upload
@@ -221,7 +221,7 @@
           :action="$store.state.uploadUrl">
           <i class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过2M</div>
+        <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过1M</div>
       </el-form-item>
 
       <el-form-item label="周边配套图：" prop="addAmbitusImgs">
@@ -241,7 +241,7 @@
           :action="$store.state.uploadUrl">
           <i class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过2M</div>
+        <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过1M</div>
       </el-form-item>
 
       <el-form-item label="分享封面图：" prop="shareImg">
@@ -259,7 +259,7 @@
           <img v-if="housesForm.shareImg" :src="housesForm.shareImg.filepath" class="cover-img">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div class="form-item-hint-text"><span v-if="$route.query.tag === 'edit'">点击图片修改封面，</span>支持jpg/jpeg/png格式图片，大小不超过2M</div>
+        <div class="form-item-hint-text"><span v-if="$route.query.tag === 'edit'">点击图片修改封面，</span>支持jpg/jpeg/png格式图片，大小不超过1M</div>
       </el-form-item>
       <div class="form-divide-title">楼盘位置</div>
       <el-form-item label="楼盘所属区域：" prop="region">
@@ -776,16 +776,16 @@ export default {
       const isJPG = file.type === 'image/jpeg'
       const isPNG = file.type === 'image/png'
       const isJPEG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
+      const isLt1M = file.size / 1024 / 1024 < 1
       if (!isJPG && !isPNG && !isJPEG) {
         this.$message.error('上传封面只能是 JPG/PNG/JPEG 格式!')
         return false
       }
-      if (!isLt2M) {
-        this.$message.error('上传封面大小不能超过 2M!')
+      if (!isLt1M) {
+        this.$message.error('上传封面大小不能超过 1M!')
         return false
       }
-      return (isJPG || isPNG || isJPEG) && isLt2M
+      return (isJPG || isPNG || isJPEG) && isLt1M
     },
     handleSubmit () {
       if (this.submitting) {
