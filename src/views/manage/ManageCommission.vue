@@ -78,15 +78,15 @@
           <!-- <el-button v-if="scope.row.status === 0" type="success" size="mini" @click="handleCheck(scope.row, 'pass')">审核通过</el-button>
           <el-button v-if="scope.row.status === 0" type="danger" size="mini" @click="handleCheck(scope.row, 'reject')">审核驳回</el-button>
           <el-button v-if="scope.row.status === 2" type="primary" size="mini" @click="handleCheck(scope.row, 'reset')">重启审核</el-button> -->
-          <div style="margin-bottom: 5px;" v-permission="'一级审核'">
+          <div style="margin-bottom: 5px;" v-permission="'一级审核'" v-if="scope.row.status === 0">
             <el-button v-if="scope.row.firstAuditStatus === 0" type="success" size="mini" @click="handleCheck(scope.row, 'pass', 1)">一审通过</el-button>
             <el-button v-if="scope.row.firstAuditStatus === 0" type="danger" size="mini" @click="handleCheck(scope.row, 'reject', 1)">一审拒绝</el-button>
           </div>
-          <div style="margin-bottom: 5px;" v-permission="'二级审核'">
+          <div style="margin-bottom: 5px;" v-permission="'二级审核'" v-if="scope.row.status === 0">
             <el-button v-if="scope.row.secondAuditStatus === 0 && scope.row.firstAuditStatus === 1" type="success" size="mini" @click="handleCheck(scope.row, 'pass', 2)">二审通过</el-button>
             <el-button v-if="scope.row.secondAuditStatus === 0 && scope.row.firstAuditStatus === 1" type="danger" size="mini" @click="handleCheck(scope.row, 'reject', 2)">二审拒绝</el-button>
           </div>
-          <div style="margin-bottom: 5px;" v-permission="'三级审核'">
+          <div style="margin-bottom: 5px;" v-permission="'三级审核'" v-if="scope.row.status === 0">
             <el-button v-if="scope.row.thirdAuditStatus === 0 && scope.row.firstAuditStatus === 1 && scope.row.secondAuditStatus === 1" type="success" size="mini" @click="handleCheck(scope.row, 'pass', 3)">三审通过</el-button>
             <el-button v-if="scope.row.thirdAuditStatus === 0 && scope.row.firstAuditStatus === 1 && scope.row.secondAuditStatus === 1" type="danger" size="mini" @click="handleCheck(scope.row, 'reject', 3)">三审拒绝</el-button>
           </div>
@@ -236,9 +236,13 @@ export default {
         level: this.currentLevel,
         intro: this.intrForm.intro
       }).then(({ data }) => {
-        this.$message.success('操作成功')
-        this.handleReset()
-        this.handleClose()
+      }).catch(error => {
+        console.log(error)
+        if (error.result_code === 10001) {
+          this.$message.success('操作成功')
+          this.handleReset()
+          this.handleClose()
+        }
       })
     },
     handleSearch () {
