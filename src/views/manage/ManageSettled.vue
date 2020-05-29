@@ -56,7 +56,7 @@
         <div class="title">请确认以下结算信息：</div>
         <div class="settled-detail-box">
           <div><span>结算人：{{currentItem.realname}}</span><span>手机号：13011111111</span></div>
-          <div><span>结算方式：{{currentItem.payTypeName}}</span><span>结算账号：{{currentItem.bankAccount}}</span></div>
+          <div><span>开户行：{{currentItem.payTypeName}}</span><span>卡号：{{currentItem.bankAccount}}</span></div>
           <div>已选中订单佣金金额：{{currentItem.commission}}</div>
         </div>
         <div>

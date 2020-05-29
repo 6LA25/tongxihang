@@ -1,5 +1,5 @@
 <template>
-  <div class="add-following-record-pag1e">
+  <div class="add-following-record-page">
     <template v-if="$route.query.flag !== 'preview'">
       <div class="content-title">添加跟进记录</div>
       <el-form :rules="rules" ref="followingForm" :model="followingForm" label-width="130px">
@@ -68,6 +68,7 @@
               <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
         </el-form-item>
+        <!-- 已签约添加房号面积 -->
         <template v-if="followingForm.followStatus === 6">
           <el-form-item label="合同编号：" prop="contractNum">
             <el-input style="width: 400px" size="mini" v-model="followingForm.contractNum"></el-input>
@@ -98,6 +99,12 @@
             </el-upload>
             <div class="form-item-hint-text">支持jpg/jpeg/png格式图片，大小不超过2M</div>
           </el-form-item>
+          <el-form-item label="房号" prop="roomNumber">
+            <el-input style="width: 400px" size="mini" v-model="followingForm.roomNumber"></el-input>
+          </el-form-item>
+          <el-form-item label="面积" prop="housingArea">
+            <el-input style="width: 400px" type="number" size="mini" v-model="followingForm.housingArea"></el-input>
+          </el-form-item>
         </template>
         <el-form-item v-if="followingForm.followStatus === 7" label="回款金额：" prop="amount">
           <el-input type="text" style="width: 400px" size="mini" v-model="followingForm.amount"></el-input>
@@ -110,10 +117,15 @@
     </template>
     <div class="following-list-box">
       <div class="title">跟进日志：</div>
-      <ul v-loading="loading">
-        <li v-for="(log, index) in logList" :key="index">
+      <ul class="log-list-box" v-loading="loading">
+        <li class="log-list-item" v-for="(log, index) in logList" :key="index">
           <div>2019.09.08 12:31:23 操作人：{{log.operator}}</div>
-          <div>跟进状态"{{log.followStatusName}}"，跟进时间“{{log.followTime}}”，下次跟进时间为“{{log.nextFollowTime}}”，备注“{{log.intro}}”</div>
+          <div>
+            <span>跟进状态"{{log.followStatusName}}"，</span>
+            <span>跟进时间“{{log.followTime}}”，下次跟进时间为“{{log.nextFollowTime}}”，</span>
+            <span v-if="log.followStatusName === '已签约'">房号“{{log.roomNumber}}”，面积“{{log.housingArea}}”，</span>
+            <span>备注“{{log.intro}}”</span>
+          </div>
         </li>
       </ul>
       <div class="pager-box">
@@ -158,6 +170,12 @@ export default {
         houseId: [
           { required: false, message: '请填写购买楼盘', trigger: 'blur' }
         ],
+        roomNumber: [
+          { required: true, message: '请填写房号', trigger: 'blur' }
+        ],
+        housingArea: [
+          { required: true, message: '请填写面积', trigger: 'blur' }
+        ],
         contractImgs: [{ required: true, message: '请上传合同照片' }]
       },
       submitting: false,
@@ -182,6 +200,8 @@ export default {
         houseId: '',
         contractNum: '',
         contractAmount: '',
+        roomNumber: '',
+        housingArea: '',
         contractImgs: []
       },
       pageSize: 10,
@@ -205,6 +225,8 @@ export default {
       this.followingForm.houseId = ''
       this.followingForm.contractNum = ''
       this.followingForm.contractAmount = ''
+      this.followingForm.roomNumber = ''
+      this.followingForm.housingArea = ''
       this.followingForm.contractImgs = []
       this.options = []
     }
@@ -280,7 +302,9 @@ export default {
         amount: this.followingForm.amount, // 回款金额
         houseId: this.followingForm.houseId,
         contractNum: this.followingForm.contractNum,
-        contractAmount: this.followingForm.contractAmount
+        contractAmount: this.followingForm.contractAmount,
+        housingArea: this.followingForm.housingArea,
+        roomNumber: this.followingForm.roomNumber
       }
       let fileList = []
       this.followingForm.contractImgs.forEach(item => {
