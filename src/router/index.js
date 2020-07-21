@@ -30,6 +30,10 @@ const routes = [
         path: '/add-houses',
         name: 'add-houses',
         component: () => import(/* webpackChunkName: "AddHouses" */ '../views/manage/AddHouses.vue')
+      }, {
+        path: '/house-dynamic',
+        name: 'house-dynamic',
+        component: () => import(/* webpackChunkName: "HouseDynamic" */ '../views/manage/HouseDynamic.vue')
       },
       {
         path: '/add-role',

@@ -99,13 +99,14 @@
           {{scope.row.state === 1 ? '上架': '下架'}}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="340">
+      <el-table-column label="操作" min-width="040">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleEditHouses(scope.$index, scope.row)">编辑</el-button>
           <el-button v-if="scope.row.state === 1" v-permission="'楼盘上下架'" size="mini" type="danger" @click.stop="handlePutaway([scope.row], 0)">下架</el-button>
           <el-button v-if="scope.row.state === 0" v-permission="'楼盘上下架'" size="mini" type="primary" @click.stop="handlePutaway([scope.row], 1)">上架</el-button>
           <el-button type="primary" size="mini" @click.stop="handleAddHouseType(scope.$index, scope.row)">新增户型</el-button>
           <el-button type="warning" size="mini" v-permission="'楼盘设为热门'" @click.stop="handleSetHot([scope.row])">设为热门</el-button>
+          <el-button type="primary" size="mini" @click.stop="handleJumpInfo(scope.row)">楼盘动态</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -217,6 +218,14 @@ export default {
   watch: {
   },
   methods: {
+    handleJumpInfo (data) {
+      this.$router.push({
+        name: 'house-dynamic',
+        query: {
+          id: data.id
+        }
+      })
+    },
     fetchList () {
       this.loading = true
       let post = {
