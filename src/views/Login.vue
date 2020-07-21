@@ -14,6 +14,7 @@
         </el-form-item>
       </el-form>
     </div>
+    <div class="icp-box">版权所有 无锡同悦众联信息科技有限公司<a href="http://beian.miit.gov.cn/" target="_blank">苏ICP备20022352号-1</a></div>
   </div>
 </template>
 
@@ -101,6 +102,16 @@ export default {
   height 100%
   background url(../assets/imgs/login-bg.png) 0 0 no-repeat
   background-size cover
+  .icp-box {
+    position fixed
+    bottom 20px
+    left 50%
+    transform translate(-50%, 0)
+    color #fff
+    a {
+      color #fff
+    }
+  }
   .login-box {
     position fixed
     top 50%
