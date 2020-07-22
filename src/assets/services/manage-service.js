@@ -443,3 +443,35 @@ export const fetchUserDevelop = (options) => Fetch({
     ...options
   }
 })
+
+// 新增楼盘动态
+export const editHouseDynamic = (options) => Fetch({
+  url: URL.house.editDynamic,
+  data: {
+    ...options
+  }
+})
+
+// 楼盘动态列表
+export const houseDynamicList = (options) => Fetch({
+  url: URL.house.dynamicList,
+  data: {
+    ...options
+  }
+})
+
+// 删除动态
+export const delDynamicList = (options) => Fetch({
+  url: URL.house.delDynamic,
+  data: {
+    ...options
+  }
+})
+
+// 编辑客户
+export const editCustomer = (options) => Fetch({
+  url: URL.customer.edit,
+  data: {
+    ...options
+  }
+})

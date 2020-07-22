@@ -67,7 +67,8 @@
         </div>
         <div class="ilb-top">
           <el-form-item label="建筑面积：" prop="acreage">
-            <el-input style="width: 150px" size="mini" v-model="housesForm.acreage"></el-input>
+            <el-input style="width: 300px" placeholder="多个建筑面积请以英文逗号“,”分开" size="mini" v-model="housesForm.acreage"></el-input>
+            <span class="form-label">m2</span>
           </el-form-item>
         </div>
       </div>
@@ -159,6 +160,31 @@
           <el-form-item label="物业费用：" prop="management">
             <el-input style="width: 150px" type="number" size="mini" v-model="housesForm.managementPrice"></el-input>
             <span class="form-label">元/月*m2</span>
+          </el-form-item>
+        </div>
+      </div>
+      <div>
+        <div class="ilb-top">
+          <el-form-item label="土拍时间：" prop="tupaishijian">
+            <el-date-picker
+              value-format="yyyy-MM-dd"
+              size="mini"
+              v-model="housesForm.tupaishijian"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
+          </el-form-item>
+        </div>
+        <div class="ilb-top">
+          <el-form-item label="土拍价格：" prop="tupaijiage">
+            <el-input style="width: 150px" type="number" size="mini" v-model="housesForm.tupaijiage"></el-input>
+            <span class="form-label">元</span>
+          </el-form-item>
+        </div>
+        <div class="ilb-top">
+          <el-form-item label="楼面地价：" prop="loumiandijia">
+            <el-input style="width: 150px" type="number" size="mini" v-model="housesForm.loumiandijia"></el-input>
+            <span class="form-label">亿元</span>
           </el-form-item>
         </div>
       </div>
@@ -499,6 +525,9 @@ export default {
         }
       ],
       housesForm: {
+        tupaishijian: '', // 土拍时间
+        tupaijiage: '',
+        loumiandijia: '',
         name: '', // 楼盘名称
         price: '', // 定价
         status: '', // 楼盘状态

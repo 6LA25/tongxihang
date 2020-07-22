@@ -30,6 +30,7 @@
               <el-menu-item-group>
                 <el-menu-item index="3-1" v-permission="'意向客户公海'">意向客户公海</el-menu-item>
                 <el-menu-item index="3-2" v-permission="'意向客户跟进'">意向客户跟进</el-menu-item>
+                <el-menu-item index="3-3">待完善客户信息</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="4">
@@ -104,6 +105,7 @@ export default {
         '2-2': 'manage-label',
         '3-1': 'manage-customer-sea',
         '3-2': 'manage-customer-following',
+        '3-3': 'perfect-customer-info',
         '4-1': 'manage-commission',
         '4-2': 'confirm-transfer-account',
         '4-3': 'check-final-statement',

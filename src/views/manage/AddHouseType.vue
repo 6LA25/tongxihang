@@ -44,12 +44,35 @@
         </el-form-item>
         <div>
           <div class="ilb-top">
-            <el-form-item label="户型定价：" prop="price">
+            <el-form-item label="室：" prop="room">
+              <el-input style="width: 60px" size="mini"></el-input>
+            </el-form-item>
+          </div>
+          <div class="ilb-top">
+            <el-form-item label="厅：" prop="hall">
+              <el-input style="width: 60px" size="mini"></el-input>
+            </el-form-item>
+          </div>
+          <div class="ilb-top">
+            <el-form-item label="卫：" prop="guard">
+              <el-input style="width: 60px" size="mini"></el-input>
+            </el-form-item>
+          </div>
+        </div>
+        <div>
+          <div class="ilb-top">
+            <el-form-item label="户型均价：" prop="price">
               <el-input type="number" style="width: 100px" size="mini" v-model="editForm.price"></el-input>
               <span class="ml-10 form-item-hint-text">元/m2</span>
             </el-form-item>
           </div>
           <div class="ilb-top">
+            <el-form-item label="参考总价：">
+              <el-input type="number" style="width: 100px" size="mini"></el-input>
+              <span class="ml-10 form-item-hint-text">万元</span>
+            </el-form-item>
+          </div>
+          <!-- <div class="ilb-top">
             <el-form-item label="户型：" prop="type">
               <el-select size="mini" v-model="editForm.type" placeholder="请选择楼盘类型">
                 <el-option
@@ -61,7 +84,7 @@
               </el-select>
               <span class="ml-10 form-item-hint-text">居室</span>
             </el-form-item>
-          </div>
+          </div> -->
         </div>
         <div>
           <div class="ilb-top">
@@ -70,15 +93,37 @@
               <span class="ml-10 form-item-hint-text">m2</span>
             </el-form-item>
           </div>
-          <div class="ilb-top">
+          <!-- <div class="ilb-top">
             <el-form-item label="套内：" prop="inArea">
               <el-input type="number" style="width: 100px" size="mini" v-model="editForm.actualArea"></el-input>
               <span class="ml-10 form-item-hint-text">m2</span>
+            </el-form-item>
+          </div> -->
+        </div>
+        <div>
+          <div class="ilb-top">
+            <el-form-item label="得房率：">
+              <el-input type="number" style="width: 100px" size="mini"></el-input>
+              <span class="ml-10 form-item-hint-text">%</span>
+            </el-form-item>
+          </div>
+          <div class="ilb-top">
+            <el-form-item label="层面结构：">
+              <el-input style="width: 100px" size="mini"></el-input>
+            </el-form-item>
+          </div>
+          <div class="ilb-top">
+            <el-form-item label="户型位置：">
+              <el-input style="width: 200px" size="mini"></el-input>
             </el-form-item>
           </div>
         </div>
         <el-form-item label="标签：" prop="tags">
           <el-input type="textarea" placeholder="多个标签请以英文逗号“,”分开，最多填写3个标签，每个标签不超过5个汉字" style="width: 400px" size="mini" resize="none" v-model="editForm.tags"></el-input>
+        </el-form-item>
+        <el-form-item label="户型介绍：">
+          <el-input type="textarea" style="width: 400px" size="mini" resize="none"></el-input>
+          <span class="ml-10 form-item-hint-text">剩余500字</span>
         </el-form-item>
         <el-form-item label="户型图：" prop="editForm">
           <el-upload
@@ -163,6 +208,8 @@ export default {
       editData: null,
       rules: {
         name: [{ required: true, message: '请输入户型名称', trigger: 'blur' }],
+        room: [{ required: true, message: '请输入几室', trigger: 'blur' }],
+        hall: [{ required: true, message: '请输入几厅', trigger: 'blur' }],
         tags: [
           {
             validator: (rule, value, callback) => {

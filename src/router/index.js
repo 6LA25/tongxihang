@@ -61,6 +61,16 @@ const routes = [
         component: () => import(/* webpackChunkName: "ManageCustomerSea" */ '../views/manage/ManageCustomerSea.vue')
       },
       {
+        path: '/perfect-customer-info',
+        name: 'perfect-customer-info',
+        component: () => import(/* webpackChunkName: "PerfectCustomerInfo" */ '../views/manage/PerfectCustomerInfo.vue')
+      },
+      {
+        path: '/edit-customer',
+        name: 'edit-customer',
+        component: () => import(/* webpackChunkName: "EditCustomer" */ '../views/manage/EditCustomer.vue')
+      },
+      {
         path: '/add-intention-customer',
         name: 'add-intention-customer',
         component: () => import(/* webpackChunkName: "AddIntentionCustomer" */ '../views/manage/AddIntentionCustomer.vue')

@@ -47,7 +47,10 @@ export default {
     houseTypes: `${domain}/api/admin/apartment/items`,
     editHouseTypes: `${domain}/api/admin/apartment/edit`,
     apartmentItem: `${domain}/api/admin/apartment/item`,
-    deleteType: `${domain}/api/admin/apartment/del`
+    deleteType: `${domain}/api/admin/apartment/del`,
+    editDynamic: `${domain}/api/admin/house/trends/edit`,
+    dynamicList: `${domain}/api/admin/house/trends/items`,
+    delDynamic: `${domain}/api/admin/house/trends/del`
   },
   advertise: {
     list: `${domain}/api/admin/promote/items`,
@@ -74,7 +77,8 @@ export default {
     add: `${domain}/api/admin/customer/add`,
     myList: `${domain}/api/admin/mycustomer/items`,
     addLog: `${domain}/api/admin/mycustomer/follow/edit`,
-    logs: `${domain}/api/admin/mycustomer/follow/items`
+    logs: `${domain}/api/admin/mycustomer/follow/items`,
+    edit: `${domain}/api/admin/customer/edit`
   },
   distribution: {
     list: `${domain}/api/admin/distribution/items`,

@@ -60,18 +60,20 @@
       size="mini"
       v-loading="loading"
     >
-      <el-table-column prop="realname" label="客户姓名" width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="mobile" label="手机号" width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="genderName" label="性别" width="80" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="houseName" label="推荐楼盘" width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="intro" label="备注" width="200" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="followStatusName" label="跟进状态" width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="recommendTime" label="最近跟进时间" width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="nextFollowTime" label="下次跟进时间" width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="realname" label="客户姓名" min-width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="mobile" label="手机号" min-width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="genderName" label="性别" min-width="80" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="source" label="客户来源" min-width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="houseName" label="推荐楼盘" min-width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="intro" label="备注" min-width="200" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="followStatusName" label="跟进状态" min-width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="recommendTime" label="最近跟进时间" min-width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="nextFollowTime" label="下次跟进时间" min-width="100" show-overflow-tooltip></el-table-column>
 
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作" min-width="200">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleFollowing(scope.row)">跟进</el-button>
+          <el-button type="primary" size="mini" @click.stop="handleJumpEditCustomer(scope.row)">编辑客户</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -125,6 +127,14 @@ export default {
     this.fetchList()
   },
   methods: {
+    handleJumpEditCustomer (data) {
+      this.$router.push({
+        name: 'edit-customer',
+        query: {
+          id: data.id
+        }
+      })
+    },
     handleSearch () {
       this.search.pageNo = 1
       this.fetchList()

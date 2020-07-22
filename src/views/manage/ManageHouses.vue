@@ -89,17 +89,17 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
-      <el-table-column prop="id" label="楼盘ID" width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="name" label="楼盘名称" width="250" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="price" label="定价（元/平）" width="100"></el-table-column>
-      <el-table-column prop="typeName" label="楼盘类型" width="80" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="stateName" label="楼盘状态" width="80" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="state" label="上架状态" width="80">
+      <el-table-column prop="id" label="楼盘ID" min-width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="name" label="楼盘名称" min-width="250" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="price" label="定价（元/平）" min-width="100"></el-table-column>
+      <el-table-column prop="typeName" label="楼盘类型" min-width="80" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="stateName" label="楼盘状态" min-width="80" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="state" label="上架状态" min-width="80">
         <template slot-scope="scope">
           {{scope.row.state === 1 ? '上架': '下架'}}
         </template>
       </el-table-column>
-      <el-table-column label="操作" min-width="040">
+      <el-table-column label="操作" min-width="400">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleEditHouses(scope.$index, scope.row)">编辑</el-button>
           <el-button v-if="scope.row.state === 1" v-permission="'楼盘上下架'" size="mini" type="danger" @click.stop="handlePutaway([scope.row], 0)">下架</el-button>
