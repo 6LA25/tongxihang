@@ -63,7 +63,7 @@
       <el-table-column prop="realname" label="客户姓名" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="mobile" label="手机号" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="genderName" label="性别" min-width="80" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="source" label="客户来源" min-width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="typeName" label="客户来源" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="houseName" label="推荐楼盘" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="intro" label="备注" min-width="200" show-overflow-tooltip></el-table-column>
       <el-table-column prop="followStatusName" label="跟进状态" min-width="100" show-overflow-tooltip></el-table-column>
@@ -131,7 +131,8 @@ export default {
       this.$router.push({
         name: 'edit-customer',
         query: {
-          id: data.id
+          id: data.id,
+          houseName: encodeURIComponent(data.houseName)
         }
       })
     },

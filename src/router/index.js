@@ -71,6 +71,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "EditCustomer" */ '../views/manage/EditCustomer.vue')
       },
       {
+        path: '/edit-dws-customer',
+        name: 'edit-dws-customer',
+        component: () => import(/* webpackChunkName: "EditDwsCustomer" */ '../views/manage/EditDwsCustomer.vue')
+      },
+      {
         path: '/add-intention-customer',
         name: 'add-intention-customer',
         component: () => import(/* webpackChunkName: "AddIntentionCustomer" */ '../views/manage/AddIntentionCustomer.vue')

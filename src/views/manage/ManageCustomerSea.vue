@@ -67,13 +67,13 @@
       <el-table-column prop="mobile" label="手机号" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="genderName" label="性别" min-width="80" show-overflow-tooltip></el-table-column>
       <el-table-column prop="houseName" label="推荐楼盘" min-width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="source" label="客户来源" min-width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="typeName" label="客户来源" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="intro" label="备注" min-width="200" show-overflow-tooltip></el-table-column>
       <el-table-column prop="recommendName" label="推荐人" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="recommendTime" label="推荐时间" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="followRealname" label="跟进人" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="followStatusName" label="跟进状态" min-width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column label="操作" min-width="250">
+      <el-table-column label="操作" min-width="300">
         <template slot-scope="scope">
           <el-button type="primary" v-if="scope.row.followStatus === 1" size="mini" @click.stop="handleDispatchCase(scope.row, 1)">派单</el-button>
           <el-button type="warning" v-if="scope.row.followStatus === 0" size="mini" @click.stop="handleDispatchCase(scope.row, 0)">重新派单</el-button>
@@ -241,7 +241,8 @@ export default {
       this.$router.push({
         name: 'edit-customer',
         query: {
-          id: data.id
+          id: data.id,
+          houseName: encodeURIComponent(data.houseName)
         }
       })
     },

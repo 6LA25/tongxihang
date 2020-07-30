@@ -14,7 +14,7 @@
       <el-form-item label="客户手机号：" prop="contact">
         <el-input style="width: 400px" size="mini" v-model="form.contact"></el-input>
       </el-form-item>
-      <el-form-item label="推荐楼盘：" prop="houseId">
+      <el-form-item label="意向楼盘：" prop="houseId">
         <el-select
           size="mini"
           v-model="form.houseId"
@@ -22,7 +22,7 @@
           filterable
           remote
           reserve-keyword
-          placeholder="请输入推荐楼盘关键词"
+          placeholder="请输入意向楼盘关键词"
           :remote-method="remoteMethod"
           :loading="loading"
           @change="handleChangeHouse"
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { fetchHouseList, editCustomer, fetchKehuItem } from '../../assets/services/manage-service'
+import { fetchHouseList, editDwsCustomer, fetchDwsKehuItem } from '../../assets/services/manage-service'
 export default {
   name: 'edit-customer',
   data () {
@@ -61,16 +61,13 @@ export default {
   },
   mounted () {
     this.fetchKehuItem()
-    if (this.$route.query.houseName) {
-      this.remoteMethod(decodeURIComponent(this.$route.query.houseName))
-    }
   },
   methods: {
     handleCancel () {
       this.$router.go(-1)
     },
     handleSubmit () {
-      editCustomer({
+      editDwsCustomer({
         id: this.$route.query.id,
         ...this.form
       }).then(() => {
@@ -79,13 +76,16 @@ export default {
       })
     },
     fetchKehuItem () {
-      fetchKehuItem({
+      fetchDwsKehuItem({
         id: this.$route.query.id
       }).then(({ data }) => {
         this.form.gender = data.genderName === '男' ? 1 : 2
         this.form.realname = data.realname
         this.form.contact = data.mobile
         this.form.houseId = data.houseId
+        if (data.houseName) {
+          this.remoteMethod(data.houseName)
+        }
       })
     },
     remoteMethod (query) {

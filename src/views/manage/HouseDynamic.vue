@@ -108,10 +108,7 @@ export default {
       submitting: false,
       rules: {
         type: [{ required: true, message: '请选择动态类型', trigger: 'blur' }],
-        title: [{ required: true, message: '请选择动态类型', trigger: 'blur' }],
-        content: [
-          { required: true, message: '请选择动态类型', trigger: 'blur' }
-        ]
+        title: [{ required: true, message: '请选择动态类型', trigger: 'blur' }]
       },
       ruleForm: {
         type: '',

@@ -13,9 +13,9 @@
     >
       <el-table-column type="index" width="50"></el-table-column>
       <el-table-column prop="name" label="户型名称" width="300" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="price" label="户型定价（元/平）" width="200" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="price" label="户型均价（元/平）" width="200" show-overflow-tooltip></el-table-column>
       <el-table-column prop="floorage" label="建面（平）" width="200" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="actualArea" label="套内（平）" width="200" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="cankaozongjia" label="参考总价（万元）" width="200" show-overflow-tooltip></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleEdit(scope.row, 'edit')">编辑</el-button>

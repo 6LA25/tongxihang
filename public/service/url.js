@@ -72,13 +72,18 @@ export default {
   },
   customer: {
     list: `${domain}/api/admin/customer/items`,
+    kehuItem: `${domain}/api/admin/customer/item`,
     close: `${domain}/api/admin/customer/close`,
     send: `${domain}/api/admin/customer/distribute`,
     add: `${domain}/api/admin/customer/add`,
     myList: `${domain}/api/admin/mycustomer/items`,
     addLog: `${domain}/api/admin/mycustomer/follow/edit`,
     logs: `${domain}/api/admin/mycustomer/follow/items`,
-    edit: `${domain}/api/admin/customer/edit`
+    edit: `${domain}/api/admin/customer/edit`,
+    editDws: `${domain}/api/admin/customer/collect/edit`,
+    dwsItems: `${domain}/api/admin/customer/collect/items`,
+    dwsItem: `${domain}/api/admin/customer/collect/item`,
+    updateStatus: `${domain}/api/admin/customer/collect/updateStatus`
   },
   distribution: {
     list: `${domain}/api/admin/distribution/items`,

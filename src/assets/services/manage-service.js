@@ -475,3 +475,43 @@ export const editCustomer = (options) => Fetch({
     ...options
   }
 })
+
+// 获取单个客户
+export const fetchKehuItem = (options) => Fetch({
+  url: URL.customer.kehuItem,
+  data: {
+    ...options
+  }
+})
+
+// 编辑待完善客户
+export const editDwsCustomer = (options) => Fetch({
+  url: URL.customer.editDws,
+  data: {
+    ...options
+  }
+})
+
+// 获取待完善客户
+export const fetchDwsKehuItem = (options) => Fetch({
+  url: URL.customer.dwsItem,
+  data: {
+    ...options
+  }
+})
+
+// 获取待完善信息客户列表
+export const fetchDwsList = (options) => Fetch({
+  url: URL.customer.dwsItems,
+  data: {
+    ...options
+  }
+})
+
+// 关单及重启
+export const updateCustomerCase = (options) => Fetch({
+  url: URL.customer.updateStatus,
+  data: {
+    ...options
+  }
+})
