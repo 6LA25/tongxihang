@@ -44,18 +44,18 @@
         </el-form-item>
         <div>
           <div class="ilb-top">
-            <el-form-item label="室：" prop="room">
-              <el-input style="width: 60px" size="mini"></el-input>
+            <el-form-item label="室：" prop="shi">
+              <el-input style="width: 60px" size="mini" v-model="editForm.shi"></el-input>
             </el-form-item>
           </div>
           <div class="ilb-top">
-            <el-form-item label="厅：" prop="hall">
-              <el-input style="width: 60px" size="mini"></el-input>
+            <el-form-item label="厅：" prop="ting">
+              <el-input style="width: 60px" size="mini" v-model="editForm.ting"></el-input>
             </el-form-item>
           </div>
           <div class="ilb-top">
-            <el-form-item label="卫：" prop="guard">
-              <el-input style="width: 60px" size="mini"></el-input>
+            <el-form-item label="卫：" prop="wei">
+              <el-input style="width: 60px" size="mini" v-model="editForm.wei"></el-input>
             </el-form-item>
           </div>
         </div>
@@ -68,23 +68,10 @@
           </div>
           <div class="ilb-top">
             <el-form-item label="参考总价：">
-              <el-input type="number" style="width: 100px" size="mini"></el-input>
+              <el-input type="number" style="width: 100px" size="mini" v-model="editForm.cankaozongjia"></el-input>
               <span class="ml-10 form-item-hint-text">万元</span>
             </el-form-item>
           </div>
-          <!-- <div class="ilb-top">
-            <el-form-item label="户型：" prop="type">
-              <el-select size="mini" v-model="editForm.type" placeholder="请选择楼盘类型">
-                <el-option
-                  v-for="item in houseTypes"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-              <span class="ml-10 form-item-hint-text">居室</span>
-            </el-form-item>
-          </div> -->
         </div>
         <div>
           <div class="ilb-top">
@@ -93,28 +80,22 @@
               <span class="ml-10 form-item-hint-text">m2</span>
             </el-form-item>
           </div>
-          <!-- <div class="ilb-top">
-            <el-form-item label="套内：" prop="inArea">
-              <el-input type="number" style="width: 100px" size="mini" v-model="editForm.actualArea"></el-input>
-              <span class="ml-10 form-item-hint-text">m2</span>
-            </el-form-item>
-          </div> -->
         </div>
         <div>
           <div class="ilb-top">
             <el-form-item label="得房率：">
-              <el-input type="number" style="width: 100px" size="mini"></el-input>
+              <el-input type="number" style="width: 100px" size="mini" v-model="editForm.defanglv"></el-input>
               <span class="ml-10 form-item-hint-text">%</span>
             </el-form-item>
           </div>
           <div class="ilb-top">
             <el-form-item label="层面结构：">
-              <el-input style="width: 100px" size="mini"></el-input>
+              <el-input style="width: 100px" size="mini" v-model="editForm.cengmianjiegou"></el-input>
             </el-form-item>
           </div>
           <div class="ilb-top">
             <el-form-item label="户型位置：">
-              <el-input style="width: 200px" size="mini"></el-input>
+              <el-input style="width: 200px" size="mini" v-model="editForm.huxingweizhi"></el-input>
             </el-form-item>
           </div>
         </div>
@@ -122,7 +103,7 @@
           <el-input type="textarea" placeholder="多个标签请以英文逗号“,”分开，最多填写3个标签，每个标签不超过5个汉字" style="width: 400px" size="mini" resize="none" v-model="editForm.tags"></el-input>
         </el-form-item>
         <el-form-item label="户型介绍：">
-          <el-input type="textarea" style="width: 400px" size="mini" resize="none"></el-input>
+          <el-input type="textarea" style="width: 400px" size="mini" maxlength="500" resize="none" v-model="editForm.huxingjieshao"></el-input>
           <span class="ml-10 form-item-hint-text">剩余500字</span>
         </el-form-item>
         <el-form-item label="户型图：" prop="editForm">
@@ -139,6 +120,26 @@
             :before-upload="beforeAvatarUpload"
             :on-remove="removeRealImg"
             :file-list="editForm.addImages"
+            :action="$store.state.uploadUrl">
+            <i class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        <div class="form-item-hint-text">最多上传4张图片，支持jpg/jpeg/png格式图片，大小不超过1M</div>
+      </el-form-item>
+
+      <el-form-item label="样板图：" prop="editForm">
+          <el-upload
+            v-if="$store.state.uploadUrl"
+            :headers="$store.state.uploadHeaders"
+            :data="$store.state.uploadData"
+            list-type="picture-card"
+            :name="'Filedata'"
+            style="display: inline-block;"
+            class="avatar-uploader"
+            :limit="4"
+            :on-success="uploadYangbanImgSuccess"
+            :before-upload="beforeAvatarUpload"
+            :on-remove="removeYangbanImg"
+            :file-list="editForm.addYangBanTu"
             :action="$store.state.uploadUrl">
             <i class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
@@ -171,7 +172,17 @@ export default {
         actualArea: '', // 套内面积
         tags: '',
         addImages: [],
-        delImages: []
+        delImages: [],
+        shi: '',
+        ting: '',
+        wei: '',
+        cankaozongjia: '',
+        huxingweizhi: '',
+        defanglv: '',
+        huxingjieshao: '',
+        cengmianjiegou: '',
+        addYangBanTu: [],
+        delYangBanTu: []
       },
       tableData: [],
       search: {
@@ -208,8 +219,8 @@ export default {
       editData: null,
       rules: {
         name: [{ required: true, message: '请输入户型名称', trigger: 'blur' }],
-        room: [{ required: true, message: '请输入几室', trigger: 'blur' }],
-        hall: [{ required: true, message: '请输入几厅', trigger: 'blur' }],
+        shi: [{ required: true, message: '请输入几室', trigger: 'blur' }],
+        ting: [{ required: true, message: '请输入几厅', trigger: 'blur' }],
         tags: [
           {
             validator: (rule, value, callback) => {
@@ -267,6 +278,14 @@ export default {
         this.editData = data
         this.editForm.name = data.name
         this.editForm.price = data.price
+        this.editForm.shi = data.shi
+        this.editForm.ting = data.ting
+        this.editForm.wei = data.wei
+        this.editForm.cankaozongjia = data.cankaozongjia
+        this.editForm.defanglv = data.defanglv
+        this.editForm.cengmianjiegou = data.cengmianjiegou
+        this.editForm.huxingweizhi = data.huxingweizhi
+        this.editForm.huxingjieshao = data.huxingjieshao
         this.editForm.type = data.type
         this.editForm.floorage = data.floorage
         this.editForm.actualArea = data.actualArea
@@ -313,6 +332,10 @@ export default {
       console.log('fileList', fileList)
       this.editForm.addImages = fileList
     },
+    uploadYangbanImgSuccess (res, file, fileList) {
+      console.log('fileList', fileList)
+      this.editForm.addYangBanTu = fileList
+    },
     beforeAvatarUpload (file) {
       console.log(file)
       const isJPG = file.type === 'image/jpeg'
@@ -340,6 +363,17 @@ export default {
         }
       }
     },
+    removeYangbanImg (file, fileList) {
+      console.log(file, fileList)
+      // 删除原有图片
+      if (this.dialogStatus === 'add') {
+        this.editForm.addYangBanTu = fileList
+      } else {
+        if (!file.response && !this.editForm.delYangBanTu.includes(file.name)) {
+          this.editForm.delYangBanTu.push(file.name)
+        }
+      }
+    },
     handleCancel () {
       this.editDialogVisible = false
     },
@@ -364,6 +398,14 @@ export default {
             type: this.editForm.type,
             floorage: this.editForm.floorage,
             actualArea: this.editForm.actualArea,
+            shi: this.editForm.shi,
+            ting: this.editForm.ting,
+            wei: this.editForm.wei,
+            cankaozongjia: this.editForm.cankaozongjia,
+            huxingweizhi: this.editForm.huxingweizhi,
+            defanglv: this.editForm.defanglv,
+            huxingjieshao: this.editForm.huxingjieshao,
+            cengmianjiegou: this.editForm.cengmianjiegou,
             tags: this.editForm.tags,
             addImages,
             delImages: this.editForm.delImages
