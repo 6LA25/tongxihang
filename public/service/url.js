@@ -89,7 +89,8 @@ export default {
     list: `${domain}/api/admin/distribution/items`,
     pass: `${domain}/api/admin/distribution/pass`,
     reset: `${domain}/api/admin/distribution/reset`,
-    reject: `${domain}/api/admin/distribution/reject`
+    reject: `${domain}/api/admin/distribution/reject`,
+    item: `${domain}/api/admin/distribution/item`
   },
   commission: {
     list: `${domain}/api/admin/commission/items`,

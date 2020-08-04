@@ -515,3 +515,11 @@ export const updateCustomerCase = (options) => Fetch({
     ...options
   }
 })
+
+// 获取单个佣金数据
+export const fetchDistributionItem = (options) => Fetch({
+  url: URL.distribution.item,
+  data: {
+    ...options
+  }
+})

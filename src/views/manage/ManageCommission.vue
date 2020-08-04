@@ -8,46 +8,6 @@
           <el-input v-model="search.keyword" placeholder="请输入内容" size="mini"></el-input>
         </div>
       </div>
-      <!-- <div class="ilb-top search-item-box">
-        <div class="ilb-top search-item-label">身份：</div>
-        <div class="ilb-top">
-          <el-select v-model="search.identity" placeholder="请选择" size="mini">
-            <el-option
-              v-for="item in identities"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </div>
-      </div> -->
-      <!-- <div class="ilb-top search-item-box">
-        <div class="ilb-top search-item-label">已购房客户：</div>
-        <div class="ilb-top">
-          <el-select v-model="search.bought" placeholder="请选择" size="mini">
-            <el-option
-              v-for="item in boughts"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </div>
-      </div> -->
-      <!-- <div class="ilb-top search-item-box">
-        <div class="ilb-top search-item-label">最近登录日期：</div>
-        <div class="ilb-top">
-          <el-date-picker
-            v-model="search.time"
-            size="mini"
-            value-format="yyyy-MM-dd"
-            type="daterange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          ></el-date-picker>
-        </div>
-      </div> -->
       <div class="ilb-top search-item-box search-btns-box">
         <el-button type="primary" size="mini" @click="handleSearch">搜索</el-button>
         <el-button type="warning" size="mini" @click="handleReset">重置</el-button>
@@ -105,10 +65,22 @@
       ></el-pagination>
     </div>
     <el-dialog
-      title="审核理由"
+      title="审核"
       :visible.sync="intrFormDialogVisiable"
       width="50%">
       <el-form v-if="intrFormDialogVisiable" :model="intrForm" ref="intrForm" label-width="100px">
+        <template v-if="tag === 'pass'">
+          <el-form-item v-if="currentLevel > 0" :rules="[{ required: true, message: '请输入佣金金额'},]" label="一级佣金：" prop="leve1Price">
+            <el-input style="width: 400px" size="mini" v-model="intrForm.leve1Price"></el-input>
+            <span style="margin-left: 20px;">系统佣金：{{currentDistribution.defaultLeve1Price || 0}}</span>
+          </el-form-item>
+          <el-form-item v-if="currentLevel > 1" :rules="[{ required: true, message: '请输入佣金金额'},]" label="二级佣金：" prop="leve2Price">
+            <el-input style="width: 400px" size="mini" v-model="intrForm.leve2Price"></el-input>
+          </el-form-item>
+          <el-form-item v-if="currentLevel > 2" :rules="[{ required: true, message: '请输入佣金金额'},]" label="三级佣金：" prop="leve3Price">
+            <el-input style="width: 400px" size="mini" v-model="intrForm.leve3Price"></el-input>
+          </el-form-item>
+        </template>
         <el-form-item
           label="理由"
           prop="intro"
@@ -128,7 +100,7 @@
 </template>
 
 <script>
-import { fetchDistributionList, rejectDistribution, passDistribution } from '../../assets/services/manage-service'
+import { fetchDistributionList, rejectDistribution, passDistribution, fetchDistributionItem } from '../../assets/services/manage-service'
 export default {
   name: 'manage-commission',
   data () {
@@ -171,12 +143,16 @@ export default {
       intrFormDialogVisiable: false,
       intrForm: {
         id: '',
-        intro: ''
+        intro: '',
+        leve1Price: '',
+        leve2Price: '',
+        leve3Price: ''
       },
       totalCount: 0,
       tableData: [],
       total: 0,
-      currentLevel: ''
+      currentLevel: '',
+      currentDistribution: {}
     }
   },
   mounted () {
@@ -193,6 +169,15 @@ export default {
     }
   },
   methods: {
+    getDistributionItem () {
+      fetchDistributionItem({
+        id: this.intrForm.id
+      }).then(({ data }) => {
+        this.intrForm.leve1Price = data.item.leve1Price || ''
+        this.intrForm.leve2Price = data.item.leve2Price || ''
+        this.intrForm.leve3Price = data.item.leve3Price || ''
+      })
+    },
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -218,11 +203,17 @@ export default {
       this.tag = tag
       this.intrFormDialogVisiable = true
       this.currentLevel = level
+      if (tag === 'pass') {
+        this.getDistributionItem()
+      }
     },
     handlePass () {
       passDistribution({
         id: this.intrForm.id,
         level: this.currentLevel,
+        leve1Price: this.intrForm.leve1Price,
+        leve2Price: this.intrForm.leve2Price,
+        leve3Price: this.intrForm.leve3Price,
         intro: this.intrForm.intro
       }).then(({ data }) => {
         this.$message.success('操作成功')
