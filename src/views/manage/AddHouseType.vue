@@ -297,7 +297,14 @@ export default {
             url: item.filepath
           })
         })
+        data.yangbantu.forEach(item => {
+          this.editForm.addYangBanTu.push({
+            name: item.filename,
+            url: item.filepath
+          })
+        })
         this.editForm.delImages = []
+        this.editForm.delYangBanTu = []
       })
     },
     handleDelete (index, row) {
@@ -390,6 +397,12 @@ export default {
               addImages.push(item.response.filename)
             }
           })
+          let addYangBanTu = []
+          this.editForm.addYangBanTu.forEach(item => {
+            if (item.response) {
+              addYangBanTu.push(item.response.filename)
+            }
+          })
           editHouseTypes({
             id: this.dialogStatus === 'add' ? 0 : this.editData.id,
             houseId: this.$route.query.id,
@@ -408,7 +421,9 @@ export default {
             cengmianjiegou: this.editForm.cengmianjiegou,
             tags: this.editForm.tags,
             addImages,
-            delImages: this.editForm.delImages
+            delImages: this.editForm.delImages,
+            addYangBanTu,
+            delYangBanTu: this.editForm.delYangBanTu
           }).then(({ data }) => {
             this.$message.success('操作成功')
             this.editDialogVisible = false
@@ -440,6 +455,8 @@ export default {
       this.editForm.tags = ''
       this.editForm.addImages = []
       this.editForm.delImages = []
+      this.editForm.addYangBanTu = []
+      this.editForm.delYangBanTu = []
     }
   }
 }

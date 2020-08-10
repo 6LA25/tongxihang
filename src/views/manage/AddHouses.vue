@@ -498,6 +498,18 @@ export default {
         {
           value: 6,
           label: '商铺'
+        },
+        {
+          value: 7,
+          label: '公寓'
+        },
+        {
+          value: 8,
+          label: '厂房'
+        },
+        {
+          value: 9,
+          label: '其他'
         }
       ],
       houseTypes: [
