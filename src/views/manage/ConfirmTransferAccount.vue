@@ -45,7 +45,7 @@
       <!-- <el-table-column prop="account" label="打款帐号" width="150"></el-table-column> -->
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
-          <el-button type="success" v-if="scope.row.stayAmount > 0" size="mini" @click="handleCheck(scope.row)">结算</el-button>
+          <el-button type="success" v-if="scope.row.stayPayAmount > 0" size="mini" @click="handleCheck(scope.row)">结算</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -76,11 +76,15 @@ export default {
         },
         {
           value: 0,
-          label: '待结算'
+          label: '待提现'
         },
         {
           value: 1,
-          label: '已结算'
+          label: '待发放'
+        },
+        {
+          value: 2,
+          label: '已发放'
         }
       ],
       search: {

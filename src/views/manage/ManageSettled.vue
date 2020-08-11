@@ -32,7 +32,7 @@
       <!-- <el-table-column prop="code" label="结算单号"></el-table-column> -->
       <el-table-column label="操作" width="200" v-if="$route.query.flag !== 'preview'">
         <template slot-scope="scope">
-          <el-button type="success" v-if="scope.row.status === 0" size="mini" @click="handleConfirmPay(scope.row)">确认打款</el-button>
+          <el-button type="success" v-if="scope.row.status === 1" size="mini" @click="handleConfirmPay(scope.row)">确认打款</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -62,7 +62,7 @@
         <div>
           <div style="margin-bottom: 20px;">
             <div class="ilb">实际打款金额：</div>
-            <div class="ilb"><el-input-number :min="0" :max="currentItem.commission" type="number" size="mini" style="width: 200px;" v-model="settled.finalAmount"></el-input-number></div>
+            <div class="ilb"><el-input disabled type="number" size="mini" style="width: 200px;" v-model="settled.finalAmount"></el-input></div>
           </div>
           <div style="margin-bottom: 20px;">
             <div class="ilb">打款时间：</div>
@@ -167,6 +167,7 @@ export default {
         console.log(data)
         this.currentItem = data.item
         this.currentItem.commissionId = row.id
+        this.settled.finalAmount = data.item.commission
       })
       this.dialogVisible = true
       this.settled.time = moment().format('YYYY-MM-DD')

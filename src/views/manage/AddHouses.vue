@@ -130,6 +130,12 @@
           </el-form-item>
         </div>
         <div class="ilb-top">
+          <el-form-item label="总建面积：" prop="zongjianmianji">
+            <el-input style="width: 150px" type="number" size="mini" v-model="housesForm.zongjianmianji"></el-input>
+             <span class="form-label">m2</span>
+          </el-form-item>
+        </div>
+        <div class="ilb-top">
           <el-form-item label="规划户数：" prop="planNum">
             <el-input style="width: 150px" size="mini" type="number" v-model="housesForm.planNum"></el-input>
           </el-form-item>
@@ -558,6 +564,7 @@ export default {
         openTime: '', // 开盘时间
         finishTime: '', // 交房时间
         floorSpace: '', // 占地面积
+        zongjianmianji: '', // 总建面积
         planNum: '', // 规划户数
         plotRatio: '', // 容积率
         greetingRate: '', // 绿化率
