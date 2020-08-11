@@ -73,7 +73,7 @@
       <el-table-column label="操作" min-width="200">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleFollowing(scope.row)">跟进</el-button>
-          <el-button type="primary" size="mini" @click.stop="handleJumpEditCustomer(scope.row)">编辑客户</el-button>
+          <el-button v-permission="'编辑客户'" type="primary" size="mini" @click.stop="handleJumpEditCustomer(scope.row)">编辑客户</el-button>
         </template>
       </el-table-column>
     </el-table>

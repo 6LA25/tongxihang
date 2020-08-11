@@ -79,7 +79,7 @@
           <el-button type="warning" v-if="scope.row.followStatus === 0" size="mini" @click.stop="handleDispatchCase(scope.row, 0)">重新派单</el-button>
           <el-button type="danger" v-if="scope.row.followStatus === 1 || scope.row.followStatus === 2 || scope.row.followStatus === 3 || scope.row.followStatus === 4 || scope.row.followStatus === 5" size="mini" @click.stop="handleCloseCase(scope.row)">关单</el-button>
           <el-button type="warning" size="mini" @click="handleJumpDetail(scope.row)">详情</el-button>
-          <el-button type="primary" size="mini" @click.stop="handleJumpEditCustomer(scope.row)">编辑客户</el-button>
+          <el-button type="primary" v-permission="'编辑客户'" size="mini" @click.stop="handleJumpEditCustomer(scope.row)">编辑客户</el-button>
         </template>
       </el-table-column>
     </el-table>

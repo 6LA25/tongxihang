@@ -30,7 +30,7 @@
               <el-menu-item-group>
                 <el-menu-item index="3-1" v-permission="'意向客户公海'">意向客户公海</el-menu-item>
                 <el-menu-item index="3-2" v-permission="'意向客户跟进'">意向客户跟进</el-menu-item>
-                <el-menu-item index="3-3">待完善客户信息</el-menu-item>
+                <el-menu-item index="3-3" v-permission="'待完善客户信息'">待完善客户信息</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="4">

@@ -48,16 +48,19 @@
             v-if="scope.row.status === 2"
             type="primary"
             size="mini"
+            v-permission="'重新启动'"
             @click.stop="handleRestartOrClose(scope.row, 0)"
           >重新启动</el-button>
           <el-button
             v-if="scope.row.status === 0"
+            v-permission="'完善信息'"
             type="primary"
             size="mini"
             @click.stop="handleOperate(scope.row, 'edit-customer')"
           >完善信息</el-button>
           <el-button
             v-if="scope.row.status === 0"
+            v-permission="'关单'"
             type="danger"
             size="mini"
             @click.stop="handleRestartOrClose(scope.row, 2)"
