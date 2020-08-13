@@ -70,14 +70,14 @@
       width="50%">
       <el-form v-if="intrFormDialogVisiable" :model="intrForm" ref="intrForm" label-width="100px">
         <template v-if="tag === 'pass'">
-          <el-form-item v-if="currentLevel > 0" :rules="[{ required: true, message: '请输入佣金金额'},]" label="一级佣金：" prop="leve1Price">
+          <el-form-item v-if="currentDistribution.level1Agent" :rules="[{ required: true, message: '请输入佣金金额'},]" label="一级佣金：" prop="leve1Price">
             <el-input style="width: 400px" size="mini" v-model="intrForm.leve1Price"></el-input>
             <span style="margin-left: 20px;">系统佣金：{{currentDistribution.defaultLeve1Price || 0}}</span>
           </el-form-item>
-          <el-form-item v-if="currentLevel > 1" :rules="[{ required: true, message: '请输入佣金金额'},]" label="二级佣金：" prop="leve2Price">
+          <el-form-item v-if="currentDistribution.level2Agent" :rules="[{ required: true, message: '请输入佣金金额'},]" label="二级佣金：" prop="leve2Price">
             <el-input style="width: 400px" size="mini" v-model="intrForm.leve2Price"></el-input>
           </el-form-item>
-          <el-form-item v-if="currentLevel > 2" :rules="[{ required: true, message: '请输入佣金金额'},]" label="三级佣金：" prop="leve3Price">
+          <el-form-item v-if="currentDistribution.level3Agent" :rules="[{ required: true, message: '请输入佣金金额'},]" label="三级佣金：" prop="leve3Price">
             <el-input style="width: 400px" size="mini" v-model="intrForm.leve3Price"></el-input>
           </el-form-item>
         </template>
@@ -165,6 +165,7 @@ export default {
         this.intrForm.intro = ''
         this.tag = ''
         this.currentLevel = ''
+        this.currentDistribution = {}
       }
     }
   },
@@ -176,6 +177,7 @@ export default {
         this.intrForm.leve1Price = data.item.leve1Price || ''
         this.intrForm.leve2Price = data.item.leve2Price || ''
         this.intrForm.leve3Price = data.item.leve3Price || ''
+        this.currentDistribution = data.item
       })
     },
     submitForm (formName) {

@@ -100,7 +100,7 @@
       </div>
       <div>
         <div class="ilb-top">
-          <el-form-item label="开盘时间：" prop="openTime">
+          <el-form-item label="最新开盘时间：" prop="openTime">
             <el-date-picker
               value-format="yyyy-MM-dd"
               size="mini"
@@ -111,7 +111,7 @@
           </el-form-item>
         </div>
         <div class="ilb-top">
-          <el-form-item label="交房时间：" prop="finishTime">
+          <el-form-item label="最近交房时间：" prop="finishTime">
             <el-date-picker
               value-format="yyyy-MM-dd"
               size="mini"
@@ -215,7 +215,7 @@
           <img v-if="housesForm.coverImg" :src="housesForm.coverImg.filepath" class="cover-img">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div class="form-item-hint-text"><span v-if="$route.query.tag === 'edit'">点击图片修改封面，</span>支持jpg/jpeg/png格式图片，大小不超过1M</div>
+        <div class="form-item-hint-text"><span v-if="$route.query.tag === 'edit'">点击图片修改封面，</span>支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：336 * 256 </div>
       </el-form-item>
       <el-form-item label="实景图：" prop="addRealImgs">
         <el-upload
@@ -234,7 +234,7 @@
           :action="$store.state.uploadUrl">
           <i class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过1M</div>
+        <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：336 * 256</div>
       </el-form-item>
       <el-form-item label="效果图：" prop="addRenderImgs">
         <el-upload
@@ -253,7 +253,7 @@
           :action="$store.state.uploadUrl">
           <i class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过1M</div>
+        <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：336 * 256</div>
       </el-form-item>
 
       <el-form-item label="周边配套图：" prop="addAmbitusImgs">
@@ -273,7 +273,7 @@
           :action="$store.state.uploadUrl">
           <i class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过1M</div>
+        <div class="form-item-hint-text">最多上传6张图片，支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：336 * 256</div>
       </el-form-item>
 
       <el-form-item label="分享封面图：" prop="shareImg">
@@ -291,7 +291,7 @@
           <img v-if="housesForm.shareImg" :src="housesForm.shareImg.filepath" class="cover-img">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div class="form-item-hint-text"><span v-if="$route.query.tag === 'edit'">点击图片修改封面，</span>支持jpg/jpeg/png格式图片，大小不超过1M</div>
+        <div class="form-item-hint-text"><span v-if="$route.query.tag === 'edit'">点击图片修改封面，</span>支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：336 * 256</div>
       </el-form-item>
       <div class="form-divide-title">楼盘位置</div>
       <el-form-item label="楼盘所属区域：" prop="region">

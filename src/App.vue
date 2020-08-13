@@ -15,12 +15,16 @@ export default {
 @import './assets/css/preset'
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
-  width: 146px;
-  height: 146px;
+  width: 168px;
+  height: 128px;
   border-radius: 6px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
+}
+.el-upload-list--picture-card .el-upload-list__item {
+  width: 168px!important;
+  height: 128px!important;
 }
 .avatar-uploader .el-upload:hover {
   border-color: #409EFF;
@@ -28,13 +32,13 @@ export default {
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 146px;
-  height: 146px;
-  line-height: 146px!important;
+  width: 168px;
+  height: 128px;
+  line-height: 128px!important;
   text-align: center;
 }
 .el-upload-list--picture-card {
-  height 146px
+  height 128px
 }
 .cover-img {
   width 100%
