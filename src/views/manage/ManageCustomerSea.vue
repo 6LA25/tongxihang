@@ -2,6 +2,7 @@
   <div class="manage-customer-sea-page">
     <div class="content-title">意向客户列表</div>
     <div class="operate-btn-box">
+      <el-button type="primary" size="small" :disabled="sendForm.ids.length === 0" @click="handleDispatchCase('')">批量派单</el-button>
       <el-button type="primary" size="small" v-permission="'新增意向客户'" @click="handleAddCustomer('add')">新增意向客户</el-button>
     </div>
     <div class="search-head-box">
@@ -61,8 +62,10 @@
       tooltip-effect="dark"
       style="width: 100%"
       size="mini"
+      @selection-change="handleSelectionChange"
       v-loading="loading"
     >
+      <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
       <el-table-column prop="realname" label="客户姓名" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="mobile" label="手机号" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="genderName" label="性别" min-width="80" show-overflow-tooltip></el-table-column>
@@ -75,8 +78,8 @@
       <el-table-column prop="followStatusName" label="跟进状态" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column label="操作" min-width="300">
         <template slot-scope="scope">
-          <el-button type="primary" v-if="scope.row.followStatus === 1" size="mini" @click.stop="handleDispatchCase(scope.row, 1)">派单</el-button>
-          <el-button type="warning" v-if="scope.row.followStatus === 0" size="mini" @click.stop="handleDispatchCase(scope.row, 0)">重新派单</el-button>
+          <el-button type="primary" v-if="scope.row.followStatus === 1" size="mini" @click.stop="handleDispatchCase([scope.row.id], 1)">派单</el-button>
+          <el-button type="warning" v-if="scope.row.followStatus === 0" size="mini" @click.stop="handleDispatchCase([scope.row.id], 0)">重新派单</el-button>
           <el-button type="danger" v-if="scope.row.followStatus === 1 || scope.row.followStatus === 2 || scope.row.followStatus === 3 || scope.row.followStatus === 4 || scope.row.followStatus === 5" size="mini" @click.stop="handleCloseCase(scope.row)">关单</el-button>
           <el-button type="warning" size="mini" @click="handleJumpDetail(scope.row)">详情</el-button>
           <el-button type="primary" v-permission="'编辑客户'" size="mini" @click.stop="handleJumpEditCustomer(scope.row)">编辑客户</el-button>
@@ -164,6 +167,7 @@ export default {
   name: 'manage-customer-sea-page',
   data () {
     return {
+      multipleSelection: [],
       loading: false,
       searching: false,
       total: 0,
@@ -182,7 +186,7 @@ export default {
         intro: ''
       },
       sendForm: {
-        id: '',
+        ids: '',
         intro: '',
         followUser: ''
       },
@@ -230,13 +234,22 @@ export default {
     },
     sendDialogVisible (nv) {
       if (!nv) {
-        this.sendForm.id = ''
+        this.sendForm.ids = []
         this.sendForm.intro = ''
         this.sendForm.followUser = ''
       }
     }
   },
   methods: {
+    checkSelectable (item) {
+      return item.followStatus === 1 || item.followStatus === 0
+    },
+    handleSelectionChange (val) {
+      let ids = val.map(item => {
+        return item.id
+      })
+      this.sendForm.ids = ids
+    },
     handleJumpEditCustomer (data) {
       this.$router.push({
         name: 'edit-customer',
@@ -283,7 +296,11 @@ export default {
     handleSendForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          sendCustomerCase(this.sendForm).then(({ data }) => {
+          sendCustomerCase({
+            ids: this.sendForm.ids.join(','),
+            intro: this.sendForm.intro,
+            followUser: this.sendForm.followUser
+          }).then(({ data }) => {
             this.$message.success('派单成功')
             this.handleReset()
             this.sendDialogVisible = false
@@ -330,9 +347,10 @@ export default {
       this.search.time = ''
       this.fetchList()
     },
-    handleDispatchCase (row) {
-      console.log(row)
-      this.sendForm.id = row.id
+    handleDispatchCase (ids) {
+      if (ids) {
+        this.sendForm.ids = ids
+      }
       this.sendDialogVisible = true
     },
     // 关单

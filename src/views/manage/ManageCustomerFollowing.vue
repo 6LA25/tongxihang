@@ -5,7 +5,12 @@
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">用户搜索：</div>
         <div class="ilb-top">
-          <el-input style="width: 250px;" v-model="search.keyword" placeholder="请输入UID、手机或姓名搜索" size="mini"></el-input>
+          <el-input
+            style="width: 250px;"
+            v-model="search.keyword"
+            placeholder="请输入UID、手机或姓名搜索"
+            size="mini"
+          ></el-input>
         </div>
       </div>
       <div class="ilb-top search-item-box">
@@ -14,6 +19,19 @@
           <el-select v-model="search.type" placeholder="请选择" size="mini">
             <el-option
               v-for="item in identities"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </div>
+      </div>
+      <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">跟进状态：</div>
+        <div class="ilb-top">
+          <el-select v-model="search.followStatus" placeholder="请选择" size="mini">
+            <el-option
+              v-for="item in followingStatus"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -73,7 +91,12 @@
       <el-table-column label="操作" min-width="200">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleFollowing(scope.row)">跟进</el-button>
-          <el-button v-permission="'编辑客户'" type="primary" size="mini" @click.stop="handleJumpEditCustomer(scope.row)">编辑客户</el-button>
+          <el-button
+            v-permission="'编辑客户'"
+            type="primary"
+            size="mini"
+            @click.stop="handleJumpEditCustomer(scope.row)"
+          >编辑客户</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -101,11 +124,22 @@ export default {
       total: 0,
       search: {
         keyword: '',
+        followStatus: -1,
         type: -1,
         time: '',
         pageSize: 10,
         pageNo: 1
       },
+      followingStatus: [
+        { value: -1, label: '全部' },
+        { value: 0, label: '关单' },
+        { value: 2, label: '联系中' },
+        { value: 3, label: '已到访' },
+        { value: 4, label: '已认筹' },
+        { value: 5, label: '已认购' },
+        { value: 6, label: '已签约' }
+        // { status: 7, text: '已回款' }
+      ],
       identities: [
         {
           value: -1,
@@ -145,6 +179,7 @@ export default {
       this.search.pageNo = 1
       this.search.keyword = ''
       this.search.type = -1
+      this.search.followStatus = -1
       this.search.time = ''
       this.fetchList()
     },
@@ -173,7 +208,8 @@ export default {
         startTime: this.search.time ? this.search.time[0] : '',
         endTime: this.search.time ? this.search.time[1] : '',
         pageNo: this.search.pageNo,
-        pageSize: this.search.pageSize
+        pageSize: this.search.pageSize,
+        followStatus: this.search.followStatus
       }
       fetchMyCustomer(post).then(({ data }) => {
         this.total = data.totalCount

@@ -2,7 +2,12 @@
   <div class="manage-settled-page">
     <div class="content-title">待结算佣金</div>
     <div class="settled-detail-box">
-      <div><span>结算人：{{userInfo.realname}}</span><span>手机号：{{userInfo.mobile}}</span></div>
+      <div>
+        <span>结算人：{{userInfo.realname}}</span>
+        <span>手机号：{{userInfo.mobile}}</span>
+        <span>开户行：{{userInfo.bankTitle}}</span>
+        <span>卡号：{{userInfo.bankAccount}}</span>
+      </div>
       <div class="money-box"><span>佣金总额：{{userInfo.totalAmount}}</span><span>待结算金额：{{userInfo.stayAmount}}</span></div>
     </div>
     <!-- <div class="operate-btn-box" v-if="$route.query.flag !== 'preview'">

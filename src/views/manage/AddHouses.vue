@@ -514,6 +514,10 @@ export default {
           label: '厂房'
         },
         {
+          value: 10,
+          label: '车位'
+        },
+        {
           value: 9,
           label: '其他'
         }

@@ -26,9 +26,21 @@
       <el-table-column prop="houseName" label="购买楼盘" width="120"></el-table-column>
       <el-table-column prop="contractAmount" label="合同总价" width="100"></el-table-column>
       <el-table-column prop="contractTime" label="签约时间" width="150"></el-table-column>
-      <el-table-column prop="leve1Price" label="一级分成" width="80"></el-table-column>
-      <el-table-column prop="leve2Price" label="二级分成" width="80"></el-table-column>
-      <el-table-column prop="leve3Price" label="三级分成" width="80"></el-table-column>
+      <el-table-column prop="leve1Price" label="一级分成" width="80">
+        <template slot-scope="scope">
+          {{scope.row.level1Agent ? scope.row.leve1Price : '--'}}
+        </template>
+      </el-table-column>
+      <el-table-column prop="leve2Price" label="二级分成" width="80">
+        <template slot-scope="scope">
+          {{scope.row.level2Agent ? scope.row.leve2Price : '--'}}
+        </template>
+      </el-table-column>
+      <el-table-column prop="leve3Price" label="三级分成" width="80">
+        <template slot-scope="scope">
+          {{scope.row.level3Agent ? scope.row.leve3Price : '--'}}
+        </template>
+      </el-table-column>
       <el-table-column prop="salesmanRealname" label="所属员工" width="100"></el-table-column>
       <el-table-column prop="totalPrice" label="总计" width="80"></el-table-column>
       <el-table-column prop="statusName" label="财务状态" width="80"></el-table-column>

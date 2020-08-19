@@ -119,7 +119,7 @@
       <div class="title">跟进日志：</div>
       <ul class="log-list-box" v-loading="loading">
         <li class="log-list-item" v-for="(log, index) in logList" :key="index">
-          <div>2019.09.08 12:31:23 操作人：{{log.operator}}</div>
+          <div>{{log.operationTime | YMDHMS_date}} 操作人：{{log.operator}}</div>
           <div>
             <span>跟进状态"{{log.followStatusName}}"，</span>
             <span>跟进时间“{{log.followTime}}”，下次跟进时间为“{{log.nextFollowTime}}”，</span>
