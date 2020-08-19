@@ -291,7 +291,7 @@
           <img v-if="housesForm.shareImg" :src="housesForm.shareImg.filepath" class="cover-img">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div class="form-item-hint-text"><span v-if="$route.query.tag === 'edit'">点击图片修改封面，</span>支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：336 * 256</div>
+        <div class="form-item-hint-text"><span v-if="$route.query.tag === 'edit'">点击图片修改封面，</span>支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：260 * 350</div>
       </el-form-item>
       <div class="form-divide-title">楼盘位置</div>
       <el-form-item label="楼盘所属区域：" prop="region">
