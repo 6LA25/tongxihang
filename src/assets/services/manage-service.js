@@ -523,3 +523,11 @@ export const fetchDistributionItem = (options) => Fetch({
     ...options
   }
 })
+
+// 重新派单
+export const redistributionCase = (options) => Fetch({
+  url: URL.customer.reSend,
+  data: {
+    ...options
+  }
+})

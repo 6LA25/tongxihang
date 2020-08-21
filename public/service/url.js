@@ -83,7 +83,8 @@ export default {
     editDws: `${domain}/api/admin/customer/collect/edit`,
     dwsItems: `${domain}/api/admin/customer/collect/items`,
     dwsItem: `${domain}/api/admin/customer/collect/item`,
-    updateStatus: `${domain}/api/admin/customer/collect/updateStatus`
+    updateStatus: `${domain}/api/admin/customer/collect/updateStatus`,
+    reSend: `${domain}/api/admin/customer/redistribution`
   },
   distribution: {
     list: `${domain}/api/admin/distribution/items`,

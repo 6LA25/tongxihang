@@ -2,14 +2,29 @@
   <div class="manage-customer-sea-page">
     <div class="content-title">意向客户列表</div>
     <div class="operate-btn-box">
-      <el-button type="primary" size="small" :disabled="sendForm.ids.length === 0" @click="handleDispatchCase('')">批量派单</el-button>
-      <el-button type="primary" size="small" v-permission="'新增意向客户'" @click="handleAddCustomer('add')">新增意向客户</el-button>
+      <el-button
+        type="primary"
+        size="small"
+        :disabled="sendForm.ids.length === 0"
+        @click="handleDispatchCase('')"
+      >批量派单</el-button>
+      <el-button
+        type="primary"
+        size="small"
+        v-permission="'新增意向客户'"
+        @click="handleAddCustomer('add')"
+      >新增意向客户</el-button>
     </div>
     <div class="search-head-box">
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">用户搜索：</div>
         <div class="ilb-top">
-          <el-input style="width: 250px;" v-model="search.keyword" placeholder="请输入UID、手机或姓名搜索" size="mini"></el-input>
+          <el-input
+            style="width: 250px;"
+            v-model="search.keyword"
+            placeholder="请输入UID、手机或姓名搜索"
+            size="mini"
+          ></el-input>
         </div>
       </div>
       <div class="ilb-top search-item-box">
@@ -76,13 +91,33 @@
       <el-table-column prop="recommendTime" label="推荐时间" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="followRealname" label="跟进人" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="followStatusName" label="跟进状态" min-width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column label="操作" min-width="300">
+      <el-table-column label="操作" min-width="350">
         <template slot-scope="scope">
-          <el-button type="primary" v-if="scope.row.followStatus === 1" size="mini" @click.stop="handleDispatchCase([scope.row.id], 1)">派单</el-button>
-          <el-button type="warning" v-if="scope.row.followStatus === 0" size="mini" @click.stop="handleDispatchCase([scope.row.id], 0)">重新派单</el-button>
-          <el-button type="danger" v-if="scope.row.followStatus === 1 || scope.row.followStatus === 2 || scope.row.followStatus === 3 || scope.row.followStatus === 4 || scope.row.followStatus === 5" size="mini" @click.stop="handleCloseCase(scope.row)">关单</el-button>
+          <el-button
+            type="primary"
+            v-if="scope.row.followStatus === 1"
+            size="mini"
+            @click.stop="handleDispatchCase([scope.row.id], 1)"
+          >派单</el-button>
+          <el-button
+            type="warning"
+            size="mini"
+            v-if="scope.row.followStatus !== 1"
+            @click.stop="handleRedispatchCase([scope.row.id], 0)"
+          >重新派单</el-button>
+          <el-button
+            type="danger"
+            v-if="scope.row.followStatus === 1 || scope.row.followStatus === 2 || scope.row.followStatus === 3 || scope.row.followStatus === 4 || scope.row.followStatus === 5"
+            size="mini"
+            @click.stop="handleCloseCase(scope.row)"
+          >关单</el-button>
           <el-button type="warning" size="mini" @click="handleJumpDetail(scope.row)">详情</el-button>
-          <el-button type="primary" v-permission="'编辑客户'" size="mini" @click.stop="handleJumpEditCustomer(scope.row)">编辑客户</el-button>
+          <el-button
+            type="primary"
+            v-permission="'编辑客户'"
+            size="mini"
+            @click.stop="handleJumpEditCustomer(scope.row)"
+          >编辑客户</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -97,11 +132,8 @@
         :total="total"
       ></el-pagination>
     </div>
-    <el-dialog
-      title="关单"
-      :visible.sync="closeDialogVisible"
-      width="50%">
-        <el-form v-if="closeDialogVisible" :model="closeForm" ref="closeForm" label-width="100px">
+    <el-dialog title="关单" :visible.sync="closeDialogVisible" width="50%">
+      <el-form v-if="closeDialogVisible" :model="closeForm" ref="closeForm" label-width="100px">
         <el-form-item
           label="理由"
           prop="intro"
@@ -109,7 +141,13 @@
             { required: true, message: '理由不能为空'},
           ]"
         >
-          <el-input style="width: 400px;" type="text" size="mini" v-model="closeForm.intro" autocomplete="off"></el-input>
+          <el-input
+            style="width: 400px;"
+            type="text"
+            size="mini"
+            v-model="closeForm.intro"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button size="mini" type="primary" @click="submitForm('closeForm')">提交</el-button>
@@ -118,9 +156,10 @@
       </el-form>
     </el-dialog>
     <el-dialog
-      title="派单"
+      :title="sendStatus === 1 ? '派单' : '重新派单'"
       :visible.sync="sendDialogVisible"
-      width="50%">
+      width="50%"
+    >
       <el-form v-if="sendDialogVisible" :model="sendForm" ref="sendForm" label-width="100px">
         <el-form-item
           label="跟进人"
@@ -137,20 +176,24 @@
             remote
             reserve-keyword
             placeholder="请输入需要指派的用户名"
-            :remote-method="fetchUsers">
+            :remote-method="fetchUsers"
+          >
             <el-option
               v-for="item in options"
               :key="item.account"
               :label="item.account"
-              :value="item.account">
-            </el-option>
+              :value="item.account"
+            ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="理由"
-          prop="intro"
-        >
-          <el-input style="width: 400px;" type="text" size="mini" v-model="sendForm.intro" autocomplete="off"></el-input>
+        <el-form-item label="理由" prop="intro">
+          <el-input
+            style="width: 400px;"
+            type="text"
+            size="mini"
+            v-model="sendForm.intro"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button size="mini" type="primary" @click="handleSendForm('sendForm')">提交</el-button>
@@ -162,7 +205,13 @@
 </template>
 
 <script>
-import { fetchCustomerSea, closeCustomerCase, fetchAllUsers, sendCustomerCase } from '../../assets/services/manage-service'
+import {
+  fetchCustomerSea,
+  closeCustomerCase,
+  fetchAllUsers,
+  sendCustomerCase,
+  redistributionCase
+} from '../../assets/services/manage-service'
 export default {
   name: 'manage-customer-sea-page',
   data () {
@@ -218,7 +267,8 @@ export default {
           label: '无'
         }
       ],
-      tableData: []
+      tableData: [],
+      sendStatus: ''
     }
   },
   mounted () {
@@ -237,6 +287,7 @@ export default {
         this.sendForm.ids = []
         this.sendForm.intro = ''
         this.sendForm.followUser = ''
+        this.sendStatus = ''
       }
     }
   },
@@ -245,7 +296,7 @@ export default {
       return item.followStatus === 1 || item.followStatus === 0
     },
     handleSelectionChange (val) {
-      let ids = val.map(item => {
+      let ids = val.map((item) => {
         return item.id
       })
       this.sendForm.ids = ids
@@ -296,12 +347,17 @@ export default {
     handleSendForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          sendCustomerCase({
+          let _post = {
             ids: this.sendForm.ids.join(','),
             intro: this.sendForm.intro,
             followUser: this.sendForm.followUser
-          }).then(({ data }) => {
-            this.$message.success('派单成功')
+          }
+          let _fn =
+            this.sendStatus === 1 ? sendCustomerCase : redistributionCase
+          _fn(_post).then(({ data }) => {
+            this.$message.success(
+              this.sendStatus === 1 ? '派单成功' : '重新派单成功'
+            )
             this.handleReset()
             this.sendDialogVisible = false
           })
@@ -326,13 +382,15 @@ export default {
         pageNo: this.search.pageNo,
         pageSize: this.search.pageSize
       }
-      fetchCustomerSea(post).then(({ data }) => {
-        this.total = data.totalCount
-        this.tableData = data.items
-        this.loading = false
-      }).catch(() => {
-        this.loading = false
-      })
+      fetchCustomerSea(post)
+        .then(({ data }) => {
+          this.total = data.totalCount
+          this.tableData = data.items
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     handleAddCustomer () {
       this.$router.push({
@@ -347,10 +405,18 @@ export default {
       this.search.time = ''
       this.fetchList()
     },
+    // 重新派单
+    handleRedispatchCase (ids) {
+      this.sendStatus = 0
+      this.sendForm.ids = ids
+      this.sendDialogVisible = true
+    },
+    // 派单
     handleDispatchCase (ids) {
       if (ids) {
         this.sendForm.ids = ids
       }
+      this.sendStatus = 1
       this.sendDialogVisible = true
     },
     // 关单
