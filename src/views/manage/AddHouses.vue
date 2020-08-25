@@ -101,24 +101,12 @@
       <div>
         <div class="ilb-top">
           <el-form-item label="最新开盘时间：" prop="openTime">
-            <el-date-picker
-              value-format="yyyy-MM-dd"
-              size="mini"
-              v-model="housesForm.openTime"
-              type="date"
-              placeholder="选择日期">
-            </el-date-picker>
+            <el-input style="width: 150px" size="mini" v-model="housesForm.openTime"></el-input>
           </el-form-item>
         </div>
         <div class="ilb-top">
           <el-form-item label="最近交房时间：" prop="finishTime">
-            <el-date-picker
-              value-format="yyyy-MM-dd"
-              size="mini"
-              v-model="housesForm.finishTime"
-              type="date"
-              placeholder="选择日期">
-            </el-date-picker>
+            <el-input style="width: 150px" size="mini" v-model="housesForm.finishTime"></el-input>
           </el-form-item>
         </div>
       </div>
