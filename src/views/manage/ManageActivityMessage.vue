@@ -44,6 +44,16 @@
       width="60%">
       <div>
         <el-form v-if="dialogVisible" :disabled="flag === 'preview'" label-width="100px" :rules="rules" ref="ruleForm" :model="activityForm">
+          <el-form-item label="查看角色：" prop="title">
+            <el-select size="mini" v-model="activityForm.type">
+              <el-option
+                v-for="item in roles"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="通知标题：" prop="title">
             <el-input size="mini" type="text" v-model="activityForm.title"></el-input>
           </el-form-item>
@@ -79,10 +89,25 @@ export default {
         pageNo: 1,
         state: 1
       },
+      roles: [
+        {
+          name: '全部',
+          value: 0
+        },
+        {
+          name: '游客',
+          value: 1
+        },
+        {
+          name: '经纪人',
+          value: 2
+        }
+      ],
       activityForm: {
         id: '',
         title: '',
-        content: ''
+        content: '',
+        type: ''
       },
       tableData: [
       ],
@@ -115,6 +140,7 @@ export default {
         this.activityForm.id = data.id
         this.activityForm.title = data.title
         this.activityForm.content = data.content
+        this.activityForm.type = data.type
       })
     },
     checkSelectable () {

@@ -42,6 +42,16 @@
         <el-form-item label="户型名称：" prop="name">
           <el-input style="width: 400px" size="mini" v-model="editForm.name"></el-input>
         </el-form-item>
+        <el-form-item label="户型类型：" prop="type">
+          <el-select @change="handleSelectType" size="mini" v-model="editForm.type" placeholder="请选择">
+            <el-option
+              v-for="item in houseTypes"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <div>
           <div class="ilb-top">
             <el-form-item label="室：" prop="shi">
@@ -51,6 +61,11 @@
           <div class="ilb-top">
             <el-form-item label="厅：" prop="ting">
               <el-input style="width: 60px" size="mini" v-model="editForm.ting"></el-input>
+            </el-form-item>
+          </div>
+          <div class="ilb-top">
+            <el-form-item label="厨：" prop="chu">
+              <el-input style="width: 60px" size="mini" v-model="editForm.chu"></el-input>
             </el-form-item>
           </div>
           <div class="ilb-top">
@@ -167,7 +182,7 @@ export default {
       editForm: {
         name: '', // 名称
         price: '', // 定价
-        type: '',
+        type: '', // 户型类型
         floorage: '', // 建筑面积
         actualArea: '', // 套内面积
         tags: '',
@@ -176,6 +191,7 @@ export default {
         shi: '',
         ting: '',
         wei: '',
+        chu: '',
         cankaozongjia: '',
         huxingweizhi: '',
         defanglv: '',
@@ -191,36 +207,23 @@ export default {
       },
       total: 0,
       houseTypes: [
-        {
-          value: -1,
-          label: '全部'
-        },
-        {
-          value: 1,
-          label: '一'
-        },
-        {
-          value: 2,
-          label: '二'
-        },
-        {
-          value: 3,
-          label: '三'
-        },
-        {
-          value: 4,
-          label: '四'
-        },
-        {
-          value: 5,
-          label: '五及以上'
-        }
+        { value: 1, label: '一居室' },
+        { value: 2, label: '二居室' },
+        { value: 3, label: '三居室' },
+        { value: 4, label: '四居室' },
+        { value: 5, label: '五居室' },
+        { value: 6, label: '六居室' },
+        { value: 7, label: '七居室' },
+        { value: 8, label: '八居室' },
+        { value: 9, label: '九居室' }
       ],
       editData: null,
       rules: {
         name: [{ required: true, message: '请输入户型名称', trigger: 'blur' }],
         shi: [{ required: true, message: '请输入几室', trigger: 'blur' }],
         ting: [{ required: true, message: '请输入几厅', trigger: 'blur' }],
+        chu: [{ required: true, message: '请输入几厨', trigger: 'blur' }],
+        type: [{ required: true, message: '请选择户型类型', trigger: 'change' }],
         tags: [
           {
             validator: (rule, value, callback) => {
@@ -269,6 +272,11 @@ export default {
         this.loading = false
       })
     },
+    handleSelectType (e) {
+      console.log(e)
+      this.editForm.shi = e
+      this.$refs['editForm'].clearValidate('shi')
+    },
     handleEdit (row, tag) {
       this.editDialogVisible = true
       this.dialogStatus = tag
@@ -281,6 +289,7 @@ export default {
         this.editForm.shi = data.shi
         this.editForm.ting = data.ting
         this.editForm.wei = data.wei
+        this.editForm.chu = data.chu
         this.editForm.cankaozongjia = data.cankaozongjia
         this.editForm.defanglv = data.defanglv
         this.editForm.cengmianjiegou = data.cengmianjiegou
@@ -414,6 +423,7 @@ export default {
             shi: this.editForm.shi,
             ting: this.editForm.ting,
             wei: this.editForm.wei,
+            chu: this.editForm.chu,
             cankaozongjia: this.editForm.cankaozongjia,
             huxingweizhi: this.editForm.huxingweizhi,
             defanglv: this.editForm.defanglv,
@@ -457,6 +467,10 @@ export default {
       this.editForm.delImages = []
       this.editForm.addYangBanTu = []
       this.editForm.delYangBanTu = []
+      this.editForm.chu = ''
+      this.editForm.shi = ''
+      this.editForm.ting = ''
+      this.editForm.wei = ''
     }
   }
 }
