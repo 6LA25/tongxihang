@@ -3,11 +3,14 @@
     <div class="content-title">{{titleText}}</div>
     <el-form :disabled="$route.query.tag === 'preview'" :rules="rules" ref="housesForm" :model="housesForm" label-width="130px">
       <div class="form-divide-title">楼盘信息</div>
-      <el-form-item label="楼盘名称：" prop="name">
+      <el-form-item label="楼盘推广名称：" prop="name">
         <el-input style="width: 400px" size="mini" v-model="housesForm.name"></el-input>
       </el-form-item>
+      <el-form-item label="楼盘注册名称：" prop="zhuceming">
+        <el-input style="width: 400px" size="mini" v-model="housesForm.zhuceming"></el-input>
+      </el-form-item>
       <el-form-item label="定价：" prop="price">
-        <el-input style="width: 400px" size="mini" type="number" v-model="housesForm.price"></el-input>
+        <el-input style="width: 400px" size="mini" v-model="housesForm.price"></el-input>
         <span class="form-label">元/m2</span>
       </el-form-item>
       <el-form-item label="楼盘类型：" prop="type">
@@ -45,7 +48,7 @@
       <div>
         <div class="ilb-top">
           <el-form-item label="装修标准：" prop="standard">
-            <el-input style="width: 150px" size="mini" type="number" v-model="housesForm.standard"></el-input>
+            <el-input style="width: 150px" size="mini" v-model="housesForm.standard"></el-input>
             <span class="form-label">元/m2</span>
           </el-form-item>
         </div>
@@ -131,7 +134,6 @@
         <div class="ilb-top">
           <el-form-item label="容积率：" prop="plotRatio">
             <el-input style="width: 150px" size="mini" type="number" v-model="housesForm.plotRatio"></el-input>
-            <span class="form-label">%</span>
           </el-form-item>
         </div>
         <div class="ilb-top">
@@ -526,15 +528,28 @@ export default {
           label: '热销中'
         },
         {
+          value: 4,
+          label: '在售｜即将加推'
+        },
+        {
+          value: 5,
+          label: '即将首开'
+        },
+        {
           value: 2,
           label: '即将开盘'
         },
         {
+          value: 6,
+          label: '即将售罄'
+        },
+        {
           value: 3,
-          label: '已售罄'
+          label: '售罄'
         }
       ],
       housesForm: {
+        zhuceming: '', // 注册名
         tupaishijian: '', // 土拍时间
         tupaijiage: '',
         loumiandijia: '',

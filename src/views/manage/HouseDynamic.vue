@@ -17,7 +17,7 @@
       v-loading="loading"
     >
       <el-table-column prop="updated" label="发布时间" min-width="200" show-overflow-tooltip>
-        <template slot-scope="scope">{{scope.row.updated | YMDHMS_date}}</template>
+        <template slot-scope="scope">{{scope.row.publishTime || scope.row.created | YMDHMS_date}}</template>
       </el-table-column>
       <el-table-column prop="type" label="动态类型" min-width="100" show-overflow-tooltip>
         <template slot-scope="scope">{{getTypeText(scope.row.type)}}</template>
@@ -61,6 +61,14 @@
         <el-form-item label="动态标题：" prop="title">
           <el-input v-model="ruleForm.title" size="mini"></el-input>
         </el-form-item>
+        <el-form-item label="发布时间：">
+          <el-date-picker
+            v-model="ruleForm.publishTime"
+            size="mini"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="datetime"
+          ></el-date-picker>
+        </el-form-item>
         <el-form-item label="动态正文：" prop="content">
           <el-input type="textarea" size="mini" v-model="ruleForm.content"></el-input>
         </el-form-item>
@@ -79,6 +87,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import {
   editHouseDynamic,
   houseDynamicList,
@@ -94,6 +103,7 @@ export default {
           this.ruleForm.type = ''
           this.ruleForm.title = ''
           this.ruleForm.content = ''
+          this.ruleForm.publishTime = ''
           this.currentEditData = null
         })
       }
@@ -113,6 +123,7 @@ export default {
       ruleForm: {
         type: '',
         title: '',
+        publishTime: '',
         content: ''
       },
       tableData: [
@@ -156,8 +167,12 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.submitting = true
+          let _ruleForm = JSON.parse(JSON.stringify(this.ruleForm))
+          if (_ruleForm.publishTime) {
+            _ruleForm.publishTime = moment(_ruleForm.publishTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
+          }
           editHouseDynamic({
-            ...this.ruleForm,
+            ..._ruleForm,
             houseId: this.$route.query.id,
             id: this.tag === 'edit' ? this.currentEditData.id : ''
           })
@@ -207,6 +222,7 @@ export default {
         this.ruleForm.type = row.type
         this.ruleForm.title = row.title
         this.ruleForm.content = row.content
+        this.ruleForm.publishTime = row.publishTime ? moment(row.publishTime).format('YYYY-MM-DD HH:MM:SS') : ''
       }
       this.dialogVisible = true
     }
