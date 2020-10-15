@@ -174,13 +174,13 @@
         <div class="ilb-top">
           <el-form-item label="土拍价格：" prop="tupaijiage">
             <el-input style="width: 150px" type="number" size="mini" v-model="housesForm.tupaijiage"></el-input>
-            <span class="form-label">元</span>
+            <span class="form-label">亿</span>
           </el-form-item>
         </div>
         <div class="ilb-top">
           <el-form-item label="楼面地价：" prop="loumiandijia">
             <el-input style="width: 150px" type="number" size="mini" v-model="housesForm.loumiandijia"></el-input>
-            <span class="form-label">亿元</span>
+            <span class="form-label">元/m2</span>
           </el-form-item>
         </div>
       </div>
