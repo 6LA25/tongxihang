@@ -154,7 +154,7 @@
         </div>
         <div class="ilb-top">
           <el-form-item label="物业费用：" prop="management">
-            <el-input style="width: 150px" type="number" size="mini" v-model="housesForm.managementPrice"></el-input>
+            <el-input style="width: 150px" size="mini" v-model="housesForm.managementPrice"></el-input>
             <span class="form-label">元/月*m2</span>
           </el-form-item>
         </div>
