@@ -43,9 +43,19 @@
           <el-input style="width: 400px" size="mini" v-model="editForm.name"></el-input>
         </el-form-item>
         <el-form-item label="户型类型：" prop="type">
-          <el-select @change="handleSelectType" size="mini" v-model="editForm.type" placeholder="请选择">
+          <el-select size="mini" v-model="editForm.type" placeholder="请选择">
             <el-option
               v-for="item in houseTypes"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="销售状态：" prop="state">
+          <el-select @change="handleSelectType" size="mini" v-model="editForm.state" placeholder="请选择">
+            <el-option
+              v-for="item in stateTypes"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -182,6 +192,7 @@ export default {
       editForm: {
         name: '', // 名称
         price: '', // 定价
+        state: '',
         type: '', // 户型类型
         floorage: '', // 建筑面积
         actualArea: '', // 套内面积
@@ -216,6 +227,11 @@ export default {
         { value: 7, label: '七居室' },
         { value: 8, label: '八居室' },
         { value: 9, label: '九居室' }
+      ],
+      stateTypes: [
+        { value: 0, label: '在售' },
+        { value: 1, label: '待售' },
+        { value: 2, label: '售罄' }
       ],
       editData: null,
       rules: {
@@ -433,7 +449,8 @@ export default {
             addImages,
             delImages: this.editForm.delImages,
             addYangBanTu,
-            delYangBanTu: this.editForm.delYangBanTu
+            delYangBanTu: this.editForm.delYangBanTu,
+            state: this.editForm.state
           }).then(({ data }) => {
             this.$message.success('操作成功')
             this.editDialogVisible = false
