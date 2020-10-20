@@ -17,7 +17,7 @@
       v-loading="loading"
     >
       <el-table-column prop="updated" label="发布时间" min-width="200" show-overflow-tooltip>
-        <template slot-scope="scope">{{scope.row.publishTime || scope.row.created | YMDHMS_date}}</template>
+        <template slot-scope="scope">{{scope.row.publishTime | YMDHMS_date}}</template>
       </el-table-column>
       <el-table-column prop="type" label="动态类型" min-width="100" show-overflow-tooltip>
         <template slot-scope="scope">{{getTypeText(scope.row.type)}}</template>
@@ -222,8 +222,8 @@ export default {
         this.ruleForm.type = row.type
         this.ruleForm.title = row.title
         this.ruleForm.content = row.content
-        this.ruleForm.publishTime = row.publishTime ? moment(row.publishTime).format('YYYY-MM-DD HH:MM:SS') : ''
       }
+      this.ruleForm.publishTime = moment((row && row.publishTime) ? row.publishTime : moment().valueOf()).format('YYYY-MM-DD HH:MM:SS')
       this.dialogVisible = true
     }
   }

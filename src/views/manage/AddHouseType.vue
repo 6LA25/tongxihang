@@ -53,7 +53,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="销售状态：" prop="state">
-          <el-select @change="handleSelectType" size="mini" v-model="editForm.state" placeholder="请选择">
+          <el-select size="mini" v-model="editForm.state" placeholder="请选择">
             <el-option
               v-for="item in stateTypes"
               :key="item.value"
@@ -315,6 +315,7 @@ export default {
         this.editForm.floorage = data.floorage
         this.editForm.actualArea = data.actualArea
         this.editForm.tags = data.tags
+        this.editForm.state = data.state
         // this.editForm.addImages = data.imageList
         data.imageList.forEach(item => {
           this.editForm.addImages.push({
@@ -474,20 +475,29 @@ export default {
       this.dialogStatus = tag
     },
     resetEditForm () {
-      this.editForm.name = ''
-      this.editForm.price = ''
-      this.editForm.type = ''
-      this.editForm.floorage = ''
-      this.editForm.actualArea = ''
-      this.editForm.tags = ''
-      this.editForm.addImages = []
-      this.editForm.delImages = []
-      this.editForm.addYangBanTu = []
-      this.editForm.delYangBanTu = []
-      this.editForm.chu = ''
-      this.editForm.shi = ''
-      this.editForm.ting = ''
-      this.editForm.wei = ''
+      let _editForm = {
+        name: '', // 名称
+        price: '', // 定价
+        state: '',
+        type: '', // 户型类型
+        floorage: '', // 建筑面积
+        actualArea: '', // 套内面积
+        tags: '',
+        addImages: [],
+        delImages: [],
+        shi: '',
+        ting: '',
+        wei: '',
+        chu: '',
+        cankaozongjia: '',
+        huxingweizhi: '',
+        defanglv: '',
+        huxingjieshao: '',
+        cengmianjiegou: '',
+        addYangBanTu: [],
+        delYangBanTu: []
+      }
+      this.editForm = _editForm
     }
   }
 }
