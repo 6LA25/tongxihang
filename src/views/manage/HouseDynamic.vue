@@ -17,7 +17,7 @@
       v-loading="loading"
     >
       <el-table-column prop="updated" label="发布时间" min-width="200" show-overflow-tooltip>
-        <template slot-scope="scope">{{scope.row.publishTime | YMDHMS_date}}</template>
+        <template slot-scope="scope">{{scope.row.publishTime | YMD_date}}</template>
       </el-table-column>
       <el-table-column prop="type" label="动态类型" min-width="100" show-overflow-tooltip>
         <template slot-scope="scope">{{getTypeText(scope.row.type)}}</template>
@@ -65,8 +65,8 @@
           <el-date-picker
             v-model="ruleForm.publishTime"
             size="mini"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
+            value-format="yyyy-MM-dd"
+            type="date"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="动态正文：" prop="content">
@@ -169,7 +169,7 @@ export default {
           this.submitting = true
           let _ruleForm = JSON.parse(JSON.stringify(this.ruleForm))
           if (_ruleForm.publishTime) {
-            _ruleForm.publishTime = moment(_ruleForm.publishTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
+            _ruleForm.publishTime = moment(_ruleForm.publishTime, 'YYYY-MM-DD').valueOf()
           }
           editHouseDynamic({
             ..._ruleForm,
@@ -223,7 +223,7 @@ export default {
         this.ruleForm.title = row.title
         this.ruleForm.content = row.content
       }
-      this.ruleForm.publishTime = moment((row && row.publishTime) ? row.publishTime : moment().valueOf()).format('YYYY-MM-DD HH:MM:SS')
+      this.ruleForm.publishTime = moment((row && row.publishTime) ? row.publishTime : moment().valueOf()).format('YYYY-MM-DD')
       this.dialogVisible = true
     }
   }

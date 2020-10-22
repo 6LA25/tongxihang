@@ -23,6 +23,16 @@ Vue.filter('YMDHMS_date', function (value) {
   let second = moment(value).second() >= 10 ? moment(value).second() : `0${moment(value).second()}`
   return `${year}-${month}-${date} ${hour}:${min}:${second}`
 })
+Vue.filter('YMD_date', function (value) {
+  // 2019-04-01T03:21:43.000+0000
+  if (!value) {
+    return '/'
+  }
+  let year = moment(value).year()
+  let month = moment(value).month() + 1
+  let date = moment(value).date()
+  return `${year}-${month}-${date}`
+})
 Vue.component('v-chart', ECharts)
 new Vue({
   router,

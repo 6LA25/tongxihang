@@ -53,14 +53,13 @@
       v-loading="loading"
        @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
-      <el-table-column type="index" label="序号" width="55"></el-table-column>
-      <el-table-column prop="title" label="广告位名称" width="200"></el-table-column>
-      <el-table-column prop="sort" label="排序" width="100"></el-table-column>
-      <el-table-column prop="on_time" label="上架时间" width="180"></el-table-column>
-      <el-table-column prop="off_time" label="下架时间" width="180"></el-table-column>
-      <el-table-column prop="statusName" label="上架状态" width="100"></el-table-column>
-      <el-table-column label="操作" width="280">
+      <el-table-column type="selection" min-width="55" :selectable="checkSelectable"></el-table-column>
+      <el-table-column type="index" label="序号" min-width="55"></el-table-column>
+      <el-table-column prop="title" label="广告位名称" min-width="200"></el-table-column>
+      <el-table-column prop="sort" label="排序" min-width="100"></el-table-column>
+      <el-table-column prop="on_time" label="上架时间" min-width="180"></el-table-column>
+      <el-table-column prop="statusName" label="上架状态" min-width="100"></el-table-column>
+      <el-table-column label="操作" min-width="280">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleAddAdvertisement('edit', scope.row)">编辑</el-button>
           <el-button type="danger" v-permission="'广告上下架'" v-if="scope.row.status === 1" size="mini" @click.stop="handleSet([scope.row], '下架')">下架</el-button>

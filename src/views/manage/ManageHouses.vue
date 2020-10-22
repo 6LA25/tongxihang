@@ -5,7 +5,8 @@
       <el-button type="primary" size="small" v-permission="'新建楼盘'" @click="handleAddHouses('add')">新建楼盘</el-button>
       <el-button type="primary" size="small" v-permission="'楼盘上下架'" @click="handlePutaway(multipleSelection, 1)">批量上架</el-button>
       <el-button type="danger" size="small" v-permission="'楼盘上下架'" @click="handlePutaway(multipleSelection, 0)">批量下架</el-button>
-      <el-button type="warning" size="mini" v-permission="'楼盘设为热门'" @click="handleSetHot(multipleSelection)">批量设为热门</el-button>
+      <el-button type="warning" size="mini" v-permission="'楼盘设为热门'" @click="handleSetHot(multipleSelection, 1)">批量设为热门</el-button>
+      <el-button type="warning" size="mini" v-permission="'楼盘设为热门'" @click="handleSetHot(multipleSelection, 0)">批量取消热门</el-button>
     </div>
     <div class="search-head-box">
       <div class="ilb-top search-item-box">
@@ -93,19 +94,17 @@
       <el-table-column prop="name" label="楼盘名称" min-width="250" show-overflow-tooltip></el-table-column>
       <el-table-column prop="price" label="定价（元/平）" min-width="100"></el-table-column>
       <el-table-column prop="typeName" label="楼盘类型" min-width="80" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="stateName" label="楼盘状态" min-width="80" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="state" label="上架状态" min-width="80">
-        <template slot-scope="scope">
-          {{scope.row.state === 1 ? '上架': '下架'}}
-        </template>
-      </el-table-column>
+      <el-table-column prop="statusName" label="楼盘状态" min-width="80" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="stateName" label="上架状态" min-width="80"></el-table-column>
       <el-table-column label="操作" min-width="400">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleEditHouses(scope.$index, scope.row)">编辑</el-button>
           <el-button v-if="scope.row.state === 1" v-permission="'楼盘上下架'" size="mini" type="danger" @click.stop="handlePutaway([scope.row], 0)">下架</el-button>
           <el-button v-if="scope.row.state === 0" v-permission="'楼盘上下架'" size="mini" type="primary" @click.stop="handlePutaway([scope.row], 1)">上架</el-button>
           <el-button type="primary" size="mini" @click.stop="handleAddHouseType(scope.$index, scope.row)">新增户型</el-button>
-          <el-button type="warning" size="mini" v-permission="'楼盘设为热门'" @click.stop="handleSetHot([scope.row])">设为热门</el-button>
+          <el-button type="warning" size="mini" v-permission="'楼盘设为热门'" @click.stop="handleSetHot([scope.row], +!scope.row.hot)">
+            {{scope.row.hot ? '取消热门' : '设为热门'}}
+          </el-button>
           <el-button type="primary" size="mini" @click.stop="handleJumpInfo(scope.row)">楼盘动态</el-button>
         </template>
       </el-table-column>
@@ -157,8 +156,20 @@ export default {
           label: '热销中'
         },
         {
+          value: 4,
+          label: '在售｜即将加推'
+        },
+        {
+          value: 5,
+          label: '即将首开'
+        },
+        {
           value: 2,
           label: '即将开盘'
+        },
+        {
+          value: 6,
+          label: '即将售罄'
         },
         {
           value: 3,
@@ -321,14 +332,14 @@ export default {
       }).catch(() => {
       })
     },
-    handleSetHot (rows) {
+    handleSetHot (rows, hot) {
       let ids = []
       rows.map(row => {
         ids.push(row.id)
       })
       changeHot({
         ids: ids.join(','),
-        hot: 1
+        hot
       }).then(({ data }) => {
         this.$message({
           type: 'success',
