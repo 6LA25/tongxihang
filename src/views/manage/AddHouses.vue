@@ -49,7 +49,7 @@
         <div class="ilb-top">
           <el-form-item label="装修标准：" prop="standard">
             <el-input style="width: 150px" size="mini" v-model="housesForm.standard"></el-input>
-            <span class="form-label">元/m2</span>
+            <!-- <span class="form-label">元/m2</span> -->
           </el-form-item>
         </div>
         <div class="ilb-top">
