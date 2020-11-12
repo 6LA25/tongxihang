@@ -147,11 +147,27 @@ export default {
         },
         {
           value: 0,
-          label: '经纪人录入'
+          label: '经纪人推荐'
         },
         {
           value: 1,
           label: '后台录入'
+        },
+        {
+          value: 2,
+          label: '开盘通知'
+        },
+        {
+          value: 3,
+          label: '变价通知'
+        },
+        {
+          value: 4,
+          label: '预约看房'
+        },
+        {
+          value: 5,
+          label: '实时动态'
         }
       ],
       tableData: []

@@ -42,6 +42,19 @@
         </div>
       </div>
       <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">热门状态：</div>
+        <div class="ilb-top">
+          <el-select v-model="search.hot" placeholder="请选择" size="mini">
+            <el-option
+              v-for="item in hotStatus"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </div>
+      </div>
+      <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">上架状态：</div>
         <div class="ilb-top">
           <el-select v-model="search.state" placeholder="请选择" size="mini">
@@ -91,12 +104,13 @@
     >
       <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
       <el-table-column prop="id" label="楼盘ID" min-width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="name" label="楼盘名称" min-width="250" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="name" label="楼盘名称" min-width="200" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="regionName" label="楼盘区域" min-width="150" show-overflow-tooltip></el-table-column>
       <el-table-column prop="price" label="定价（元/平）" min-width="100"></el-table-column>
       <el-table-column prop="typeName" label="楼盘类型" min-width="80" show-overflow-tooltip></el-table-column>
       <el-table-column prop="statusName" label="楼盘状态" min-width="80" show-overflow-tooltip></el-table-column>
       <el-table-column prop="stateName" label="上架状态" min-width="80"></el-table-column>
-      <el-table-column label="操作" min-width="400">
+      <el-table-column label="操作" min-width="440">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleEditHouses(scope.$index, scope.row)">编辑</el-button>
           <el-button v-if="scope.row.state === 1" v-permission="'楼盘上下架'" size="mini" type="danger" @click.stop="handlePutaway([scope.row], 0)">下架</el-button>
@@ -190,6 +204,20 @@ export default {
           label: '已下架'
         }
       ],
+      hotStatus: [
+        {
+          value: -1,
+          label: '全部'
+        },
+        {
+          value: 1,
+          label: '普通'
+        },
+        {
+          value: 0,
+          label: '热门'
+        }
+      ],
       props: {
         lazy: true,
         async lazyLoad (node, resolve) {
@@ -217,6 +245,7 @@ export default {
         state: '', // 上下架
         time: '',
         area: '', // 所在地
+        hot: '',
         pageSize: 10,
         pageNo: 1
       },
@@ -248,7 +277,8 @@ export default {
         pageNo: this.search.pageNo,
         areaid: this.search.area ? this.search.area[2] : '',
         startTime: this.search.time ? this.search.time[0] : '',
-        endTime: this.search.time ? this.search.time[1] : ''
+        endTime: this.search.time ? this.search.time[1] : '',
+        hot: this.search.hot
       }
       fetchHouseList(post).then(({ data }) => {
         this.total = data.totalCount

@@ -28,11 +28,49 @@
         </div>
       </div>
       <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">推荐人搜索：</div>
+        <div class="ilb-top">
+          <el-input
+            style="width: 250px;"
+            v-model="search.recommendWord"
+            placeholder="请输入推荐人手机号"
+            size="mini"
+          ></el-input>
+        </div>
+      </div>
+      <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">派单人员：</div>
+        <div class="ilb-top">
+          <el-select :disabled="options.length === 0" v-model="search.followUser" placeholder="请选择" size="mini">
+            <el-option label="全部" value="-1"></el-option>
+            <el-option
+              v-for="item in options"
+              :key="item.account"
+              :label="item.account"
+              :value="item.account"
+            ></el-option>
+          </el-select>
+        </div>
+      </div>
+      <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">身份：</div>
         <div class="ilb-top">
           <el-select v-model="search.type" placeholder="请选择" size="mini">
             <el-option
               v-for="item in identities"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </div>
+      </div>
+      <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">跟进状态：</div>
+        <div class="ilb-top">
+          <el-select v-model="search.followStatus" placeholder="请选择跟进状态" size="mini">
+            <el-option
+              v-for="item in followingStatus"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -88,6 +126,7 @@
       <el-table-column prop="typeName" label="客户来源" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="intro" label="备注" min-width="200" show-overflow-tooltip></el-table-column>
       <el-table-column prop="recommendName" label="推荐人" min-width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="recommendMobile" label="推荐人手机号" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="recommendTime" label="推荐时间" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="followRealname" label="跟进人" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="followStatusName" label="跟进状态" min-width="100" show-overflow-tooltip></el-table-column>
@@ -225,6 +264,9 @@ export default {
       options: [],
       search: {
         keyword: '',
+        recommendWord: '',
+        followUser: '',
+        followStatus: '',
         type: -1,
         time: '',
         pageSize: 10,
@@ -239,6 +281,7 @@ export default {
         intro: '',
         followUser: ''
       },
+      followUsers: [],
       identities: [
         {
           value: -1,
@@ -246,11 +289,27 @@ export default {
         },
         {
           value: 0,
-          label: '经纪人录入'
+          label: '经纪人推荐'
         },
         {
           value: 1,
           label: '后台录入'
+        },
+        {
+          value: 2,
+          label: '开盘通知'
+        },
+        {
+          value: 3,
+          label: '变价通知'
+        },
+        {
+          value: 4,
+          label: '预约看房'
+        },
+        {
+          value: 5,
+          label: '实时动态'
         }
       ],
       boughts: [
@@ -266,6 +325,16 @@ export default {
           value: '2',
           label: '无'
         }
+      ],
+      followingStatus: [
+        { value: -1, label: '全部' },
+        { value: 0, label: '关单' },
+        { value: 2, label: '联系中' },
+        { value: 3, label: '已到访' },
+        { value: 4, label: '已认筹' },
+        { value: 5, label: '已认购' },
+        { value: 6, label: '已签约' }
+        // { status: 7, text: '已回款' }
       ],
       tableData: [],
       sendStatus: ''
@@ -380,7 +449,10 @@ export default {
         startTime: this.search.time ? this.search.time[0] : '',
         endTime: this.search.time ? this.search.time[1] : '',
         pageNo: this.search.pageNo,
-        pageSize: this.search.pageSize
+        pageSize: this.search.pageSize,
+        recommendWord: this.search.recommendWord,
+        followUser: this.search.followUser,
+        followStatus: this.search.followStatus
       }
       fetchCustomerSea(post)
         .then(({ data }) => {
@@ -401,6 +473,9 @@ export default {
       this.search.pageSize = 10
       this.search.pageNo = 1
       this.search.keyword = ''
+      this.search.recommendWord = ''
+      this.search.followStatus = ''
+      this.search.followUser = ''
       this.search.type = -1
       this.search.time = ''
       this.fetchList()
