@@ -84,7 +84,8 @@ export default {
     dwsItems: `${domain}/api/admin/customer/collect/items`,
     dwsItem: `${domain}/api/admin/customer/collect/item`,
     updateStatus: `${domain}/api/admin/customer/collect/updateStatus`,
-    reSend: `${domain}/api/admin/customer/redistribution`
+    reSend: `${domain}/api/admin/customer/redistribution`,
+    updateLog: `${domain}/api/admin/customer/follow/updateStatus`
   },
   distribution: {
     list: `${domain}/api/admin/distribution/items`,
@@ -99,6 +100,7 @@ export default {
     item: `${domain}/api/admin/commission/user`,
     items: `${domain}/api/admin/commission/payments`,
     singleItem: `${domain}/api/admin/commission/item`,
-    pay: `${domain}/api/admin/commission/pay`
+    pay: `${domain}/api/admin/commission/pay`,
+    paymentItem: `${domain}/api/admin/commission/paymentItem`
   }
 }

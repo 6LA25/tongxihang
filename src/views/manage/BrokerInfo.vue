@@ -34,8 +34,8 @@
           </el-select>
         </div>
       </div> -->
-      <!-- <div class="ilb-top search-item-box">
-        <div class="ilb-top search-item-label">最近登录日期：</div>
+      <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">成为经纪人时间：</div>
         <div class="ilb-top">
           <el-date-picker
             v-model="search.time"
@@ -47,7 +47,7 @@
             end-placeholder="结束日期"
           ></el-date-picker>
         </div>
-      </div> -->
+      </div>
       <div class="ilb-top search-item-box search-btns-box">
         <el-button type="primary" size="mini" @click="handleSearch">搜索</el-button>
         <el-button type="warning" size="mini" @click="handleReset">重置</el-button>
@@ -63,6 +63,7 @@
     >
       <el-table-column prop="mobile" label="手机号" width="150"></el-table-column>
       <el-table-column prop="realname" label="姓名" width="150"></el-table-column>
+      <el-table-column prop="registTime" label="注册经纪人时间" width="150"></el-table-column>
       <el-table-column prop="superiorOne.mobile" label="二级分销人" width="100"></el-table-column>
       <el-table-column prop="superiorTow.mobile" label="三级分销人" width="150"></el-table-column>
       <el-table-column prop="customerCount" label="推荐客户数" width="150"></el-table-column>
@@ -121,6 +122,7 @@ export default {
       ],
       search: {
         keyword: '',
+        time: '',
         pageSize: 10,
         pageNo: 1
       },
@@ -148,6 +150,7 @@ export default {
     },
     handleReset () {
       this.search.keyword = ''
+      this.search.time = ''
       this.search.pageSize = 10
       this.search.pageNo = 1
       this.handleSearch()
@@ -163,6 +166,8 @@ export default {
     fetchData () {
       this.loading = true
       fetchAllAgents({
+        startTime: this.search.time ? this.search.time[0] : '',
+        endTime: this.search.time ? this.search.time[1] : '',
         pageSize: this.search.pageSize,
         pageNo: this.search.pageNo,
         keyword: this.search.keyword

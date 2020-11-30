@@ -2,9 +2,18 @@
   <div class="add-following-record-page">
     <template v-if="$route.query.flag !== 'preview'">
       <div class="content-title">添加跟进记录</div>
-      <el-form :rules="rules" ref="followingForm" :model="followingForm" label-width="130px">
+      <el-form
+        :rules="rules"
+        ref="followingForm"
+        :model="followingForm"
+        label-width="130px"
+      >
         <el-form-item label="跟进状态：" prop="followStatus">
-          <el-select size="mini" v-model="followingForm.followStatus" placeholder="请选择跟进状态">
+          <el-select
+            size="mini"
+            v-model="followingForm.followStatus"
+            placeholder="请选择跟进状态"
+          >
             <el-option
               v-for="item in followingStatus"
               :key="item.status"
@@ -23,7 +32,13 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item
-          v-if="followingForm.followStatus === 2 || followingForm.followStatus === 3 || followingForm.followStatus === 4 || followingForm.followStatus === 5 || followingForm.followStatus === 6"
+          v-if="
+            followingForm.followStatus === 2 ||
+            followingForm.followStatus === 3 ||
+            followingForm.followStatus === 4 ||
+            followingForm.followStatus === 5 ||
+            followingForm.followStatus === 6
+          "
           label="下次跟进时间："
           prop="nextFollowTime"
         >
@@ -45,33 +60,52 @@
           ></el-input>
         </el-form-item>
         <el-form-item
-          v-if="followingForm.followStatus === 2 || followingForm.followStatus === 3 || followingForm.followStatus === 4 || followingForm.followStatus === 5"
+          v-if="
+            followingForm.followStatus === 2 ||
+            followingForm.followStatus === 3 ||
+            followingForm.followStatus === 4 ||
+            followingForm.followStatus === 5
+          "
           label="发放奖励金："
           prop="reward"
         >
-          <el-input style="width: 300px" type="number" size="mini" v-model="followingForm.reward"></el-input>
+          <el-input
+            style="width: 300px"
+            type="number"
+            size="mini"
+            v-model="followingForm.reward"
+          ></el-input>
           <span class="form-label">元</span>
         </el-form-item>
         <el-form-item label="购买楼盘：" prop="houseId">
-            <el-select
-              style="width: 400px"
-              size="mini"
-              v-model="followingForm.houseId"
-              filterable
-              @change="handleChangeHouse"
-              remote
-              reserve-keyword
-              placeholder="请输入完整楼盘名称"
-              :remote-method="fetchHouses"
-              :loading="searching"
-            >
-              <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item.id"></el-option>
-            </el-select>
+          <el-select
+            style="width: 400px"
+            size="mini"
+            v-model="followingForm.houseId"
+            filterable
+            @change="handleChangeHouse"
+            remote
+            reserve-keyword
+            placeholder="请输入完整楼盘名称"
+            :remote-method="fetchHouses"
+            :loading="searching"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <!-- 已签约添加房号面积 -->
         <template v-if="followingForm.followStatus === 6">
           <el-form-item label="合同编号：" prop="contractNum">
-            <el-input style="width: 400px" size="mini" v-model="followingForm.contractNum"></el-input>
+            <el-input
+              style="width: 400px"
+              size="mini"
+              v-model="followingForm.contractNum"
+            ></el-input>
           </el-form-item>
           <el-form-item label="合同金额：" prop="contractAmount">
             <el-input
@@ -88,7 +122,7 @@
               :data="$store.state.uploadData"
               list-type="picture-card"
               :name="'Filedata'"
-              style="display: inline-block;"
+              style="display: inline-block"
               class="avatar-uploader"
               :on-success="uploadRealImgSuccess"
               :before-upload="beforeAvatarUpload"
@@ -97,20 +131,42 @@
             >
               <i class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
-            <div class="form-item-hint-text">支持jpg/jpeg/png格式图片，大小不超过2M</div>
+            <div class="form-item-hint-text">
+              支持jpg/jpeg/png格式图片，大小不超过2M
+            </div>
           </el-form-item>
           <el-form-item label="房号" prop="roomNumber">
-            <el-input style="width: 400px" size="mini" v-model="followingForm.roomNumber"></el-input>
+            <el-input
+              style="width: 400px"
+              size="mini"
+              v-model="followingForm.roomNumber"
+            ></el-input>
           </el-form-item>
           <el-form-item label="面积" prop="housingArea">
-            <el-input style="width: 400px" type="number" size="mini" v-model="followingForm.housingArea"></el-input>
+            <el-input
+              style="width: 400px"
+              type="number"
+              size="mini"
+              v-model="followingForm.housingArea"
+            ></el-input>
           </el-form-item>
         </template>
-        <el-form-item v-if="followingForm.followStatus === 7" label="回款金额：" prop="amount">
-          <el-input type="text" style="width: 400px" size="mini" v-model="followingForm.amount"></el-input>
+        <el-form-item
+          v-if="followingForm.followStatus === 7"
+          label="回款金额："
+          prop="amount"
+        >
+          <el-input
+            type="text"
+            style="width: 400px"
+            size="mini"
+            v-model="followingForm.amount"
+          ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button size="mini" type="primary" @click="handleSubmit">确定</el-button>
+          <el-button size="mini" type="primary" @click="handleSubmit"
+            >确定</el-button
+          >
           <el-button size="mini" @click="handleCancel">取消</el-button>
         </el-form-item>
       </el-form>
@@ -119,12 +175,25 @@
       <div class="title">跟进日志：</div>
       <ul class="log-list-box" v-loading="loading">
         <li class="log-list-item" v-for="(log, index) in logList" :key="index">
-          <div>{{log.operationTime | YMDHMS_date}} 操作人：{{log.operator}}</div>
           <div>
-            <span>跟进状态"{{log.followStatusName}}"，</span>
-            <span>跟进时间“{{log.followTime}}”，下次跟进时间为“{{log.nextFollowTime}}”，</span>
-            <span v-if="log.followStatusName === '已签约'">房号“{{log.roomNumber}}”，面积“{{log.housingArea}}”，</span>
-            <span>备注“{{log.intro}}”</span>
+            <div>
+              {{ log.operationTime | YMDHMS_date }} 操作人：{{ log.operator }}
+            </div>
+            <div>
+              <span>跟进状态"{{ log.followStatusName }}"，</span>
+              <span
+                >跟进时间“{{ log.followTime }}”，下次跟进时间为“{{
+                  log.nextFollowTime
+                }}”，</span
+              >
+              <span v-if="log.followStatusName === '已签约'"
+                >房号“{{ log.roomNumber }}”，面积“{{ log.housingArea }}”，</span
+              >
+              <span>备注“{{ log.intro }}”</span>
+            </div>
+          </div>
+          <div class="btn-box">
+            <el-button type="primary" size="mini" :disabled="currentToggleItem.id === log.id && disabledToggle" @click="handleToggleLog(log)">{{log.statusName}}</el-button>
           </div>
         </li>
       </ul>
@@ -147,7 +216,8 @@
 import {
   addFollowLog,
   fetchHouseList,
-  fetchFollowLogs
+  fetchFollowLogs,
+  updateLogShow
 } from '../../assets/services/manage-service'
 import moment from 'moment'
 export default {
@@ -209,7 +279,9 @@ export default {
       searching: false,
       options: [],
       loading: false,
-      total: 0
+      total: 0,
+      disabledToggle: false,
+      currentToggleItem: {}
     }
   },
   watch: {
@@ -232,13 +304,27 @@ export default {
     }
   },
   mounted () {
-    this.followingForm.followTime = `${moment().year()}-${moment().month() +
-      1}-${moment().date()}`
+    this.followingForm.followTime = `${moment().year()}-${
+      moment().month() + 1
+    }-${moment().date()}`
     this.followingForm.customerId = this.$route.query.id
     this.fetchLogs()
     this.$store.dispatch('initUpload')
   },
   methods: {
+    handleToggleLog (item) {
+      this.disabledToggle = true
+      this.currentToggleItem = item
+      updateLogShow({
+        id: item.id,
+        status: +!item.status
+      }).then(() => {
+        this.$message.success('设置成功')
+        this.disabledToggle = false
+        this.currentToggleItem = {}
+        this.fetchLogs()
+      })
+    },
     handleChangeHouse () {
       this.$refs['followingForm'].clearValidate('houseId')
     },
@@ -259,7 +345,7 @@ export default {
         return
       }
       this.submitting = true
-      this.$refs['followingForm'].validate(valid => {
+      this.$refs['followingForm'].validate((valid) => {
         if (valid) {
           if (this.followingForm.followStatus === 0) {
             this.$confirm('确定关单吗?', '提示', {
@@ -307,7 +393,7 @@ export default {
         roomNumber: this.followingForm.roomNumber
       }
       let fileList = []
-      this.followingForm.contractImgs.forEach(item => {
+      this.followingForm.contractImgs.forEach((item) => {
         fileList.push(item.response.filename)
       })
       addFollowLog({
@@ -319,7 +405,7 @@ export default {
           this.$message.success('操作成功')
           this.$router.go(-1)
         })
-        .catch(error => {
+        .catch((error) => {
           this.submitting = false
           this.$message.error(`操作失败：${error.result_msg}`)
         })
@@ -384,7 +470,18 @@ export default {
     ul>li {
       border-bottom 1px solid #eeeeee
       padding 10px 0
+      &.log-list-item {
+          position relative
+          padding-right 100px
+          .btn-box {
+            position absolute
+            right 0
+            top 50%
+            transform translate(0, -50%)
+          }
+      }
     }
   }
+
 }
 </style>

@@ -48,6 +48,30 @@
           ></el-date-picker>
         </div>
       </div>
+      <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">所属员工：</div>
+        <div class="ilb-top">
+          <el-select :disabled="options.length === 0" v-model="search.account" placeholder="请选择" size="mini">
+            <el-option label="全部" value="-1"></el-option>
+            <el-option
+              v-for="item in options"
+              :key="item.account"
+              :label="item.account"
+              :value="item.account"
+            ></el-option>
+          </el-select>
+        </div>
+      </div>
+      <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">所属经纪人：</div>
+        <div class="ilb-top">
+          <el-input
+            style="width: 180px;"
+            v-model="search.superior"
+            size="mini"
+          ></el-input>
+        </div>
+      </div>
       <div class="ilb-top search-item-box search-btns-box">
         <el-button type="primary" size="mini" @click="handleSearch">搜索</el-button>
         <el-button type="warning" size="mini" @click="handleReset">重置</el-button>
@@ -90,7 +114,7 @@
 </template>
 
 <script>
-import { fetchAllRegisters } from '../../assets/services/manage-service'
+import { fetchAllRegisters, fetchAllUsers } from '../../assets/services/manage-service'
 
 export default {
   name: 'manage-register-user',
@@ -128,21 +152,32 @@ export default {
       search: {
         time: '',
         pageSize: 10,
-        pageNo: 1
+        pageNo: 1,
+        account: '',
+        superior: ''
       },
       tableData: [],
-      total: 0
+      total: 0,
+      options: []
     }
   },
   mounted () {
     this.fetchData()
+    this.fetchUsers()
   },
   methods: {
+    fetchUsers (query) {
+      fetchAllUsers({}).then(({ data }) => {
+        this.options = data.items
+      })
+    },
     handleSearch () {
       this.fetchData()
     },
     handleReset () {
       this.search.time = ''
+      this.search.account = ''
+      this.search.superior = ''
       this.search.pageSize = 10
       this.search.pageNo = 1
       this.handleSearch()
@@ -167,7 +202,9 @@ export default {
         pageSize: this.search.pageSize,
         pageNo: this.search.pageNo,
         start_time: this.search.time ? this.search.time[0] : '',
-        end_time: this.search.time ? this.search.time[1] : ''
+        end_time: this.search.time ? this.search.time[1] : '',
+        account: this.search.account === '-1' ? '' : this.search.account,
+        superior: this.search.superior
       }).then(({ data }) => {
         this.loading = false
         this.tableData = data.items || []

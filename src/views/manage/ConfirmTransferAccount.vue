@@ -5,7 +5,7 @@
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">用户搜索：</div>
         <div class="ilb-top">
-          <el-input style="width: 250px;" v-model="search.keyword" placeholder="请输入结算人姓名、身份证或手机号" size="mini"></el-input>
+          <el-input style="width: 250px;" v-model="search.keyword" placeholder="请输入被结算人姓名或手机号" size="mini"></el-input>
         </div>
       </div>
       <div class="ilb-top search-item-box">
@@ -33,12 +33,14 @@
       size="mini"
       v-loading="loading"
     >
-      <el-table-column prop="realname" label="结算人" width="120"></el-table-column>
+      <el-table-column prop="realname" label="被结算人" width="120"></el-table-column>
       <!-- <el-table-column prop="idCode" label="身份证号码" width="150"></el-table-column> -->
       <el-table-column prop="mobile" label="手机号" width="120"></el-table-column>
       <el-table-column prop="totalAmount" label="获取佣金总额" width="120"></el-table-column>
       <el-table-column prop="completionAmount" label="已结算金额" width="120"></el-table-column>
       <el-table-column prop="stayAmount" label="待结算金额" width="120"></el-table-column>
+      <el-table-column prop="stayPayAmount" label="待发放金额" width="120"></el-table-column>
+      <el-table-column prop="balanceAmount" label="余额" width="120"></el-table-column>
       <el-table-column prop="salesmanRealname" label="所属员工" width="100"></el-table-column>
       <!-- <el-table-column prop="status" label="结算状态" width="100"></el-table-column> -->
       <!-- <el-table-column prop="way" label="打款方式" width="100"></el-table-column> -->

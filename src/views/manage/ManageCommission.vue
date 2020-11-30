@@ -8,6 +8,18 @@
           <el-input v-model="search.keyword" placeholder="请输入内容" size="mini"></el-input>
         </div>
       </div>
+      <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">合同编号：</div>
+        <div class="ilb-top">
+          <el-input v-model="search.contractNum" placeholder="请输入内容" size="mini"></el-input>
+        </div>
+      </div>
+      <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">购买楼盘：</div>
+        <div class="ilb-top">
+          <el-input v-model="search.houseName" placeholder="请输入内容" size="mini"></el-input>
+        </div>
+      </div>
       <div class="ilb-top search-item-box search-btns-box">
         <el-button type="primary" size="mini" @click="handleSearch">搜索</el-button>
         <el-button type="warning" size="mini" @click="handleReset">重置</el-button>
@@ -149,6 +161,8 @@ export default {
       tag: '',
       search: {
         keyword: '',
+        contractNum: '',
+        houseName: '',
         pageSize: 10,
         pageNo: 1
       },
@@ -258,6 +272,8 @@ export default {
       this.search.pageNo = 1
       this.search.pageSize = 10
       this.search.keyword = ''
+      this.search.houseName = ''
+      this.search.contractNum = ''
       this.fetchList()
     },
     handleSizeChange (val) {
@@ -273,7 +289,9 @@ export default {
       fetchDistributionList({
         pageSize: this.search.pageSize,
         pageNo: this.search.pageNo,
-        keyword: this.search.keyword
+        keyword: this.search.keyword,
+        contractNum: this.search.contractNum,
+        houseName: this.search.houseName
       }).then(({ data }) => {
         this.total = data.totalCount
         this.tableData = data.items

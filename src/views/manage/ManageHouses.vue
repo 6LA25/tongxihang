@@ -210,11 +210,11 @@ export default {
           label: '全部'
         },
         {
-          value: 1,
+          value: 0,
           label: '普通'
         },
         {
-          value: 0,
+          value: 1,
           label: '热门'
         }
       ],

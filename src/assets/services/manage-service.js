@@ -531,3 +531,19 @@ export const redistributionCase = (options) => Fetch({
     ...options
   }
 })
+
+// 更新日志展示
+export const updateLogShow = (options) => Fetch({
+  url: URL.customer.updateLog,
+  data: {
+    ...options
+  }
+})
+
+// 获取结算单详情
+export const fetchPaymentItem = (options) => Fetch({
+  url: URL.commission.paymentItem,
+  data: {
+    ...options
+  }
+})
