@@ -76,22 +76,22 @@ export default {
           value: -1,
           label: '全部'
         },
-        {
-          value: 0,
-          label: '待提现'
-        },
+        // {
+        //   value: 0,
+        //   label: '待提现'
+        // },
         {
           value: 1,
           label: '待发放'
-        },
-        {
-          value: 2,
-          label: '已发放'
         }
+        // {
+        //   value: 2,
+        //   label: '已发放'
+        // }
       ],
       search: {
         keyword: '',
-        status: '',
+        status: 1,
         pageSize: 10,
         pageNo: 1
       },
