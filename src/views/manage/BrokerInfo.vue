@@ -65,10 +65,12 @@
       <el-table-column prop="realname" label="姓名" width="150"></el-table-column>
       <el-table-column prop="registTime" label="注册经纪人时间" width="150"></el-table-column>
       <el-table-column prop="superiorOne.mobile" label="二级分销人" width="100"></el-table-column>
-      <el-table-column prop="superiorTow.mobile" label="三级分销人" width="150"></el-table-column>
-      <el-table-column prop="customerCount" label="推荐客户数" width="150"></el-table-column>
-      <el-table-column prop="successfulTradeCount" width="150" label="成单量"></el-table-column>
-      <el-table-column prop="totalCommission" width="150" label="佣金总额"></el-table-column>
+      <el-table-column prop="superiorTow.mobile" label="三级分销人" width="100"></el-table-column>
+      <el-table-column prop="customerCount" label="推荐客户数" width="100"></el-table-column>
+      <el-table-column prop="successfulTradeCount" width="100" label="成单量"></el-table-column>
+      <el-table-column prop="totalCommission" width="100" label="佣金总额"></el-table-column>
+      <el-table-column prop="myAgentQuantity" label="我邀请的下线人数" width="100"></el-table-column>
+      <el-table-column prop="myAgentSubQuantity" label="我的下线邀请人数" width="100"></el-table-column>
     </el-table>
     <div class="pager-box">
       <el-pagination
