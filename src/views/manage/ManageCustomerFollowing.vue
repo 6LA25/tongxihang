@@ -14,7 +14,18 @@
         </div>
       </div>
       <div class="ilb-top search-item-box">
-        <div class="ilb-top search-item-label">身份：</div>
+        <div class="ilb-top search-item-label">推荐楼盘：</div>
+        <div class="ilb-top">
+          <el-input
+            style="width: 150px;"
+            v-model="search.houseName"
+            placeholder="请输入楼盘名称"
+            size="mini"
+          ></el-input>
+        </div>
+      </div>
+      <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">客户来源：</div>
         <div class="ilb-top">
           <el-select v-model="search.type" placeholder="请选择" size="mini">
             <el-option
@@ -83,7 +94,7 @@
       <el-table-column prop="genderName" label="性别" min-width="80" show-overflow-tooltip></el-table-column>
       <el-table-column prop="typeName" label="客户来源" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="houseName" label="推荐楼盘" min-width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="intro" label="备注" min-width="200" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="intro" label="备注" min-width="150" show-overflow-tooltip></el-table-column>
       <el-table-column prop="followStatusName" label="跟进状态" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="recommendTime" label="最近跟进时间" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="nextFollowTime" label="下次跟进时间" min-width="100" show-overflow-tooltip></el-table-column>
@@ -127,9 +138,11 @@ export default {
         followStatus: -1,
         type: -1,
         time: '',
+        houseName: '',
         pageSize: 10,
         pageNo: 1
       },
+      options: [],
       followingStatus: [
         { value: -1, label: '全部' },
         { value: 0, label: '关单' },
@@ -194,6 +207,7 @@ export default {
       this.search.pageSize = 10
       this.search.pageNo = 1
       this.search.keyword = ''
+      this.search.houseName = ''
       this.search.type = -1
       this.search.followStatus = -1
       this.search.time = ''
@@ -221,6 +235,7 @@ export default {
       let post = {
         keyword: this.search.keyword,
         type: this.search.type,
+        houseName: this.search.houseName,
         startTime: this.search.time ? this.search.time[0] : '',
         endTime: this.search.time ? this.search.time[1] : '',
         pageNo: this.search.pageNo,

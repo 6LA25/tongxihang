@@ -39,9 +39,22 @@
         </div>
       </div>
       <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">推荐楼盘：</div>
+        <div class="ilb-top">
+          <el-input
+            style="width: 150px;"
+            v-model="search.houseName"
+            placeholder="请输入楼盘名称"
+            size="mini"
+          ></el-input>
+        </div>
+      </div>
+      <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">派单人员：</div>
         <div class="ilb-top">
-          <el-select :disabled="options.length === 0" v-model="search.followUser" placeholder="请选择" size="mini">
+          <el-select filterable
+          remote
+          reserve-keyword :disabled="options.length === 0" v-model="search.followUser" placeholder="请选择" size="mini">
             <el-option label="全部" value="-1"></el-option>
             <el-option
               v-for="item in options"
@@ -53,7 +66,7 @@
         </div>
       </div>
       <div class="ilb-top search-item-box">
-        <div class="ilb-top search-item-label">身份：</div>
+        <div class="ilb-top search-item-label">客户来源：</div>
         <div class="ilb-top">
           <el-select v-model="search.type" placeholder="请选择" size="mini">
             <el-option
@@ -265,6 +278,7 @@ export default {
       search: {
         keyword: '',
         recommendWord: '',
+        houseName: '',
         followUser: '',
         followStatus: '',
         type: -1,
@@ -446,6 +460,7 @@ export default {
       let post = {
         keyword: this.search.keyword,
         type: this.search.type,
+        houseName: this.search.houseName,
         startTime: this.search.time ? this.search.time[0] : '',
         endTime: this.search.time ? this.search.time[1] : '',
         pageNo: this.search.pageNo,
@@ -478,6 +493,7 @@ export default {
       this.search.followUser = ''
       this.search.type = -1
       this.search.time = ''
+      this.search.houseName = ''
       this.fetchList()
     },
     // 重新派单

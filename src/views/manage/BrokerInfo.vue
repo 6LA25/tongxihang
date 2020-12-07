@@ -128,18 +128,7 @@ export default {
         pageSize: 10,
         pageNo: 1
       },
-      tableData: [
-        {
-          uid: 1,
-          mobile: 11111,
-          name: 'xxx',
-          two: 111111,
-          three: 222222,
-          recommend: 3,
-          num: 3,
-          all: 4000
-        }
-      ],
+      tableData: [],
       total: 0
     }
   },
