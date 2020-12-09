@@ -3,7 +3,7 @@
     <div class="content-title">意向客户列表</div>
     <div class="search-head-box">
       <div class="ilb-top search-item-box">
-        <div class="ilb-top search-item-label">用户搜索：</div>
+        <div class="ilb-top search-item-label">客户搜索：</div>
         <div class="ilb-top">
           <el-input
             style="width: 250px;"

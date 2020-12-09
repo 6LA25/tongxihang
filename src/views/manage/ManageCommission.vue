@@ -3,9 +3,9 @@
     <div class="content-title">分销佣金审核</div>
     <div class="search-head-box">
       <div class="ilb-top search-item-box">
-        <div class="ilb-top search-item-label">用户搜索：</div>
+        <div class="ilb-top search-item-label">客户搜索：</div>
         <div class="ilb-top">
-          <el-input v-model="search.keyword" placeholder="请输入内容" size="mini"></el-input>
+          <el-input v-model="search.keyword" placeholder="请输入姓名或手机号" size="mini"></el-input>
         </div>
       </div>
       <div class="ilb-top search-item-box">
