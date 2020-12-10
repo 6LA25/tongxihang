@@ -5,35 +5,9 @@
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">用户搜索：</div>
         <div class="ilb-top">
-          <el-input v-model="search.keyword" placeholder="请输入内容" size="mini"></el-input>
+          <el-input v-model="search.keyword" placeholder="请输入姓名或手机号" size="mini"></el-input>
         </div>
       </div>
-      <!-- <div class="ilb-top search-item-box">
-        <div class="ilb-top search-item-label">身份：</div>
-        <div class="ilb-top">
-          <el-select v-model="search.identity" placeholder="请选择" size="mini">
-            <el-option
-              v-for="item in identities"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </div>
-      </div> -->
-      <!-- <div class="ilb-top search-item-box">
-        <div class="ilb-top search-item-label">已购房客户：</div>
-        <div class="ilb-top">
-          <el-select v-model="search.bought" placeholder="请选择" size="mini">
-            <el-option
-              v-for="item in boughts"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </div>
-      </div> -->
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">成为经纪人时间：</div>
         <div class="ilb-top">
@@ -61,8 +35,8 @@
       size="mini"
       v-loading="loading"
     >
-      <el-table-column prop="mobile" label="手机号" width="150"></el-table-column>
       <el-table-column prop="realname" label="姓名" width="150"></el-table-column>
+      <el-table-column prop="mobile" label="手机号" width="150"></el-table-column>
       <el-table-column prop="registTime" label="注册经纪人时间" width="150"></el-table-column>
       <el-table-column prop="superiorOne.mobile" label="二级分销人" width="100"></el-table-column>
       <el-table-column prop="superiorTow.mobile" label="三级分销人" width="100"></el-table-column>
