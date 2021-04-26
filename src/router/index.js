@@ -177,7 +177,22 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-      }
+      },
+      {
+        path: '/manage-appply-activity', // 报名活动管理
+        name: 'manage-appply-activity',
+        component: () => import(/* webpackChunkName: "ManageApplyActivity" */ '../views/manage/ManageApplyActivity.vue')
+      },
+      {
+        path: '/add-appply-activity', // 报名活动管理
+        name: 'add-appply-activity',
+        component: () => import(/* webpackChunkName: "AddApplyActivity" */ '../views/manage/AddApplyActivity.vue')
+      },
+      {
+        path: '/manage-house-activity', // 楼盘活动管理
+        name: 'manage-house-activity',
+        component: () => import(/* webpackChunkName: "ManageHouseActivity" */ '../views/manage/ManageHouseActivity.vue')
+      },
     ]
   }
 ]

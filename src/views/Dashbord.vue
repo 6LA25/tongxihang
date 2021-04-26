@@ -104,6 +104,15 @@
                 >
               </el-menu-item-group>
             </el-submenu>
+            <el-submenu index="8">
+              <template slot="title">
+                <span>营销活动管理</span>
+              </template>
+              <el-menu-item-group>
+                <el-menu-item index="8-1">报名活动</el-menu-item>
+                <el-menu-item index="8-2">楼盘活动</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
           </el-menu>
         </div>
       </el-aside>
@@ -162,6 +171,8 @@ export default {
         '7-2': 'manage-permission',
         '7-3': 'manage-staff',
         '7-4': 'user-develop',
+        '8-1': 'manage-appply-activity',
+        '8-2': 'manage-house-activity',
       },
     }
   },
@@ -179,7 +190,7 @@ export default {
   methods: {
     handleJumpTim() {
       this.$router.push({
-        name: 'manage-tim'
+        name: 'manage-tim',
       })
     },
     handleSelectNav(key, keyPath) {
@@ -244,6 +255,7 @@ export default {
       align-items center
       justify-content flex-end
       padding 0 40px
+      border-bottom 1px solid #eee
       .user-info-box {
         display flex
         align-items center

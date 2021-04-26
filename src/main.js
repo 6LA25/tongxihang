@@ -7,7 +7,7 @@ import store from './store'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import permission from './assets/directives/permission'
-
+import _ from 'lodash'
 import TIM from 'tim-js-sdk'
 import TIMUploadPlugin from 'tim-upload-plugin'
 let options = {
@@ -22,6 +22,8 @@ tim.setLogLevel(0) // 普通级别，日志量较多，接入时建议使用
 tim.registerPlugin({ 'tim-upload-plugin': TIMUploadPlugin })
 Vue.prototype.$$tim = tim
 Vue.prototype.TIM = TIM
+Vue.prototype._lodash = _
+window._lodash = _
 
 // 开始登录
 tim.login({
