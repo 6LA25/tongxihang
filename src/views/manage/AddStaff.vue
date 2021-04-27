@@ -31,6 +31,39 @@
       <el-form-item label="员工编号" prop="jobnum">
         <el-input maxlength="100" style="width: 400px;" size="mini" v-model.trim="userForm.jobnum"></el-input>
       </el-form-item>
+      <el-form-item label="员工性别" prop="gender">
+        <el-radio-group v-model="userForm.gender">
+          <el-radio :label="1">男</el-radio>
+          <el-radio :label="0">女</el-radio>
+          <el-radio :label="2">其他</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="员工头像" prop="coverImg">
+          <el-upload
+            v-if="$store.state.uploadUrl"
+            :headers="$store.state.uploadHeaders"
+            :data="$store.state.uploadData"
+            :name="'Filedata'"
+            style="display: inline-block"
+            class="avatar-uploader"
+            :action="$store.state.uploadUrl"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+          >
+            <img
+              v-if="userForm.coverImg"
+              :src="userForm.coverImg.filepath"
+              class="cover-img"
+            />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+          <div class="form-item-hint-text">
+            <span v-if="$route.query.tag === 'edit'"
+              >点击图片修改活动封面，</span
+            >支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：336 * 256
+          </div>
+        </el-form-item>
       <el-form-item label="设置角色" prop="role">
         <el-input
           readonly
@@ -100,7 +133,9 @@ export default {
         email: '',
         mobile: '',
         jobnum: '',
-        role: ''
+        role: '',
+        gender: '',
+        coverImg: ''
       },
       roleName: '',
       selectRole: {
@@ -113,7 +148,8 @@ export default {
         realname: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
         // email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
         mobile: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
-        role: [{ required: true, message: '请设置角色', trigger: 'blur' }]
+        role: [{ required: true, message: '请设置角色', trigger: 'blur' }],
+        coverImg: [{ required: true, message: '请上传头像' }],
       }
     }
   },
@@ -134,6 +170,7 @@ export default {
     }
   },
   mounted () {
+    this.$store.dispatch('initUpload')
     if (this.$route.query.tag !== 'add') {
       this.rules.password[0].required = false
       fetchStaffItem({
@@ -150,6 +187,34 @@ export default {
     }
   },
   methods: {
+    handleAvatarSuccess(res, file) {
+      console.log(res)
+      if (res.result_code === 10001) {
+        this.$message.error(`上传错误：${res.result_msg}`)
+        return
+      }
+      this.$refs['userForm'].clearValidate('coverImg')
+      this.userForm.coverImg = {
+        filename: res.filename,
+        filepath: res.http_path,
+      }
+    },
+    beforeAvatarUpload(file) {
+      console.log(file)
+      const isJPG = file.type === 'image/jpeg'
+      const isPNG = file.type === 'image/png'
+      const isJPEG = file.type === 'image/jpeg'
+      const isLt1M = file.size / 1024 / 1024 < 1
+      if (!isJPG && !isPNG && !isJPEG) {
+        this.$message.error('上传封面只能是 JPG/PNG/JPEG 格式!')
+        return false
+      }
+      if (!isLt1M) {
+        this.$message.error('上传封面大小不能超过 1M!')
+        return false
+      }
+      return (isJPG || isPNG || isJPEG) && isLt1M
+    },
     handleSelectRole (index, row) {
       console.log(row)
       this.selectRole.id = row.id

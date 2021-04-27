@@ -90,6 +90,15 @@
                 >
               </el-menu-item-group>
             </el-submenu>
+            <el-submenu index="8">
+              <template slot="title">
+                <span>营销活动管理</span>
+              </template>
+              <el-menu-item-group>
+                <el-menu-item index="8-1">报名活动</el-menu-item>
+                <el-menu-item index="8-2">楼盘活动</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
             <el-submenu index="7">
               <template slot="title">
                 <span>系统设置</span>
@@ -105,15 +114,6 @@
                 <el-menu-item index="7-4" v-permission="'员工发展'"
                   >员工发展</el-menu-item
                 >
-              </el-menu-item-group>
-            </el-submenu>
-            <el-submenu index="8">
-              <template slot="title">
-                <span>营销活动管理</span>
-              </template>
-              <el-menu-item-group>
-                <el-menu-item index="8-1">报名活动</el-menu-item>
-                <el-menu-item index="8-2">楼盘活动</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>
