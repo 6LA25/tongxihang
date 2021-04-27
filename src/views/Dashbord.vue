@@ -85,6 +85,9 @@
                 <el-menu-item index="6-3" v-permission="'活动信息管理'"
                   >活动信息管理</el-menu-item
                 >
+                <el-menu-item index="6-4" v-permission="'活动信息管理'"
+                  >文章管理</el-menu-item
+                >
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="7">
@@ -167,6 +170,7 @@ export default {
         '6-1': 'manage-advertise-place',
         '6-2': 'manage-hot-word',
         '6-3': 'manage-activity-message',
+        '6-4': 'manage-article',
         '7-1': 'manage-role',
         '7-2': 'manage-permission',
         '7-3': 'manage-staff',

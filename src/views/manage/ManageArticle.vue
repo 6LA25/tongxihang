@@ -1,18 +1,18 @@
 <template>
-  <div class="manage-house-activity-page">
-    <div class="content-title">报名活动管理</div>
+  <div class="manage-article-page">
+    <div class="content-title">文章管理列表</div>
     <div class="operate-btn-box">
       <el-button
         type="primary"
         size="small"
         v-permission="'新建楼盘'"
         @click="handleAddAct('add')"
-        >新建活动</el-button
+        >新建文章</el-button
       >
     </div>
     <div class="search-head-box">
       <div class="ilb-top search-item-box">
-        <div class="ilb-top search-item-label">活动名称：</div>
+        <div class="ilb-top search-item-label">文章名称：</div>
         <div class="ilb-top">
           <el-input
             v-model="search.keyword"
@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="ilb-top search-item-box">
-        <div class="ilb-top search-item-label">活动状态：</div>
+        <div class="ilb-top search-item-label">文章状态：</div>
         <div class="ilb-top">
           <el-select v-model="search.state" placeholder="请选择" size="mini">
             <el-option
@@ -52,55 +52,42 @@
     >
       <el-table-column
         prop="id"
-        label="活动ID"
+        label="文章ID"
         min-width="100"
         show-overflow-tooltip
       ></el-table-column>
       <el-table-column
-        prop="name"
-        label="活动名称"
+        prop="title"
+        label="文章标题"
         min-width="100"
         show-overflow-tooltip
       ></el-table-column>
       <el-table-column
-        prop="num"
-        label="报名人数"
+        prop="time"
+        label="发布时间"
         min-width="100"
+        show-overflow-tooltip
       ></el-table-column>
       <el-table-column
         prop="statusName"
-        label="活动状态"
+        label="文章状态"
         min-width="100"
       ></el-table-column>
       <el-table-column label="操作" min-width="250">
         <template slot-scope="scope">
           <el-button
-            type="primary"
-            size="mini"
-            v-permission="'新建楼盘'"
-            @click.stop="handleShowBatch(scope.row)"
-            >批量上/下架</el-button
-          >
-          <el-button
             v-permission="'新建楼盘'"
             type="primary"
             size="mini"
             @click.stop="handleJumpEditAct(scope.row)"
-            >编辑活动</el-button
+            >编辑文章</el-button
           >
           <el-button
+            v-permission="'新建楼盘'"
             type="primary"
             size="mini"
-            v-permission="'新建楼盘'"
-            @click.stop="handleDelete(scope.row)"
-            >删除</el-button
-          >
-          <el-button
-            type="primary"
-            size="mini"
-            v-permission="'新建楼盘'"
-            @click="handleShowNames"
-            >报名名单</el-button
+            @click.stop="handleUp(scope.row)"
+            >上架</el-button
           >
         </template>
       </el-table-column>
@@ -116,51 +103,9 @@
         :total="total"
       ></el-pagination>
     </div>
-    <el-dialog title="报名名单" :visible.sync="nameDialogVisible" width="70%">
-      <div class="name-title-box">
-        <span class="title">xxxx</span>
-        <span class="num">已有2人报名</span>
-        <el-button type="primary" size="mini">导出EXCEL</el-button>
-      </div>
-      <el-table
-        :data="nameData"
-        tooltip-effect="dark"
-        style="width: 100%"
-        size="mini"
-      >
-        <el-table-column
-          prop="time"
-          label="报名时间"
-          min-width="100"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="mobile"
-          label="手机号"
-          min-width="100"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="name"
-          label="报名楼盘"
-          min-width="100"
-          show-overflow-tooltip
-        ></el-table-column>
-      </el-table>
-      <div class="pager-box">
-        <el-pagination
-          @size-change="handleNameSizeChange"
-          @current-change="handleNameCurrentChange"
-          :current-page="nameSearch.pageNo"
-          :page-sizes="[10, 20, 30, 40]"
-          :page-size="nameSearch.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="100"
-        ></el-pagination>
-      </div>
-    </el-dialog>
     <el-dialog
-      title="编辑活动"
+      title="编辑文章"
+      append-to-body
       :visible.sync="editVisible"
       :destroy-on-close="true"
     >
@@ -171,9 +116,9 @@
         :rules="rules"
       >
         <el-form-item
-          label="活动名称"
+          label="文章标题"
           prop="name"
-          :rules="[{ required: true, message: '活动名称不能为空' }]"
+          :rules="[{ required: true, message: '文章标题不能为空' }]"
         >
           <el-input
             style="width: 400px"
@@ -209,19 +154,8 @@
             >支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：336 * 256
           </div>
         </el-form-item>
-        <el-form-item
-          label="提示"
-          prop="hint"
-          :rules="[{ required: true, message: '提示不能为空' }]"
-        >
-          <el-input
-            type="textarea"
-            style="width: 400px"
-            size="mini"
-            placeholder="请输入温馨提示，建议30字以内"
-            resize="none"
-            v-model="editForm.hint"
-          ></el-input>
+        <el-form-item label="正文" prop="content">
+          <div id="editor" ref="editor" style="text-align: left"></div>
         </el-form-item>
         <el-form-item>
           <el-button size="mini" type="primary" @click="submitForm('editForm')"
@@ -235,42 +169,13 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
+import E from 'wangeditor'
 export default {
-  name: 'manage-house-activity',
+  name: 'manage-article',
   data() {
     return {
-      editForm: {
-        name: '',
-        coverImg: null,
-      },
-      rules: {
-        coverImg: [{ required: true, message: '请上传楼盘活动封面' }],
-      },
-      loading: false,
-      nameDialogVisible: false,
       editVisible: false,
-      total: 0,
-      nameSearch: {
-        pageNo: 1,
-        pageSize: 10,
-      },
-      nameData: [
-        {
-          time: '2010-1-1',
-          name: 'xxx',
-          mobile: 1234,
-        },
-      ],
-      tableData: [
-        {
-          id: 'xxx',
-          name: '1111',
-          num: 234,
-          statusName: 'xxxx',
-        },
-      ],
       putawayStatus: [
         {
           value: -1,
@@ -278,11 +183,19 @@ export default {
         },
         {
           value: 1,
-          label: '开启中',
+          label: '上架',
         },
         {
           value: 0,
-          label: '已关闭',
+          label: '下架',
+        },
+      ],
+      tableData: [
+        {
+          id: 1,
+          title: 'xx',
+          time: 'xxx',
+          statusName: 'xx',
         },
       ],
       search: {
@@ -291,14 +204,31 @@ export default {
         pageSize: 10,
         pageNo: 1,
       },
+      total: 0,
+      loading: false,
+      editForm: {
+        name: '',
+        coverImg: null,
+        content: '',
+      },
+      rules: {
+        coverImg: [{ required: true, message: '请上传楼盘活动封面' }],
+        content: [
+          {
+            required: true, message: '请输入正文内容'
+          }
+        ]
+      },
+      editor: null,
     }
   },
   watch: {
     editVisible(nv) {
       if (!nv) {
         this.editForm.name = ''
-        this.editForm.hint = ''
+        this.editForm.content = ''
         this.editForm.coverImg = null
+        this.editor.destroy()
       }
     },
   },
@@ -334,37 +264,46 @@ export default {
       }
       return (isJPG || isPNG || isJPEG) && isLt1M
     },
-    handleShowNames() {
-      this.nameDialogVisible = true
-    },
+    fetchList() {},
     handleAddAct() {
       this.editVisible = true
-    },
-    fetchList() {},
-    fetchNameList() {},
-    handleDelete() {
-      this.$confirm('确定删除该活动吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
+      this.$nextTick(() => {
+        this.editor = new E('#editor')
+        Object.assign(this.editor.config, {
+          uploadImgServer: this.$store.state.uploadUrl,
+          uploadImgMaxLength: 1,
+          uploadImgHeaders: {
+            ...this.$store.state.uploadHeaders,
+          },
+          uploadFileName: 'Filedata',
+          uploadImgParams: {
+            ...this.$store.state.uploadData,
+          },
+          showLinkImg: false,
+          showFullScreen: false,
+          excludeMenus: [
+            'video', 'link'
+          ],
+          uploadImgHooks: {
+            customInsert:  (insertImgFn, result) => {
+              // result 即服务端返回的接口
+              console.log('customInsert', result)
+              // insertImgFn 可把图片插入到编辑器，传入图片 src ，执行函数即可
+              insertImgFn(result.http_path)
+            },
+          },
+          onchange: (newHtml) => {
+            if (newHtml) {
+              this.$refs['editForm'].clearValidate('content')
+            }
+            this.editForm.content = newHtml
+          }
+        })
+        this.editor.create()
       })
-        .then(() => {})
-        .catch(() => {})
     },
-    handleShowBatch() {},
     handleJumpEditAct() {},
-    handleReset() {
-      Object.keys(this.search).forEach((item) => {
-        this.search[item] = ''
-        this.search.pageSize = 10
-        this.search.pageNo = 1
-      })
-      this.fetchList()
-    },
-    handleSearch() {
-      this.search.pageNo = 1
-      this.fetchList()
-    },
+    handleUp() {},
     handleSizeChange(val) {
       this.search.pageSize = val
       this.fetchList()
@@ -373,13 +312,17 @@ export default {
       this.search.pageNo = val
       this.fetchList()
     },
-    handleNameSizeChange() {
-      this.nameSearch.pageSize = val
-      this.fetchNameList()
+    handleSearch() {
+      this.search.pageNo = 1
+      this.fetchList()
     },
-    handleNameCurrentChange() {
-      this.nameSearch.pageNo = val
-      this.fetchNameList()
+    handleReset() {
+      Object.keys(this.search).forEach((item) => {
+        this.search[item] = ''
+        this.search.pageSize = 10
+        this.search.pageNo = 1
+      })
+      this.fetchList()
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -393,14 +336,6 @@ export default {
   },
 }
 </script>
-
-<style lang="stylus" scoped>
-.name-title-box {
-  display flex
-  align-items center
-  margin-bottom 10px
-  .title, .num {
-    margin-right 10px
-  }
-}
+<style lang="scss" scoped>
+  
 </style>

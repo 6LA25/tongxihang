@@ -193,6 +193,11 @@ const routes = [
         name: 'manage-house-activity',
         component: () => import(/* webpackChunkName: "ManageHouseActivity" */ '../views/manage/ManageHouseActivity.vue')
       },
+      {
+        path: '/manage-article', // 文章管理
+        name: 'manage-article',
+        component: () => import(/* webpackChunkName: "ManageArticle" */ '../views/manage/ManageArticle.vue')
+      },
     ]
   }
 ]

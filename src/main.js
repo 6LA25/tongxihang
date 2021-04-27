@@ -59,6 +59,7 @@ Vue.filter('YMD_date', function (value) {
   return `${year}-${month}-${date}`
 })
 Vue.component('v-chart', ECharts)
+window.$$store = store
 new Vue({
   router,
   store,
