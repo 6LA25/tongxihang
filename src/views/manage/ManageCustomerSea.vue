@@ -137,10 +137,11 @@
       <el-table-column prop="genderName" label="性别" min-width="80" show-overflow-tooltip></el-table-column>
       <el-table-column prop="houseName" label="推荐楼盘" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="typeName" label="客户来源" min-width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="intro" label="备注" min-width="200" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="intro" label="备注" min-width="150" show-overflow-tooltip></el-table-column>
       <el-table-column prop="recommendName" label="推荐人" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="recommendMobile" label="推荐人手机号" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="recommendTime" label="推荐时间" min-width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="overtime" label="超时时间" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="followRealname" label="跟进人" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="followStatusName" label="跟进状态" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column label="操作" min-width="350">

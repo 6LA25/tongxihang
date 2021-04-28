@@ -12,7 +12,8 @@ export default {
     keys: `${domain}/api/member/admin/login/publickey`,
     login: `${domain}/api/member/admin/login`,
     logout: `${domain}/api/member/admin/logout`,
-    permission: `${domain}/api/admin/common/permissions/all`
+    permission: `${domain}/api/admin/common/permissions/all`,
+    userSig: `${domain}/api/im/genUserSig`
   },
   user: {
     all: `${domain}/api/admin/adminuser/items`,

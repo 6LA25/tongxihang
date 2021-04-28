@@ -1,0 +1,47 @@
+.chat-dialog {
+  .el-dialog__body {
+    padding: 10px;
+  }
+}
+.global-chatting-box {
+  display: flex;
+  border: 1px solid #eee;
+  width: 800px;
+  height: 560px;
+  margin: 0 auto;
+  .chat-user-list {
+    width: 240px;
+    border-right: 1px solid #eee;
+  }
+  .chat-area {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    .chat-messages {
+      flex: 1;
+      min-height: 0
+    }
+    .chat-ipt-box {
+      display: flex;
+      flex-direction: column;
+      height: 150px;
+      background: #eee;
+      padding: 10px;
+      .el-textarea {
+        flex: 1;
+      }
+      .send-btns {
+        height: 30px
+      }
+      .el-textarea textarea {
+        width: 100%;
+      }
+      .send-btns {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 5px;
+      }
+    }
+  }
+}

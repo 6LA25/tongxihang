@@ -25,13 +25,6 @@ Vue.prototype.TIM = TIM
 Vue.prototype._lodash = _
 window._lodash = _
 
-// 开始登录
-tim.login({
-  userID: 'webrtc11',
-  userSig:
-    '5d7290ad19b899bd32ec21c48f62fd824f4e6ffe8083c458e49d9aa0ec6096e4',
-})
-
 Vue.config.productionTip = false
 Vue.directive('permission', permission)
 Vue.use(ElementUI)

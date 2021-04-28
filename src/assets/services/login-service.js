@@ -29,3 +29,11 @@ export const logout = (options) => Fetch({
     ...options
   }
 })
+
+// 获取UserSig
+export const fetchTimUserSig = (options) => Fetch({
+  url: URL.login.userSig,
+  data: {
+    ...options
+  }
+})
