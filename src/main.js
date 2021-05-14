@@ -41,6 +41,26 @@ Vue.filter('YMDHMS_date', function (value) {
   let second = moment(value).second() >= 10 ? moment(value).second() : `0${moment(value).second()}`
   return `${year}-${month}-${date} ${hour}:${min}:${second}`
 })
+Vue.filter('CHAT_DATE', (time) => {
+  let val = time * 1000
+  // 获取当前毫秒时间戳
+  let currentDate = moment().format('x')
+  let chatDate = val
+  let currentYear = moment().year()
+  let currentDay = moment().date()
+  let currentMonth = moment().month() + 1
+  let chatYear = moment(val).year()
+  let chatMonth = moment(val).month() + 1
+  let chatDay = moment(val).date()
+  let chatHour = moment(val).hour() >= 10 ? moment(val).hour() : `0${moment(val).hour()}`
+  let chatMin = moment(val).minute() >= 10 ? moment(val).minute() : `0${moment(val).minute()}`
+  // 和当前时间在同一天内
+  if (currentYear === chatYear && currentDay === chatDay && currentMonth === chatMonth && currentDate >= chatDate) {
+    return `${chatHour}:${chatMin}`
+  } else {
+    return `${chatYear}/${chatMonth}/${chatDay}`
+  }
+})
 Vue.filter('YMD_date', function (value) {
   // 2019-04-01T03:21:43.000+0000
   if (!value) {
