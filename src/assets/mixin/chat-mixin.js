@@ -17,8 +17,43 @@ export default {
       chatUser: state => state.currentChatTarget && state.currentChatTarget.chatUser,
       messageData: state => state.currentChatTarget && state.currentChatTarget.messageData,
     }),
+    allUnreadMsg() {
+      return this._lodash.sumBy(this.contactList, 'unreadCount')
+    }
+  },
+  watch: {
+    chatVisible(nv) {
+    }
+  },
+  mounted() {
   },
   methods: {
+    // 从发送消息时间开始算起，两分钟内可以编辑
+    handleRevokeMsg(message) {
+      let now = new Date()
+      if (parseInt(now.getTime() / 1000) - message.time > 2 * 60 || message.flow === 'in') {
+        return
+      }
+      this.$confirm('是否撤回该条消息？', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(() => {
+          // 主动撤回消息
+          let promise = this.$$tim.revokeMessage(message);
+          promise.then((imResponse) => {
+            // 消息撤回成功
+            this.$message.success('消息撤回成功')
+          }).catch(function (imError) {
+            // 消息撤回失败
+            console.warn('revokeMessage error:', imError);
+          });
+        })
+        .catch(() => {
+
+        })
+    },
     makeChatAreaToBottom() {
       this.$nextTick(() => {
         document.getElementById('chat-content').scrollTop = document.getElementById('chat-content').scrollHeight
@@ -80,9 +115,21 @@ export default {
         }
       })
       tim.on(TIM.EVENT.MESSAGE_REVOKED, function (event) {
+        console.log('TIM.EVENT.MESSAGE_REVOKED=>', event.data)
+        this.$store.commit('UPDATE_SINGLE_MESSAGE', )
+        let revokeMsgs = event.data
+        if (this.chatUser) {
+          let currentChat = revokeMsgs.find(item => {
+            return item.conversationID === this.chatUser.conversationID
+          })
+          if (currentChat) {
+            this.$store.commit('UPDATE_SINGLE_MESSAGE', currentChat)
+          }
+        }
         // 收到消息被撤回的通知
         // event.name - TIM.EVENT.MESSAGE_REVOKED
         // event.data - 存储 Message 对象的数组 - [Message] - 每个 Message 对象的 isRevoked 属性值为 true
+
       })
       tim.on(TIM.EVENT.MESSAGE_READ_BY_PEER, function (event) {
         // SDK 收到对端已读消息的通知，即已读回执。使用前需要将 SDK 版本升级至 v2.7.0 或以上。仅支持单聊会话。
@@ -189,14 +236,27 @@ export default {
       this.loadMessages({ conversationID: item.conversationID })
       this.makeChatAreaToBottom()
     },
+    handlePlayVoice(msg) {
+      this.$store.commit('TOGGLE_MESSAGES_VOICE_PLAYING', msg)
+      // if (msg.playing) {
+      // } else {
+      //   const audio = document.createElement('audio')
+      //   audio.src = msg.payload.url
+      //   const promise = audio.play()
+      //   if (promise) {
+      //     promise.catch(() => { })
+      //   }
+      // }
+
+    },
     makeMsgReaded(conversationID) {
       let promise = this.$$tim.setMessageRead({ conversationID });
-        promise.then(function (imResponse) {
-          // 已读上报成功，指定 ID 的会话的 unreadCount 属性值被置为0
-        }).catch(function (imError) {
-          // 已读上报失败
-          console.warn('setMessageRead error:', imError);
-        });
+      promise.then(function (imResponse) {
+        // 已读上报成功，指定 ID 的会话的 unreadCount 属性值被置为0
+      }).catch(function (imError) {
+        // 已读上报失败
+        console.warn('setMessageRead error:', imError);
+      });
     },
     loadMessages(options) {
       this.messagesLoading = true
@@ -220,6 +280,77 @@ export default {
         conversationID: this.chatUser.conversationID,
         nextReqMessageID: this.messageData.nextReqMessageID
       })
+    },
+    handleLine() {
+      console.log(111)
+      this.chatContent += '\n'
+    },
+    handleSendImage() {
+      if (this.chatUser) {
+        this.$refs.imagePicker.click()
+      }
+    },
+    sendImage() {
+      let tim = this.$$tim
+      const TIM = this.TIM
+      const message = tim.createImageMessage({
+        to: this.chatUser.userProfile.userID,
+        conversationType: TIM.TYPES.CONV_C2C,
+        payload: {
+          file: document.getElementById('imagePicker') // 或者用event.target
+        },
+        onProgress: percent => {
+          this.$set(message, 'progress', percent) // 手动给message 实例加个响应式属性: progress
+        }
+      })
+      let promise = tim.sendMessage(message);
+      promise.then((imResponse) => {
+        // 发送成功
+        console.log('发送成功=>', imResponse);
+        this.$store.commit('UPDATE_UPDATE_CURRENT_CHAT_USER_MESSAGES', imResponse.data.message)
+        this.$refs.imagePicker.value = null
+        setTimeout(() => {
+          this.makeChatAreaToBottom()
+        }, 400)
+      }).catch(function (imError) {
+        // 发送失败
+        console.warn('sendMessage error:', imError);
+      });
+    },
+    handleSendVideo() {
+      if (this.chatUser) {
+        this.$refs.videoPicker.click()
+      }
+    },
+    sendVideo() {
+      let tim = this.$$tim
+      const TIM = this.TIM
+      const message = tim.createVideoMessage({
+        to: this.chatUser.userProfile.userID,
+        conversationType: TIM.TYPES.CONV_C2C,
+        payload: {
+          file: document.getElementById('videoPicker') // 或者用event.target
+        },
+        onProgress: percent => {
+          this.$set(message, 'progress', percent) // 手动给message 实例加个响应式属性: progress
+        }
+      })
+      let promise = tim.sendMessage(message);
+      promise.then((imResponse) => {
+        // 发送成功
+        console.log('发送成功=>', imResponse);
+        this.$store.commit('UPDATE_UPDATE_CURRENT_CHAT_USER_MESSAGES', imResponse.data.message)
+        this.$refs.videoPicker.value = null
+        this.$nextTick(() => {
+          this.makeChatAreaToBottom()
+        })
+      }).catch(function (imError) {
+        // 发送失败
+        console.warn('sendMessage error:', imError);
+      });
+    },
+    handleToggleMsgOperate(e) {
+      console.log('e=>', e)
     }
-  },
+  }
 }

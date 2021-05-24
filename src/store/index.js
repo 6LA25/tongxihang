@@ -27,8 +27,37 @@ export default new Vuex.Store({
       payload.messageList = showMsgs
       state.currentChatTarget.messageData = payload
     },
-    UPDATE_UPDATE_CURRENT_CHAT_USER_MESSAGES({currentChatTarget}, payload) {
+    UPDATE_UPDATE_CURRENT_CHAT_USER_MESSAGES({ currentChatTarget }, payload) {
       currentChatTarget.messageData.messageList.push(payload)
+    },
+    TOGGLE_MESSAGES_VOICE_PLAYING(state, payload) {
+      let voiceMsg = payload
+      let messageList = JSON.parse(JSON.stringify(state.currentChatTarget.messageData.messageList))
+      const audio = document.getElementById('voice-audio')
+      audio.src = voiceMsg.payload.url
+      if (!voiceMsg.playing) {
+        messageList.forEach(item => {
+          item.playing = item.ID === voiceMsg.ID
+        })
+        audio.play()
+      } else {
+        messageList.forEach(item => {
+          if (item.ID === voiceMsg.ID) {
+            item.playing = false
+          }
+        })
+        audio.pause()
+      }
+      state.currentChatTarget.messageData.messageList = messageList
+    },
+    UPDATE_SINGLE_MESSAGE(state, payload) {
+      let messageList = JSON.parse(JSON.stringify(state.currentChatTarget.messageData.messageList))
+      messageList.forEach(item => {
+        if (item.ID === payload.ID) {
+          item = payload
+        }
+      })
+      state.currentChatTarget.messageData.messageList = messageList
     }
   },
   actions: {

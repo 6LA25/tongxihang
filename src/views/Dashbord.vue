@@ -122,7 +122,10 @@
       <el-container>
         <el-header style="height: 50px">
           <div class="user-info-box">
-            <div @click="handleJumpTim">
+            <div @click="handleJumpTim" style="position: relative">
+              <div class="unread-all-num" v-if="allUnreadMsg > 0">
+                {{ allUnreadMsg }}
+              </div>
               <i class="icon-btn el-icon-message text"></i>
             </div>
             <div class="text">{{ $store.state.userInfo.account }}</div>
@@ -155,36 +158,174 @@
     >
       <div class="global-chatting-box">
         <div class="chat-user-list">
-          <div class="chat-item pointer" :class="{'active': chatUser && item.userProfile.userID === chatUser.userProfile.userID}" v-for="item in contactList" :key="item.conversationID" @click="handleToggleChatItem(item)">
+          <div
+            class="chat-item pointer"
+            :class="{
+              active:
+                chatUser &&
+                item.userProfile.userID === chatUser.userProfile.userID,
+            }"
+            v-for="item in contactList"
+            :key="item.conversationID"
+            @click="handleToggleChatItem(item)"
+          >
             <div class="head-box">
-              <span class="unread-box" v-if="item.unreadCount > 0 && (!chatUser || (chatUser && chatUser.conversationID !== item.conversationID))">{{item.unreadCount}}</span>
-              <img :src="item.userProfile.nick || require('../assets/imgs/defaultHeader.jpg')" alt="">
+              <span
+                class="unread-box"
+                v-if="
+                  item.unreadCount > 0 &&
+                  (!chatUser ||
+                    (chatUser &&
+                      chatUser.conversationID !== item.conversationID))
+                "
+                >{{ item.unreadCount }}</span
+              >
+              <img
+                :src="
+                  item.userProfile.nick ||
+                  require('../assets/imgs/defaultHeader.jpg')
+                "
+                alt=""
+              />
             </div>
             <div class="content-box">
               <div class="title-box">
-                <div class="user-name">{{item.userProfile.nick || item.userProfile.userID}}</div>
-                <div class="time">{{item.lastMessage.lastTime | CHAT_DATE}}</div>
+                <div class="user-name">
+                  {{ item.userProfile.nick || item.userProfile.userID }}
+                </div>
+                <div class="time">
+                  {{ item.lastMessage.lastTime | CHAT_DATE }}
+                </div>
               </div>
-              <div class="recent-msg-box">{{item.lastMessage.messageForShow}}</div>
+              <div class="recent-msg-box">
+                {{ item.lastMessage.messageForShow }}
+              </div>
             </div>
           </div>
         </div>
         <div class="chat-area">
+          <audio id="voice-audio"></audio>
           <div class="chat-messages" v-loading="messagesLoading">
             <template v-if="currentChatTarget">
-              <div class="user-name">{{chatUser.userProfile.nick || chatUser.userProfile.userID}}</div>
+              <div class="user-name">
+                {{ chatUser.userProfile.nick || chatUser.userProfile.userID }}
+              </div>
               <div class="chat-content" id="chat-content">
                 <div class="load-more-btn-box" v-if="!messageData.isCompleted">
-                  <el-button :disabled="messagesLoading" @click="handleLoadMoreMsg" size="mini" plain>加载更多</el-button>
+                  <el-button
+                    :disabled="messagesLoading"
+                    @click="handleLoadMoreMsg"
+                    size="mini"
+                    plain
+                    >加载更多</el-button
+                  >
                 </div>
-                <div :class="['message-item', 'msg-' + msg.flow]" v-for="msg in messageData.messageList" :key="msg.ID">
-                  <img class="chat-head" :src="msg.avatar || require('../assets/imgs/defaultHeader.jpg')" alt="">
-                  <div class="message-detail" v-html="msg.payload.text"></div>
+                <div
+                  class="message-root-item"
+                  v-for="msg in messageData.messageList"
+                  :key="msg.ID"
+                >
+                  <div class="msg-time">{{ msg.time | CHAT_DATE }}</div>
+                  <div v-if="msg.isRevoked" class="msg-revoke">
+                    - {{msg.flow === 'out' ? '你' : (msg.from)}}撤回了一条消息 -
+                  </div>
+                  <div
+                    v-if="!msg.isRevoked"
+                    :class="['message-item', 'msg-' + msg.flow]"
+                    @contextmenu.prevent="handleRevokeMsg(msg)"
+                  >
+                    <div class="msg-time-read">
+                      <span
+                        v-if="msg.flow === 'out'"
+                        :class="[!msg.isPeerRead ? 'unreaded' : '']"
+                        >{{ msg.isPeerRead ? '已读' : '未读' }}</span
+                      >
+                    </div>
+                    <img
+                      class="chat-head"
+                      :src="
+                        msg.avatar ||
+                        require('../assets/imgs/defaultHeader.jpg')
+                      "
+                      alt=""
+                    />
+                    <!-- <div class="message-detail" v-html="msg.payload.text"></div> -->
+                    <div class="message-detail">
+                      <div
+                        class="msg-type-text"
+                        v-if="msg.type === 'TIMTextElem'"
+                      >
+                        {{ msg.payload.text }}
+                      </div>
+                      <img
+                        class="msg-type-image"
+                        v-if="msg.type === 'TIMImageElem'"
+                        :src="msg.payload.imageInfoArray[1].imageUrl"
+                        alt=""
+                      />
+                      <div
+                        @click="handlePlayVoice(msg)"
+                        :class="[
+                          'msg-type-voice',
+                          'msg-type-voice-' + msg.flow,
+                        ]"
+                        v-if="msg.type === 'TIMSoundElem'"
+                      >
+                        <img
+                          v-if="!msg.playing"
+                          class="sound-img"
+                          :src="
+                            require('../assets/imgs/sound-' + msg.flow + '.jpg')
+                          "
+                          alt=""
+                        />
+                        <img
+                          v-if="msg.playing"
+                          class="sound-img"
+                          :src="
+                            require('../assets/imgs/sound-playing-' +
+                              msg.flow +
+                              '.gif')
+                          "
+                          alt=""
+                        />
+                        <div class="voice-duration-text">
+                          {{ msg.payload.second }}"
+                          <!-- <audio id="voice" style="display:none;"></audio> -->
+                        </div>
+                      </div>
+                      <div
+                        class="msg-type-video"
+                        v-if="msg.type === 'TIMVideoFileElem'"
+                      >
+                        <video
+                          :src="msg.payload.videoUrl"
+                          controls="controls"
+                        ></video>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </template>
           </div>
           <div class="chat-ipt-box">
+            <input
+              type="file"
+              id="imagePicker"
+              ref="imagePicker"
+              accept=".jpg, .jpeg, .png, .gif, .bmp"
+              @change="sendImage"
+              style="display: none"
+            />
+            <input
+              type="file"
+              id="videoPicker"
+              ref="videoPicker"
+              @change="sendVideo"
+              style="display: none"
+              accept=".mp4"
+            />
             <el-input
               type="textarea"
               :rows="4"
@@ -192,11 +333,33 @@
               placeholder="请输入内容"
               v-model="chatContent"
               :disabled="!chatUser"
-              @keyup.ctrl.enter.native="handleSendMsg"
+              @keydown.enter.exact.native="handleSendMsg"
+              @keyup.ctrl.enter.native="handleLine"
             >
             </el-input>
             <div class="send-btns">
-              <el-button size="mini" type="primary" @click="handleSendMsg" :disabled="!chatUser">发送</el-button>
+              <div class="send-file-box">
+                <div @click="handleSendImage" class="pointer">
+                  <i
+                    style="font-size: 24px"
+                    class="el-icon-picture-outline"
+                  ></i>
+                </div>
+                <div
+                  @click="handleSendVideo"
+                  style="margin-left: 10px"
+                  class="pointer"
+                >
+                  <i style="font-size: 26px" class="el-icon-video-camera"></i>
+                </div>
+              </div>
+              <el-button
+                size="mini"
+                type="primary"
+                @click="handleSendMsg"
+                :disabled="!chatUser || !chatContent"
+                >发送</el-button
+              >
             </div>
           </div>
         </div>
@@ -207,11 +370,13 @@
 <script>
 import chatMixin from '../assets/mixin/chat-mixin.js'
 import { logout } from '../assets/services/login-service'
+import MessageBubble from '../components/MessageBubble.vue'
 export default {
   name: 'App',
+  components: { MessageBubble },
   data() {
     return {
-      chatVisible: true,
+      chatVisible: false,
       rootMap: {
         1: 'dashboard-work-bench',
         '2-1': 'manage-houses',
@@ -255,10 +420,14 @@ export default {
   },
   methods: {
     handleJumpTim() {
-      // this.$router.push({
-      //   name: 'manage-tim',
-      // })
       this.chatVisible = true
+      this.$nextTick(() => {
+        if (this.currentChatTarget) {
+          document.getElementById(
+            'chat-content'
+          ).scrollTop = document.getElementById('chat-content').scrollHeight
+        }
+      })
     },
     handleSelectNav(key, keyPath) {
       this.$router.push({
@@ -308,6 +477,21 @@ export default {
   text-align center
   padding 10px 0
   color #333
+}
+.unread-all-num {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  padding: 0 2px;
+  height: 16px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 12px;
+  background: #F56C6C;
 }
 .search-head-box {
   padding 5px
