@@ -103,5 +103,12 @@ export default {
     singleItem: `${domain}/api/admin/commission/item`,
     pay: `${domain}/api/admin/commission/pay`,
     paymentItem: `${domain}/api/admin/commission/paymentItem`
+  },
+  article: {
+    edit: `${domain}/api/admin/article/edit`,
+    items: `${domain}/api/admin/article/items`,
+    item: `${domain}/api/admin/article/item`,
+    shelves: `${domain}/api/admin/article/shelves`,
+    delete: `${domain}/api/admin/article/delete`,
   }
 }

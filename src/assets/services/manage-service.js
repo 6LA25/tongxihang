@@ -547,3 +547,42 @@ export const fetchPaymentItem = (options) => Fetch({
     ...options
   }
 })
+
+// 编辑文章
+export const editArticle = (options) => Fetch({
+  url: URL.article.edit,
+  data: {
+    ...options
+  }
+})
+
+// 搜索文章
+export const fetchAllArticles = (options) => Fetch({
+  url: URL.article.items,
+  data: {
+    ...options
+  }
+})
+
+// 搜索文章
+export const fetchItemArticle = (options) => Fetch({
+  url: URL.article.item,
+  data: {
+    ...options
+  }
+})
+
+// 批量上下架文章
+export const shelvesArticles  = (options) => Fetch({
+  url: URL.article.shelves,
+  data: {
+    ...options
+  }
+})
+
+export const deleteArticle  = (options) => Fetch({
+  url: URL.article.delete,
+  data: {
+    ...options
+  }
+})
