@@ -15,7 +15,7 @@
         <div class="ilb-top search-item-label">活动名称：</div>
         <div class="ilb-top">
           <el-input
-            v-model="search.keyword"
+            v-model="search.name"
             placeholder="请输入内容"
             size="mini"
           ></el-input>
@@ -24,7 +24,7 @@
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">活动状态：</div>
         <div class="ilb-top">
-          <el-select v-model="search.state" placeholder="请选择" size="mini">
+          <el-select v-model="search.racktype" placeholder="请选择" size="mini">
             <el-option
               v-for="item in putawayStatus"
               :key="item.value"
@@ -63,21 +63,29 @@
         show-overflow-tooltip
       ></el-table-column>
       <el-table-column
-        prop="time"
+        prop="endtime"
         label="截止时间"
         min-width="100"
         show-overflow-tooltip
-      ></el-table-column>
+      >
+      <template slot-scope="scope">
+          {{scope.row.endtime | YMDHMS_date}}
+        </template>
+      </el-table-column>
       <el-table-column
-        prop="num"
+        prop="registernum"
         label="报名人数"
         min-width="100"
       ></el-table-column>
       <el-table-column
-        prop="statusName"
+        prop="racktype"
         label="活动状态"
         min-width="100"
-      ></el-table-column>
+      >
+        <template slot-scope="scope">
+          {{scope.row.racktype === 1 ? '已上架' : '未上架'}}
+        </template>
+      </el-table-column>
       <el-table-column prop="realname" label="操作" min-width="250">
         <template slot-scope="scope">
           <el-button
@@ -85,7 +93,7 @@
             size="mini"
             v-permission="'新建楼盘'"
             @click.stop="handleToggleAct(scope.row)"
-            >开启活动</el-button
+            >{{scope.row.racktype === 0 ? '开启活动' : '关闭活动'}}</el-button
           >
           <el-button
             v-permission="'新建楼盘'"
@@ -98,7 +106,7 @@
             type="primary"
             size="mini"
             v-permission="'新建楼盘'"
-            @click="handleShowNames"
+            @click="handleShowNames(scope.row.id)"
             >报名名单</el-button
           >
         </template>
@@ -117,51 +125,32 @@
     </div>
     <el-dialog title="报名名单" :visible.sync="nameDialogVisible" width="70%">
       <div class="name-title-box">
-        <span class="title">xxxx</span>
-        <span class="num">已有2人报名</span>
-        <el-button type="primary" size="mini">导出EXCEL</el-button>
+        <span class="title">{{currentReg.name}}</span>
+        <span class="num">已有{{nameTable.length}}人报名</span>
+        <el-button @click="handleExportExcel" type="primary" size="mini" :disabled="nameTable.length === 0">导出EXCEL</el-button>
       </div>
       <el-table
-        :data="nameData"
+        :data="nameTable"
         tooltip-effect="dark"
         style="width: 100%"
         size="mini"
       >
-        <el-table-column
-          prop="time"
-          label="报名时间"
-          min-width="100"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="name"
-          label="姓名"
-          min-width="100"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="mobile"
-          label="手机号"
+      <el-table-column
+      v-for="item in nameTableHeader"
+          :prop="item.prop"
+          :key="item.prop"
+          :label="item.label"
           min-width="100"
           show-overflow-tooltip
         ></el-table-column>
       </el-table>
-      <div class="pager-box">
-        <el-pagination
-          @size-change="handleNameSizeChange"
-          @current-change="handleNameCurrentChange"
-          :current-page="nameSearch.pageNo"
-          :page-sizes="[10, 20, 30, 40]"
-          :page-size="nameSearch.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="100"
-        ></el-pagination>
-      </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import { fetchMarketRegister, fetchRegistrations, batchRegistrationsShelves, exportRegisterExcel } from '../../assets/services/manage-service'
+
 export default {
   name: 'manage-appply-activity',
   data() {
@@ -169,25 +158,7 @@ export default {
       loading: false,
       nameDialogVisible: false,
       total: 0,
-      nameSearch: {
-        pageNo: 1,
-        pageSize: 10,
-      },
-      nameData: [
-        {
-          time: '2010-1-1',
-          name: 'xxx',
-          mobile: 1234,
-        },
-      ],
       tableData: [
-        {
-          id: 'xxx',
-          name: '1111',
-          time: '2020-10-10',
-          num: 234,
-          statusName: 'xxxx',
-        },
       ],
       putawayStatus: [
         {
@@ -196,31 +167,45 @@ export default {
         },
         {
           value: 1,
-          label: '开启中',
+          label: '已上架',
         },
         {
           value: 0,
-          label: '已关闭',
+          label: '未上架',
         },
       ],
       search: {
-        keyword: '',
+        name: '',
+        racktype: '',
         pageSize: 10,
         pageNo: 1,
       },
-      nameData: [
-        {
-          time: 'xx',
-          name: 'xx',
-          mobile: 'xxx'
-        }
-      ]
+      nameTableHeader: [],
+      nameTable: [],
+      currentReg: {}
     }
   },
-  mounted() {},
+  mounted() {
+    this.fetchList()
+  },
+  watch: {
+    nameDialogVisible(nv) {
+      if (!nv) {
+        this.nameTableHeader = []
+        this.nameTable = []
+        this.currentReg = {}
+      }
+    }
+  },
   methods: {
-    handleShowNames() {
+    handleShowNames(id) {
       this.nameDialogVisible = true
+      fetchRegistrations({
+        id
+      }).then(({data}) => {
+        this.currentReg = data.item
+        this.makeNameList(data)
+      })
     },
     handleAddAct() {
       this.$router.push({
@@ -230,8 +215,51 @@ export default {
         }
       })
     },
-    fetchList() {},
-    fetchNameList() {},
+    fetchList() {
+      this.loading = true
+      let post = {
+        name: this.search.name,
+        racktype: this.search.racktype,
+        pageSize: this.search.pageSize,
+        pageNo: this.search.pageNo,
+      }
+      fetchMarketRegister(post)
+        .then(({ data }) => {
+          this.total = data.totalCount
+          this.tableData = data.items
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
+    },
+    makeNameList(data) {
+      let contentinfo = data.item.contentinfo
+      let registrations = data.registrations
+      let arr = []
+      let nameTable = []
+      contentinfo.split(';').forEach(item => {
+        arr.push({
+          prop: item.split(':')[0],
+          label: item.split(':')[1]
+        })
+      })
+      if (registrations.length > 0) {
+        registrations.forEach(item => {
+        let {userinfo} = item
+        let msg = {}
+        userinfo.split(';').forEach(info => {
+          msg[info.split(':')[0]] = info.split(':')[1]
+        })
+        nameTable.push({
+          signtime: item.signtime,
+          ...msg
+        })
+      })
+      }
+      this.nameTableHeader = arr
+      this.nameTable = nameTable
+    },
     handleDelete() {
       this.$confirm('确定删除该活动吗?', '提示', {
         confirmButtonText: '确定',
@@ -241,8 +269,34 @@ export default {
         .then(() => {})
         .catch(() => {})
     },
-    handleToggleAct() {},
-    handleJumpEditAct() {},
+    handleToggleAct(item) {
+      this.$confirm(`是否${item.racktype === 0 ? '开启活动' : '关闭活动'}`, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(() => {
+          batchRegistrationsShelves({
+            shelves: !item.racktype / 1,
+            ids: [item.id]
+          }).then((res) => {
+            this.$message.success(res.result_msg)
+            this.handleReset()
+          })
+        })
+        .catch(() => {
+
+        })
+    },
+    handleJumpEditAct({id}) {
+      this.$router.push({
+        name: 'add-appply-activity',
+        query: {
+          flag: 'edit',
+          id
+        }
+      })
+    },
     handleReset() {
       Object.keys(this.search).forEach((item) => {
         this.search[item] = ''
@@ -263,14 +317,13 @@ export default {
       this.search.pageNo = val
       this.fetchList()
     },
-    handleNameSizeChange() {
-      this.nameSearch.pageSize = val
-      this.fetchNameList()
-    },
-    handleNameCurrentChange() {
-      this.nameSearch.pageNo = val
-      this.fetchNameList()
-    },
+    handleExportExcel() {
+      exportRegisterExcel({
+        id: this.currentReg.id
+      }, this.currentReg.name + '-报名名单.xls').then(({data}) => {
+        console.log(data)
+      })
+    }
   },
 }
 </script>

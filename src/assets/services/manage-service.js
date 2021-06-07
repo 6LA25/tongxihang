@@ -586,3 +586,99 @@ export const deleteArticle  = (options) => Fetch({
     ...options
   }
 })
+
+// 营销活动-报名活动
+export const editMarketRegister  = (options) => Fetch({
+  url: URL.marketregister.edit,
+  data: {
+    ...options
+  }
+})
+
+export const fetchMarketRegister  = (options) => Fetch({
+  url: URL.marketregister.items,
+  data: {
+    ...options
+  }
+})
+
+export const fetchRegistrations  = (options) => Fetch({
+  url: URL.marketregister.registrations,
+  data: {
+    ...options
+  }
+})
+
+// 上下架
+export const batchRegistrationsShelves = (options) => Fetch({
+  url: URL.marketregister.shelves,
+  data: {
+    ...options
+  }
+})
+
+export const fetchMarketRegisterItem  = (options) => Fetch({
+  url: URL.marketregister.item,
+  data: {
+    ...options
+  }
+})
+
+export const exportRegisterExcel  = (options, name) => Fetch({
+  responseType: 'blob',
+  url: URL.marketregister.excel,
+  data: {
+    ...options
+  }
+}, name)
+
+// 楼盘活动
+export const editMarkethouse  = (options) => Fetch({
+  url: URL.markethouse.edit,
+  data: {
+    ...options
+  }
+})
+
+export const fetchMarkethouse  = (options) => Fetch({
+  url: URL.markethouse.items,
+  data: {
+    ...options
+  }
+})
+
+export const fetchMarkethouseItem  = (options) => Fetch({
+  url: URL.markethouse.item,
+  data: {
+    ...options
+  }
+})
+
+export const deleteMarkethouse  = (options) => Fetch({
+  url: URL.markethouse.delete,
+  data: {
+    ...options
+  }
+})
+
+export const upMarkethouse  = (options) => Fetch({
+  url: URL.markethouse.shelves,
+  data: {
+    ...options
+  }
+})
+
+export const fetchMarkethouseRegistrations  = (options) => Fetch({
+  url: URL.markethouse.registrations,
+  data: {
+    ...options
+  }
+})
+
+export const exportMarkethouseExcel  = (options, name) => Fetch({
+  responseType: 'blob',
+  url: URL.markethouse.excel,
+  data: {
+    ...options
+  }
+}, name)

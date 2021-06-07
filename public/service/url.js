@@ -110,5 +110,22 @@ export default {
     item: `${domain}/api/admin/article/item`,
     shelves: `${domain}/api/admin/article/shelves`,
     delete: `${domain}/api/admin/article/delete`,
+  },
+  marketregister: {
+    edit: `${domain}/api/admin/marketregister/edit`,
+    items: `${domain}/api/admin/marketregister/items`,
+    item: `${domain}/api/admin/marketregister/item`,
+    registrations: `${domain}/api/admin/marketregister/registrations`,
+    shelves: `${domain}/api/admin/marketregister/shelves`,
+    excel: `${domain}/api/admin/marketregister/registrations/export`
+  },
+  markethouse: {
+    edit: `${domain}/api/admin/markethouse/edit`,
+    items: `${domain}/api/admin/markethouse/items`,
+    item: `${domain}/api/admin/markethouse/item`,
+    delete: `${domain}/api/admin/markethouse/delete`,
+    shelves: `${domain}/api/admin/markethouse/shelves`,
+    registrations: `${domain}/api/admin/markethouse/registrations`,
+    excel: `${domain}/api/admin/markethouse/registrations/export`
   }
 }

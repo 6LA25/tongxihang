@@ -8,78 +8,114 @@
       label-width="100px"
     >
       <el-form-item label="用户名" prop="account">
-        <el-input maxlength="100" :readonly="$route.query.tag !== 'add'" style="width: 400px;" size="mini" autocomplete="off" v-model.trim="userForm.account"></el-input>
+        <el-input
+          maxlength="100"
+          :readonly="$route.query.tag !== 'add'"
+          style="width: 400px"
+          size="mini"
+          autocomplete="off"
+          v-model.trim="userForm.account"
+        ></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input
           maxlength="100"
           auto-complete="new-password"
-          style="width: 400px;"
+          style="width: 400px"
           size="mini"
           v-model.trim="userForm.password"
         ></el-input>
       </el-form-item>
       <el-form-item label="姓名" prop="realname">
-        <el-input maxlength="100" :readonly="$route.query.tag !== 'add'" style="width: 400px;" size="mini" v-model.trim="userForm.realname"></el-input>
+        <el-input
+          maxlength="100"
+          :readonly="$route.query.tag !== 'add'"
+          style="width: 400px"
+          size="mini"
+          v-model.trim="userForm.realname"
+        ></el-input>
       </el-form-item>
       <el-form-item label="邮箱" prop="email" v-if="false">
-        <el-input maxlength="100" style="width: 400px;" size="mini" v-model.trim="userForm.email"></el-input>
+        <el-input
+          maxlength="100"
+          style="width: 400px"
+          size="mini"
+          v-model.trim="userForm.email"
+        ></el-input>
       </el-form-item>
       <el-form-item label="手机号码" prop="mobile">
-        <el-input maxlength="100" style="width: 400px;" size="mini" v-model.trim="userForm.mobile"></el-input>
+        <el-input
+          maxlength="100"
+          style="width: 400px"
+          size="mini"
+          v-model.trim="userForm.mobile"
+        ></el-input>
       </el-form-item>
       <el-form-item label="员工编号" prop="jobnum">
-        <el-input maxlength="100" style="width: 400px;" size="mini" v-model.trim="userForm.jobnum"></el-input>
+        <el-input
+          maxlength="100"
+          style="width: 400px"
+          size="mini"
+          v-model.trim="userForm.jobnum"
+        ></el-input>
       </el-form-item>
-      <el-form-item label="员工性别" prop="gender">
-        <el-radio-group v-model="userForm.gender">
+      <el-form-item label="员工性别" prop="sex">
+        <el-radio-group v-model="userForm.sex">
           <el-radio :label="1">男</el-radio>
-          <el-radio :label="0">女</el-radio>
-          <el-radio :label="2">其他</el-radio>
+          <el-radio :label="2">女</el-radio>
+          <el-radio :label="0">其他</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="员工头像" prop="coverImg">
-          <el-upload
-            v-if="$store.state.uploadUrl"
-            :headers="$store.state.uploadHeaders"
-            :data="$store.state.uploadData"
-            :name="'Filedata'"
-            style="display: inline-block"
-            class="avatar-uploader"
-            :action="$store.state.uploadUrl"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
-          >
-            <img
-              v-if="userForm.coverImg"
-              :src="userForm.coverImg.filepath"
-              class="cover-img"
-            />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-          <div class="form-item-hint-text">
-            <span v-if="$route.query.tag === 'edit'"
-              >点击图片修改活动封面，</span
-            >支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：336 * 256
-          </div>
-        </el-form-item>
+        <el-upload
+          v-if="$store.state.uploadUrl"
+          :headers="$store.state.uploadHeaders"
+          :data="$store.state.uploadData"
+          :name="'Filedata'"
+          style="display: inline-block"
+          class="avatar-uploader"
+          :action="$store.state.uploadUrl"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+        >
+          <img
+            v-if="userForm.coverImg.filepath"
+            :src="userForm.coverImg.filepath"
+            class="cover-img"
+          />
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+        <div class="form-item-hint-text">
+          <span v-if="$route.query.tag === 'edit'">点击图片修改活动封面，</span
+          >支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：336 * 256
+        </div>
+      </el-form-item>
       <el-form-item label="设置角色" prop="role">
         <el-input
           readonly
           maxlength="100"
-          style="width: 200px;margin-right: 20px;"
+          style="width: 200px; margin-right: 20px"
           size="mini"
           v-model="roleName"
         ></el-input>
-        <el-button size="mini" type="primary" @click="handleShowDialog">选择角色</el-button>
+        <el-button size="mini" type="primary" @click="handleShowDialog"
+          >选择角色</el-button
+        >
       </el-form-item>
       <el-form-item>
-        <el-button size="mini" type="primary" @click="submitForm('userForm')">立即创建</el-button>
+        <el-button size="mini" type="primary" @click="submitForm('userForm')"
+          >立即创建</el-button
+        >
         <el-button size="mini" @click="handleCancel">取消</el-button>
       </el-form-item>
     </el-form>
-    <el-dialog class="select-role-dialog" title="选择角色" :visible.sync="dialogVisible" :before-close="handleClose">
+    <el-dialog
+      class="select-role-dialog"
+      title="选择角色"
+      :visible.sync="dialogVisible"
+      :before-close="handleClose"
+    >
       <el-table
         ref="multipleTable"
         :data="tableData"
@@ -90,10 +126,18 @@
       >
         <el-table-column prop="" label="选择" width="50">
           <template scope="scope">
-            <el-radio v-model="selectRole.id" :label="scope.row.id" @change.native="handleSelectRole(scope.$index,scope.row)"></el-radio>
+            <el-radio
+              v-model="selectRole.id"
+              :label="scope.row.id"
+              @change.native="handleSelectRole(scope.$index, scope.row)"
+            ></el-radio>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="角色名称" width="500"></el-table-column>
+        <el-table-column
+          prop="name"
+          label="角色名称"
+          width="500"
+        ></el-table-column>
       </el-table>
       <div class="pager-box">
         <el-pagination
@@ -106,8 +150,10 @@
           :total="total"
         ></el-pagination>
       </div>
-      <div style="text-align: center;">
-        <el-button size="mini" type="primary" @click="handleConfirm">确定</el-button>
+      <div style="text-align: center">
+        <el-button size="mini" type="primary" @click="handleConfirm"
+          >确定</el-button
+        >
         <el-button size="mini" @click="handleClose">取消</el-button>
       </div>
     </el-dialog>
@@ -115,10 +161,14 @@
 </template>
 
 <script>
-import { addStaff, fetchAllRoles, fetchStaffItem } from '../../assets/services/manage-service'
+import {
+  addStaff,
+  fetchAllRoles,
+  fetchStaffItem,
+} from '../../assets/services/manage-service'
 export default {
   name: 'add-staff',
-  data () {
+  data() {
     return {
       dialogVisible: false,
       pageNo: 1,
@@ -134,13 +184,13 @@ export default {
         mobile: '',
         jobnum: '',
         role: '',
-        gender: '',
-        coverImg: ''
+        sex: '',
+        coverImg: {},
       },
       roleName: '',
       selectRole: {
         id: '',
-        name: ''
+        name: '',
       },
       rules: {
         account: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -150,11 +200,11 @@ export default {
         mobile: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
         role: [{ required: true, message: '请设置角色', trigger: 'blur' }],
         coverImg: [{ required: true, message: '请上传头像' }],
-      }
+      },
     }
   },
   watch: {
-    dialogVisible (nv) {
+    dialogVisible(nv) {
       if (!nv) {
         this.pageNo = 1
         this.pageSize = 10
@@ -164,17 +214,17 @@ export default {
       }
     },
     'userForm.account': {
-      handler (nv) {
+      handler(nv) {
         this.userForm.account = this.userForm.account.replace(/\s+/g, '')
-      }
-    }
+      },
+    },
   },
-  mounted () {
+  mounted() {
     this.$store.dispatch('initUpload')
     if (this.$route.query.tag !== 'add') {
       this.rules.password[0].required = false
       fetchStaffItem({
-        account: this.$route.query.account
+        account: this.$route.query.account,
       }).then(({ data }) => {
         this.userForm.account = data.item.account
         this.userForm.role = data.item.roleId
@@ -183,6 +233,8 @@ export default {
         this.userForm.realname = data.item.realname
         this.userForm.mobile = data.item.mobile
         this.userForm.email = data.item.email
+        this.userForm.sex = data.item.sex
+        this.userForm.coverImg.filepath = data.item.avatar
       })
     }
   },
@@ -215,21 +267,21 @@ export default {
       }
       return (isJPG || isPNG || isJPEG) && isLt1M
     },
-    handleSelectRole (index, row) {
+    handleSelectRole(index, row) {
       console.log(row)
       this.selectRole.id = row.id
       this.selectRole.name = row.name
     },
-    handleShowDialog () {
+    handleShowDialog() {
       this.dialogVisible = true
       this.selectRole.id = this.userForm.role
       this.selectRole.name = this.roleName
       this.fetchList()
     },
-    handleCancel () {
+    handleCancel() {
       this.$router.go(-1)
     },
-    handleConfirm () {
+    handleConfirm() {
       this.userForm.role = this.selectRole.id
       this.roleName = this.selectRole.name
       if (this.selectRole.id) {
@@ -237,11 +289,20 @@ export default {
       }
       this.dialogVisible = false
     },
-    submitForm (formName) {
-      this.$refs[formName].validate(valid => {
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        let userForm = this.userForm
         if (valid) {
           addStaff({
-            ...this.userForm
+            account: userForm.account,
+            password: userForm.password,
+            realname: userForm.realname,
+            email: userForm.email,
+            mobile: userForm.mobile,
+            jobnum: userForm.jobnum,
+            role: userForm.role,
+            sex: userForm.sex,
+            avatar: userForm.coverImg.filepath
           })
             .then(({ data }) => {
               this.$message.success('操作成功')
@@ -256,31 +317,33 @@ export default {
         }
       })
     },
-    fetchList () {
+    fetchList() {
       this.loading = true
       fetchAllRoles({
         pageSize: this.pageSize,
-        pageNo: this.pageNo
-      }).then(({ data }) => {
-        this.total = data.totalCount
-        this.tableData = data.items
-        this.loading = false
-      }).catch(() => {
-        this.loading = false
+        pageNo: this.pageNo,
       })
+        .then(({ data }) => {
+          this.total = data.totalCount
+          this.tableData = data.items
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       this.pageSize = val
       this.fetchList()
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.pageNo = val
       this.fetchList()
     },
-    handleClose () {
+    handleClose() {
       this.dialogVisible = false
-    }
-  }
+    },
+  },
 }
 </script>
 

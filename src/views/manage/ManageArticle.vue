@@ -179,6 +179,18 @@
             v-model="editForm.racktype"
           ></el-switch>
         </el-form-item>
+        <el-form-item
+          label="初始浏览量"
+          prop="initView"
+        >
+          <el-input
+            style="width: 400px"
+            type="number"
+            size="mini"
+            v-model="editForm.initView"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
         <el-form-item>
           <el-button size="mini" type="primary" @click="submitForm('editForm')"
             >提交</el-button
@@ -234,6 +246,7 @@ export default {
         coverImg: null,
         content: '',
         racktype: 0,
+        initView: ''
       },
       rules: {
         coverImg: [{ required: true, message: '请上传楼盘活动封面' }],
@@ -354,6 +367,7 @@ export default {
         this.editForm.name = data.title
         this.editForm.content = data.content
         this.editForm.racktype = data.racktype
+        this.editForm.initView = data.initView
         this.editForm.coverImg = {
           filename: '',
           filepath: data.image,
@@ -426,6 +440,7 @@ export default {
             title: this.editForm.name,
             image: this.editForm.coverImg.filepath,
             content: this.editForm.content,
+            initView: this.editForm.initView / 1,
             racktype: this.editForm.racktype / 1,
           })
             .then((data) => {

@@ -60,15 +60,11 @@ export default {
       })
     },
     async initTim() {
-      let { data } = await fetchTimUserSig({
-        userid: this.userid,
-      })
-      let userSig = data.userSig
-      sessionStorage.setItem('userSig', userSig)
       // 开始登录
+      let {imconfig} = this.$store.state.userInfo
       let timLogin = this.$$tim.login({
-        userID: this.userid,
-        userSig: data.userSig,
+        userID: imconfig.userId || this.userid,
+        userSig: imconfig.userSig,
       })
       timLogin
         .then((imResponse) => {

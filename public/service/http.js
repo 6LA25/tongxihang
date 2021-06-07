@@ -28,7 +28,30 @@ export function Fetch (ajaxOptions = {}, name = '') {
   ajaxOptions.method = ajaxOptions.method || 'post'
   return new Promise((resolve, reject) => {
     axios(ajaxOptions).then((response) => {
+      const data = response.data
       // 登录报错及登录失效区分
+      if (ajaxOptions.responseType === 'blob') {
+        let type = ''
+        const csvData = new Blob([data], { type: 'text/csv' })
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+          const fileName = name || '培训考勤表.xls'
+          window.navigator.msSaveOrOpenBlob(csvData, fileName)
+        } else {
+          const url = window.URL.createObjectURL(new Blob([data]), { type: 'application/octet-stream' })
+          const link = document.createElement('a')
+          if (response.headers['content-type'].includes('excel')) {
+            type = 'xls' // excel文件
+          }
+          link.style.display = 'none'
+          link.href = url
+          // TODO：培训考勤模版下载暂时写死文件名
+          link.download = name || `培训考勤表.${type}`
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link) // 下载完成移除元素
+          window.URL.revokeObjectURL(url) // 释放掉blob对象
+        }
+      }
       if (response.data.result_code === 401) {
         MessageBox.alert('请重新登录！', '提示', {
           confirmButtonText: '确定',

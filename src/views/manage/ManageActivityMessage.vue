@@ -88,7 +88,7 @@
           ref="ruleForm"
           :model="activityForm"
         >
-          <el-form-item label="查看角色：" prop="title">
+          <el-form-item label="查看角色：">
             <el-select size="mini" v-model="activityForm.type">
               <el-option
                 v-for="item in roles"
@@ -106,18 +106,25 @@
               v-model="activityForm.title"
             ></el-input>
           </el-form-item>
-          <el-form-item label="跳转地址：" prop="link_type">
+          <el-form-item label="简介：" prop="introduction">
+            <el-input
+              size="mini"
+              type="text"
+              v-model="activityForm.introduction"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="跳转地址：" prop="linktype">
             <el-radio-group
-              v-model="activityForm.link_type"
+              v-model="activityForm.linktype"
               @change="handleSelectLink"
             >
               <div style="margin-bottom: 10px">
-                <el-radio style="width: 100px;" :label="0">楼盘</el-radio>
+                <el-radio style="width: 100px" :label="1">楼盘</el-radio>
                 <el-select
-                  :disabled="activityForm.link_type !== 0"
+                  :disabled="activityForm.linktype !== 1"
                   style="width: 400px"
                   size="mini"
-                  v-model="activityForm.link_id"
+                  v-model="activityForm.link_id_1"
                   filterable
                   remote
                   reserve-keyword
@@ -135,21 +142,21 @@
                 </el-select>
               </div>
               <div style="margin-bottom: 10px">
-                <el-radio style="width: 100px;" :label="1">报名活动</el-radio>
+                <el-radio style="width: 100px" :label="2">报名活动</el-radio>
                 <el-select
-                  :disabled="activityForm.link_type !== 0"
+                  :disabled="activityForm.linktype !== 2"
                   style="width: 400px"
                   size="mini"
-                  v-model="activityForm.link_id"
+                  v-model="activityForm.link_id_2"
                   filterable
                   remote
                   reserve-keyword
                   placeholder="请输入完整报名活动名称"
-                  :remote-method="fetchHouses"
-                  :loading="houseSearching"
+                  :remote-method="fetchApplies"
+                  :loading="applySearching"
                 >
                   <el-option
-                    v-for="item in houseOptions"
+                    v-for="item in applyOptions"
                     :key="item.id"
                     :label="item.name"
                     :value="item.id"
@@ -158,21 +165,21 @@
                 </el-select>
               </div>
               <div style="margin-bottom: 10px">
-                <el-radio style="width: 100px;" :label="2">从文章选择</el-radio>
+                <el-radio style="width: 100px" :label="3">从文章选择</el-radio>
                 <el-select
-                  :disabled="activityForm.link_type !== 0"
+                  :disabled="activityForm.linktype !== 3"
                   style="width: 400px"
                   size="mini"
-                  v-model="activityForm.link_id"
+                  v-model="activityForm.link_id_3"
                   filterable
                   remote
                   reserve-keyword
                   placeholder="请输入完整文章名称"
-                  :remote-method="fetchHouses"
-                  :loading="houseSearching"
+                  :remote-method="fetchArticles"
+                  :loading="articlesSearching"
                 >
                   <el-option
-                    v-for="item in houseOptions"
+                    v-for="item in articlesOptions"
                     :key="item.id"
                     :label="item.name"
                     :value="item.id"
@@ -180,10 +187,14 @@
                   </el-option>
                 </el-select>
               </div>
+              <div style="margin-bottom: 10px">
+                <el-radio style="width: 100px" :label="0">编辑正文</el-radio>
+              </div>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="通知正文：" prop="content">
             <el-input
+              :disabled="activityForm.linktype !== 0"
               size="mini"
               type="textarea"
               resize="none"
@@ -208,7 +219,8 @@ import {
   editNotice,
   fetchNotice,
   fetchNoticeItem,
-  fetchHouseList
+  fetchHouseList,
+  fetchMarketRegister
 } from '../../assets/services/manage-service'
 export default {
   name: 'manage-hot-word',
@@ -216,7 +228,11 @@ export default {
     return {
       houseSearching: false,
       houseOptions: [],
-      dialogVisible: true,
+      articlesSearching: false,
+      articlesOptions: [],
+      applySearching: false,
+      applyOptions: [],
+      dialogVisible: false,
       loading: false,
       total: 0,
       flag: '',
@@ -246,16 +262,19 @@ export default {
       activityForm: {
         id: '',
         title: '',
+        introduction: '',
         content: '',
         type: '',
-        link_type: '',
-        link_id: '',
+        linktype: '',
+        link_id_1: '',
+        link_id_2: '',
+        link_id_3: '',
       },
       tableData: [],
       currentEditData: null,
       rules: {
         title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
-        content: [{ required: true, message: '请输入正文', trigger: 'blur' }],
+        introduction: [{ required: true, message: '请输入简介', trigger: 'blur' }],
       },
       submitting: false,
     }
@@ -273,6 +292,28 @@ export default {
     this.fetchList()
   },
   methods: {
+    fetchArticles(query) {
+      this.articlesSearching = true
+      fetchMarketRegister({
+        name: query,
+        pageSize: 20,
+        pageNo: 1,
+      }).then(({data}) => {
+        this.articlesSearching = false
+        this.articlesOptions = data.items
+      })
+    },
+    fetchApplies(query) {
+      this.applySearching = true
+      fetchMarketRegister({
+        name: query,
+        pageSize: 20,
+        pageNo: 1,
+      }).then(({data}) => {
+        this.applySearching = false
+        this.applyOptions = data.items
+      })
+    },
     fetchHouses(query) {
       console.log(query)
       this.houseSearching = true
@@ -285,7 +326,12 @@ export default {
         this.houseSearching = false
       })
     },
-    handleSelectLink() {},
+    handleSelectLink() {
+      this.activityForm.link_id_1 = ''
+      this.activityForm.link_id_2 = ''
+      this.activityForm.link_id_3 = ''
+      this.activityForm.content = ''
+    },
     fetchItem(id) {
       fetchNoticeItem({
         id,
@@ -293,8 +339,21 @@ export default {
         console.log(data)
         this.activityForm.id = data.id
         this.activityForm.title = data.title
-        this.activityForm.content = data.content
+        if (data.linktype === 1) {
+          this.activityForm[`link_id_${data.linktype}`] = data.content / 1
+          this.fetchHouses(data.linkname)
+        } else if (data.linktype === 2) {
+          this.activityForm[`link_id_${data.linktype}`] = data.content
+          this.fetchApplies(data.linkname)
+        } else if (data.linktype === 3) {
+          this.activityForm[`link_id_${data.linktype}`] = data.content
+          this.fetchArticles(data.linkname)
+        } else {
+          this.activityForm.content = data.content
+        }
         this.activityForm.type = data.type
+        this.activityForm.linktype = data.linktype
+        this.activityForm.introduction = data.introduction
       })
     },
     checkSelectable() {
@@ -369,9 +428,17 @@ export default {
       }
       this.submitting = true
       this.$refs['ruleForm'].validate((valid) => {
+        let activityForm = {
+          id: this.activityForm.id,
+          title: this.activityForm.title,
+          introduction: this.activityForm.introduction,
+          content: this.activityForm.content || this.activityForm[`link_id_${this.activityForm.linktype}`],
+          type: this.activityForm.type,
+          linktype: this.activityForm.linktype
+        }
         if (valid) {
           editNotice({
-            ...this.activityForm,
+            ...activityForm,
             state: 1,
           })
             .then(({ data }) => {

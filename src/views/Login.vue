@@ -76,6 +76,7 @@ export default {
         this.$store.commit('UPDATE_USER_INFO', data.item)
         sessionStorage.setItem('userInfo', JSON.stringify(data.item))
         sessionStorage.setItem('ticket', data.item.ticket)
+        sessionStorage.setItem('userSig', data.item.imconfig.userSig)
         fetchStaffPermissions().then(({ data }) => {
           console.log(data)
           sessionStorage.setItem('permissions', JSON.stringify(data.permissions))

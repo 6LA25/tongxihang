@@ -15,7 +15,7 @@
         <div class="ilb-top search-item-label">活动名称：</div>
         <div class="ilb-top">
           <el-input
-            v-model="search.keyword"
+            v-model="search.name"
             placeholder="请输入内容"
             size="mini"
           ></el-input>
@@ -67,11 +67,11 @@
         label="报名人数"
         min-width="100"
       ></el-table-column>
-      <el-table-column
-        prop="statusName"
-        label="活动状态"
-        min-width="100"
-      ></el-table-column>
+      <el-table-column prop="statusName" label="活动状态" min-width="100">
+        <template slot-scope="scope">
+          {{ scope.row.racktype === 1 ? '已上架' : '未上架' }}
+        </template>
+      </el-table-column>
       <el-table-column label="操作" min-width="250">
         <template slot-scope="scope">
           <el-button
@@ -79,7 +79,7 @@
             size="mini"
             v-permission="'新建楼盘'"
             @click.stop="handleShowBatch(scope.row)"
-            >批量上/下架</el-button
+            >{{ scope.row.racktype === 1 ? '下架' : '上架' }}</el-button
           >
           <el-button
             v-permission="'新建楼盘'"
@@ -99,7 +99,7 @@
             type="primary"
             size="mini"
             v-permission="'新建楼盘'"
-            @click="handleShowNames"
+            @click="handleShowNames(scope.row)"
             >报名名单</el-button
           >
         </template>
@@ -118,9 +118,9 @@
     </div>
     <el-dialog title="报名名单" :visible.sync="nameDialogVisible" width="70%">
       <div class="name-title-box">
-        <span class="title">xxxx</span>
-        <span class="num">已有2人报名</span>
-        <el-button type="primary" size="mini">导出EXCEL</el-button>
+        <span class="title">{{currentReg.name}}</span>
+        <span class="num">已有{{nameData.length}}人报名</span>
+        <el-button type="primary" size="mini" @click="handleExportExcel" :disabled="nameData.length === 0">导出EXCEL</el-button>
       </div>
       <el-table
         :data="nameData"
@@ -129,7 +129,7 @@
         size="mini"
       >
         <el-table-column
-          prop="time"
+          prop="signtime"
           label="报名时间"
           min-width="100"
           show-overflow-tooltip
@@ -147,17 +147,6 @@
           show-overflow-tooltip
         ></el-table-column>
       </el-table>
-      <div class="pager-box">
-        <el-pagination
-          @size-change="handleNameSizeChange"
-          @current-change="handleNameCurrentChange"
-          :current-page="nameSearch.pageNo"
-          :page-sizes="[10, 20, 30, 40]"
-          :page-size="nameSearch.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="100"
-        ></el-pagination>
-      </div>
     </el-dialog>
     <el-dialog
       title="编辑活动"
@@ -170,6 +159,12 @@
         label-width="100px"
         :rules="rules"
       >
+        <el-form-item label="是否开启活动" prop="racktype">
+          <el-radio-group v-model="editForm.racktype">
+            <el-radio :label="1">开启</el-radio>
+            <el-radio :label="0">关闭</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item
           label="活动名称"
           prop="name"
@@ -237,14 +232,28 @@
 </template>
 
 <script>
+import {
+  editMarkethouse,
+  fetchMarkethouse,
+  deleteMarkethouse,
+  upMarkethouse,
+  fetchMarkethouseItem,
+  fetchMarkethouseRegistrations,
+  exportMarkethouseExcel
+} from '../../assets/services/manage-service'
+
 export default {
   name: 'manage-house-activity',
   data() {
     return {
       editForm: {
+        id: '',
+        racktype: '',
         name: '',
         coverImg: null,
+        hint: '',
       },
+      currentReg: {},
       rules: {
         coverImg: [{ required: true, message: '请上传楼盘活动封面' }],
       },
@@ -256,21 +265,9 @@ export default {
         pageNo: 1,
         pageSize: 10,
       },
-      nameData: [
-        {
-          time: '2010-1-1',
-          name: 'xxx',
-          mobile: 1234,
-        },
+      nameData: [,
       ],
-      tableData: [
-        {
-          id: 'xxx',
-          name: '1111',
-          num: 234,
-          statusName: 'xxxx',
-        },
-      ],
+      tableData: [],
       putawayStatus: [
         {
           value: -1,
@@ -286,23 +283,32 @@ export default {
         },
       ],
       search: {
-        keyword: '',
+        name: '',
         state: '',
         pageSize: 10,
         pageNo: 1,
       },
+      currentReg: {}
     }
   },
   watch: {
+    nameDialogVisible(nv) {
+      if (!nv) {
+        this.currentReg = {}
+      }
+    },
     editVisible(nv) {
       if (!nv) {
         this.editForm.name = ''
+        this.editForm.id = ''
         this.editForm.hint = ''
+        this.editForm.racktype = ''
         this.editForm.coverImg = null
       }
     },
   },
   mounted() {
+    this.fetchList()
     this.$store.dispatch('initUpload')
   },
   methods: {
@@ -334,25 +340,86 @@ export default {
       }
       return (isJPG || isPNG || isJPEG) && isLt1M
     },
-    handleShowNames() {
+    handleShowNames(item) {
       this.nameDialogVisible = true
+      fetchMarkethouseRegistrations({
+        id: item.id
+      }).then(({data}) => {
+        this.currentReg = item
+        this.nameData = data || []
+      })
     },
     handleAddAct() {
       this.editVisible = true
     },
-    fetchList() {},
+    fetchList() {
+      this.loading = true
+      let post = {
+        name: this.search.name,
+        racktype: this.search.state === '' ? -1 : this.search.state,
+        pageSize: this.search.pageSize,
+        pageNo: this.search.pageNo,
+      }
+      fetchMarkethouse(post)
+        .then(({ data }) => {
+          this.total = data.totalCount
+          this.tableData = data.items
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
+    },
     fetchNameList() {},
-    handleDelete() {
+    handleDelete(item) {
       this.$confirm('确定删除该活动吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
       })
-        .then(() => {})
+        .then(() => {
+          deleteMarkethouse({
+            id: item.id,
+          }).then(({ data }) => {
+            this.$message.success('操作成功')
+            this.handleReset()
+          })
+        })
         .catch(() => {})
     },
-    handleShowBatch() {},
-    handleJumpEditAct() {},
+    handleShowBatch(item) {
+      this.$confirm(
+        `是否确定要${item.racktype / 1 === 0 ? '上架' : '下架'}`,
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
+      )
+        .then(() => {
+          upMarkethouse({
+            shelves: item.racktype / 1 === 0 ? 1 : 0,
+            ids: [item.id],
+          }).then((data) => {
+            this.handleReset()
+            this.$message.success('操作成功')
+          })
+        })
+        .catch(() => {})
+    },
+    handleJumpEditAct(item) {
+      this.editVisible = true
+      fetchMarkethouseItem({id: item.id}).then(({data}) => {
+        this.editForm.id = data.id
+        this.editForm.racktype = data.racktype
+        this.editForm.name = data.name
+        this.editForm.hint = data.tips
+        this.editForm.coverImg = {
+          filepath: data.image
+        }
+      })
+    },
     handleReset() {
       Object.keys(this.search).forEach((item) => {
         this.search[item] = ''
@@ -384,12 +451,35 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          editMarkethouse({
+            name: this.editForm.name,
+            image: this.editForm.coverImg.filepath,
+            tips: this.editForm.hint,
+            racktype: this.editForm.racktype,
+          })
+            .then(({ data }) => {
+              this.$message.success('操作成功')
+              this.editVisible = false
+              this.handleReset()
+            })
+            .catch((err) => {
+              this.$message.error(err.result_msg || '操作失败')
+              this.editVisible = false
+              this.handleReset()
+            })
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
+    handleExportExcel() {
+      exportMarkethouseExcel({
+        id: this.currentReg.id
+      }, this.currentReg.name + '-报名名单.xls').then(({data}) => {
+        console.log(data)
+      })
+    }
   },
 }
 </script>
