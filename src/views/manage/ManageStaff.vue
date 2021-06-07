@@ -84,7 +84,6 @@
     </div>
     <el-dialog
       title="离职交接"
-      destroy-on-close="true"
       :visible.sync="dialogVisible"
     >
       <div
@@ -95,7 +94,7 @@
         <div>admin</div>
       </div>
       <div style="display: flex; align-items: center">
-        <div style="width: 100px; text-align: right">交接人：</div>
+        <div style="width: 100px; text-align: right">置业顾问交接人：</div>
         <div>
           <el-select
             size="mini"
@@ -162,7 +161,9 @@ export default {
         })
         .catch(() => {})
     },
-    handleConnect() {},
+    handleConnect() {
+      this.dialogVisible = true
+    },
     handleEdit(tag, data) {
       this.$router.push({
         name: 'add-staff',
