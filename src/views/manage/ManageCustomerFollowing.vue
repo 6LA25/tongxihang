@@ -99,7 +99,7 @@
       <el-table-column prop="recommendTime" label="最近跟进时间" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="nextFollowTime" label="下次跟进时间" min-width="100" show-overflow-tooltip></el-table-column>
 
-      <el-table-column label="操作" min-width="200">
+      <el-table-column label="操作" min-width="260">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleFollowing(scope.row)">跟进</el-button>
           <el-button
@@ -127,7 +127,32 @@
       title="提交佣金"
       width="500px"
       :visible.sync="submitDialog"
-    ></el-dialog>
+    >
+      <div style="display: flex;margin-bottom: 10px">
+        <div style="margin-right: 40px;">客户姓名：曾诚</div>
+        <div>购买楼盘：</div>
+      </div>
+      <div style="display: flex;margin-bottom: 10px">
+        <div style="margin-right: 40px;">合同编号：xxx</div>
+        <div>合同金额：111</div>
+      </div>
+      <div style="display: flex; align-items: center; margin-bottom: 10px;">
+        <div style="width: 160px;text-align: right">请输入经纪人佣金：</div>
+        <div><el-input size="mini"></el-input></div>
+      </div>
+      <div style="display: flex; align-items: center; margin-bottom: 10px;">
+        <div style="width: 160px;text-align: right">请输入二级经纪人佣金：</div>
+        <div><el-input size="mini"></el-input></div>
+      </div>
+      <div style="display: flex; align-items: center; margin-bottom: 10px;">
+        <div style="width: 160px;text-align: right">请输入三级经纪人佣金：</div>
+        <div><el-input size="mini"></el-input></div>
+      </div>
+      <div style="display: flex;justify-content: flex-end;margin-top: 10px;">
+        <el-button size="mini" type="primary" @click="handleConfirmSubmit">确认无误，提交审核</el-button>
+        <el-button size="mini" @click="submitDialog = false">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -139,7 +164,7 @@ export default {
     return {
       loading: false,
       total: 0,
-      submitDialog: true,
+      submitDialog: false,
       search: {
         keyword: '',
         followStatus: -1,
@@ -198,7 +223,19 @@ export default {
   },
   methods: {
     handleShowSubmitdialog() {
-
+      this.submitDialog = true
+    },
+    handleConfirmSubmit() {
+      this.$confirm('确定提交审核吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(() => {
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     handleJumpEditCustomer (data) {
       this.$router.push({
