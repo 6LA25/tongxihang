@@ -49,6 +49,13 @@ export const fetchAllUsers = (options) => Fetch({
   }
 })
 
+export const handoverUser = (options) => Fetch({
+  url: URL.user.handover,
+  data: {
+    ...options
+  }
+})
+
 // 获取所有菜单权限
 export const fetchAllPermissions = (options) => Fetch({
   url: URL.login.permission,
@@ -261,6 +268,23 @@ export const fetchCustomerSea = (options) => Fetch({
     ...options
   }
 })
+
+export const fetchOvertimeCustomer = (options) => Fetch({
+  url: URL.customer.timeout,
+  data: {
+    ...options
+  }
+})
+
+export const exportOvertimeExcel  = (options, name) => Fetch({
+  responseType: 'blob',
+  url: URL.customer.excel,
+  data: {
+    ...options
+  }
+}, name)
+
+
 
 // 关单
 export const closeCustomerCase = (options) => Fetch({

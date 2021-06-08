@@ -39,7 +39,7 @@
             <el-radio :label="0">外部链接</el-radio>
             <el-input :disabled="advForm.link_type !== 0" style="width: 400px" size="mini" v-model="advForm.outLink"></el-input>
           </div>
-          <div>
+          <div style="margin-bottom: 10px;">
             <el-radio :label="1">楼盘详情</el-radio>
             <!-- <el-input :disabled="advForm.link_type !== 1" style="width: 400px" size="mini" v-model="advForm.inLink"></el-input> -->
             <el-select
@@ -55,6 +55,28 @@
               :loading="searching">
             <el-option
               v-for="item in options"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+          </div>
+          <div>
+            <el-radio :label="2">报名活动</el-radio>
+            <!-- <el-input :disabled="advForm.link_type !== 1" style="width: 400px" size="mini" v-model="advForm.inLink"></el-input> -->
+            <el-select
+              style="width: 400px"
+              size="mini"
+              :disabled="advForm.link_type !== 2"
+              v-model="advForm.cLink"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入完整报名活动名称"
+              :remote-method="fetchApply"
+              :loading="searchingApply">
+            <el-option
+              v-for="item in applyOptions"
               :key="item.id"
               :label="item.name"
               :value="item.id">
@@ -82,7 +104,7 @@
 </template>
 
 <script>
-import { editAdvertise, fetchAdverItem, fetchHouseList } from '../../assets/services/manage-service'
+import { fetchMarketRegister, editAdvertise, fetchAdverItem, fetchHouseList } from '../../assets/services/manage-service'
 export default {
   name: 'add-advertisement-position',
   data () {
@@ -96,7 +118,11 @@ export default {
         {
           value: 2,
           label: '开屏广告'
-        }
+        },
+        {
+          value: 3,
+          label: '首页公告下方'
+        },
       ],
       rules: {
         postion: [{ required: true, message: '请选择广告位置', trigger: 'change' }],
@@ -130,9 +156,12 @@ export default {
         link_type: '',
         outLink: '',
         inLink: '',
+        cLink: '',
         status: '',
         sort: ''
-      }
+      },
+      applyOptions: [],
+      searchingApply: false
     }
   },
   mounted () {
@@ -152,10 +181,14 @@ export default {
         this.advForm.sort = data.sort
         if (data.link_type === 0) {
           this.advForm.outLink = data.link
-        } else {
+        } else if(data.link_type === 1) {
           this.advForm.inLink = data.link / 1
+          this.fetchHouses(data.houseName || '')
+        }else if(data.link_type === 2) {
+          this.advForm.cLink = data.link
+          this.fetchApply(data.activityName || '')
         }
-        this.fetchHouses(data.houseName || '')
+        
       })
     }
   },
@@ -170,6 +203,18 @@ export default {
       }).then(({ data }) => {
         this.options = data.items
         this.searching = false
+      })
+    },
+    fetchApply (query) {
+      console.log(query)
+      this.searchingApply = true
+      fetchMarketRegister({
+        name: query,
+        pageSize: 20,
+        pageNo: 1
+      }).then(({ data }) => {
+        this.applyOptions = data.items
+        this.searchingApply = false
       })
     },
     handleAvatarSuccess (res, file) {
@@ -215,7 +260,7 @@ export default {
             image: this.advForm.image ? this.advForm.image.filename : '',
             link_type: this.advForm.link_type,
             status: this.advForm.status,
-            link: this.advForm.link_type === 0 ? this.advForm.outLink : this.advForm.inLink,
+            link: this.advForm.link_type === 0 ? this.advForm.outLink : (this.advForm.link_type === 1 ? this.advForm.inLink : this.advForm.cLink),
             sort: this.advForm.sort
           }).then(({ data }) => {
             this.$message.success('操作成功')
@@ -238,8 +283,13 @@ export default {
       console.log(this.advForm.link_type)
       if (this.advForm.link_type === 0) {
         this.advForm.inLink = ''
-      } else {
+        this.advForm.cLink = ''
+      } else if (this.advForm.link_type === 1) {
         this.advForm.outLink = ''
+        this.advForm.cLink = ''
+      }else if (this.advForm.link_type === 2) {
+        this.advForm.outLink = ''
+        this.advForm.inLink = ''
       }
     }
   }

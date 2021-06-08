@@ -198,6 +198,11 @@ const routes = [
         name: 'manage-article',
         component: () => import(/* webpackChunkName: "ManageArticle" */ '../views/manage/ManageArticle.vue')
       },
+      {
+        path: '/manage-overtime',
+        name: 'manage-overtime',
+        component: () => import(/* webpackChunkName: "ManageOvertime" */ '../views/manage/ManageOvertime.vue')
+      },
     ]
   }
 ]

@@ -108,6 +108,7 @@
             size="mini"
             @click.stop="handleJumpEditCustomer(scope.row)"
           >编辑客户</el-button>
+          <el-button type="primary" size="mini" @click.stop="handleShowSubmitdialog">提交佣金</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -122,6 +123,11 @@
         :total="total"
       ></el-pagination>
     </div>
+    <el-dialog
+      title="提交佣金"
+      width="500px"
+      :visible.sync="submitDialog"
+    ></el-dialog>
   </div>
 </template>
 
@@ -133,6 +139,7 @@ export default {
     return {
       loading: false,
       total: 0,
+      submitDialog: true,
       search: {
         keyword: '',
         followStatus: -1,
@@ -190,6 +197,9 @@ export default {
     this.fetchList()
   },
   methods: {
+    handleShowSubmitdialog() {
+
+    },
     handleJumpEditCustomer (data) {
       this.$router.push({
         name: 'edit-customer',

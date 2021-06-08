@@ -28,6 +28,17 @@
         </div>
       </div>
       <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">跟进人：</div>
+        <div class="ilb-top">
+          <el-input
+            style="width: 250px;"
+            v-model="search.follower"
+            placeholder="请输入跟进人名称"
+            size="mini"
+          ></el-input>
+        </div>
+      </div>
+      <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">推荐人搜索：</div>
         <div class="ilb-top">
           <el-input
@@ -78,6 +89,21 @@
           </el-select>
         </div>
       </div>
+
+      <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">超时时间：</div>
+        <div class="ilb-top">
+          <el-select v-model="search.timeoutstatus" placeholder="请选择" size="mini">
+            <el-option
+              v-for="item in overtimeStatus"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </div>
+      </div>
+
       <div class="ilb-top search-item-box">
         <div class="ilb-top search-item-label">跟进状态：</div>
         <div class="ilb-top">
@@ -141,7 +167,11 @@
       <el-table-column prop="recommendName" label="推荐人" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="recommendMobile" label="推荐人手机号" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="recommendTime" label="推荐时间" min-width="100" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="overtime" label="超时时间" min-width="100" show-overflow-tooltip></el-table-column>
+      <el-table-column label="超时时间" min-width="100" show-overflow-tooltip>
+        <template slot-scope="scope">
+          {{getOverTimeText(scope.row.timeoutstatus)}}
+        </template>
+      </el-table-column>
       <el-table-column prop="followRealname" label="跟进人" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column prop="followStatusName" label="跟进状态" min-width="100" show-overflow-tooltip></el-table-column>
       <el-table-column label="操作" min-width="350">
@@ -277,10 +307,12 @@ export default {
       sendDialogVisible: false,
       options: [],
       search: {
+        timeoutstatus: '',
         keyword: '',
         recommendWord: '',
         houseName: '',
         followUser: '',
+        follower: '',
         followStatus: '',
         type: -1,
         time: '',
@@ -341,6 +373,13 @@ export default {
           label: '无'
         }
       ],
+      overtimeStatus: [
+        {value:0,label: '未超时'},
+        {value:1,label: '超时3天'},
+        {value:2,label: '超时7天'},
+        {value:3,label: '超时15天'},
+        {value:4,label: '超时30天'},
+      ],
       followingStatus: [
         { value: -1, label: '全部' },
         { value: 0, label: '关单' },
@@ -376,6 +415,9 @@ export default {
     }
   },
   methods: {
+    getOverTimeText(state) {
+      return ['未超时', '超时3天', '超时7天', '超时15天', '超时30天'][state]
+    },
     checkSelectable (item) {
       return item.followStatus === 1 || item.followStatus === 0
     },
@@ -468,7 +510,9 @@ export default {
         pageSize: this.search.pageSize,
         recommendWord: this.search.recommendWord,
         followUser: this.search.followUser,
-        followStatus: this.search.followStatus
+        followStatus: this.search.followStatus,
+        timeoutstatus: this.search.timeoutstatus,
+        follower: this.search.follower,
       }
       fetchCustomerSea(post)
         .then(({ data }) => {
@@ -495,6 +539,8 @@ export default {
       this.search.type = -1
       this.search.time = ''
       this.search.houseName = ''
+      this.search.follower = ''
+      this.search.timeoutstatus = ''
       this.fetchList()
     },
     // 重新派单

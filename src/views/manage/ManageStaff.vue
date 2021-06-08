@@ -90,11 +90,11 @@
         class="title"
         style="display: flex; align-items: center; margin-bottom: 10px"
       >
-        <div style="width: 100px; text-align: right">离职员工：</div>
-        <div>admin</div>
+        <div style="width: 180px; text-align: right">离职员工：</div>
+        <div>{{currentHandUser.account}}</div>
       </div>
-      <div style="display: flex; align-items: center">
-        <div style="width: 100px; text-align: right">置业顾问交接人：</div>
+      <div style="display: flex; align-items: center; margin-bottom: 10px">
+        <div style="width: 180px; text-align: right">置业顾问交接人（必填）：</div>
         <div>
           <el-select
             size="mini"
@@ -102,14 +102,36 @@
             filterable
             remote
             reserve-keyword
-            placeholder="请选择置业顾问"
+            placeholder="请输入交接人姓名"
             :remote-method="fetchUsers"
           >
             <el-option
               v-for="item in options"
               :key="item.uid"
               :label="item.account"
-              :value="item.uid"
+              :value="item.account"
+            >
+            </el-option>
+          </el-select>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center">
+        <div style="width: 180px; text-align: right">未签约跟进单交接人：</div>
+        <div>
+          <el-select
+            size="mini"
+            v-model="qykh_account"
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入交接人姓名"
+            :remote-method="fetchUsers2"
+          >
+            <el-option
+              v-for="item in options2"
+              :key="item.uid"
+              :label="item.account"
+              :value="item.account"
             >
             </el-option>
           </el-select>
@@ -117,7 +139,7 @@
       </div>
       <div style="display: flex;justify-content: flex-end;margin-top: 10px;">
         <el-button size="mini" type="primary" @click="handleConfirmConnect">确认交接，并将交接人设为离职</el-button>
-        <el-button size="mini" @click="outerVisible = false">取 消</el-button>
+        <el-button size="mini" @click="dialogVisible = false">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -127,42 +149,86 @@
 import {
   fetchAlllStaff,
   fetchAllUsers,
+  handoverUser
 } from '../../assets/services/manage-service'
 export default {
   name: 'manage-staff',
   data() {
     return {
       loading: false,
-      dialogVisible: true,
+      dialogVisible: false,
       tableData: [],
       pageSize: 10,
       pageNo: 1,
       total: 0,
       options: [],
+      options2: [],
       adviser: '',
+      qykh_account: '',
+      currentHandUser: {}
     }
   },
   mounted() {
     this.fetchList()
   },
+  watch: {
+    dialogVisible(nv) {
+      if (!nv) {
+        this.qykh_account = ''
+        this.currentHandUser = {}
+        this.adviser = ''
+        this.options = []
+        this.options2 = []
+      }
+    }
+  },
   methods: {
     fetchUsers(query) {
-      fetchAllUsers({}).then(({ data }) => {
+      fetchAllUsers({
+        account: query
+      }).then(({ data }) => {
         this.options = data.items
       })
     },
+    fetchUsers2(query) {
+      fetchAllUsers({
+        account: query
+      }).then(({ data }) => {
+        this.options2 = data.items
+      })
+    },
     handleConfirmConnect() {
+      if (!this.adviser) {
+        this.$message.warning('请设置跟进单交接人')
+        return
+      }
       this.$confirm('确定设置离职并交接吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
       })
         .then(() => {
+          handoverUser({
+            account: this.currentHandUser.account,
+            zygw_account: this.adviser,
+            qykh_account: this.qykh_account
+          }).then(({data}) => {
+            this.pageSize = 10
+            this.pageNo = 1
+            this.$message.success('交接成功')
+            this.dialogVisible = false
+            this.fetchList()
+          }).catch(err => {
+            this.$message.error(err.result_msg)
+          })
         })
-        .catch(() => {})
+        .catch((err) => {
+          console.log(err)
+        })
     },
-    handleConnect() {
+    handleConnect(data) {
       this.dialogVisible = true
+      this.currentHandUser = data
     },
     handleEdit(tag, data) {
       this.$router.push({

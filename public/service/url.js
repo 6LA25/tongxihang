@@ -19,7 +19,8 @@ export default {
     all: `${domain}/api/admin/adminuser/items`,
     commonUser: `${domain}/api/admin/common/authorization/users`,
     items: `${domain}/api/admin/user/items`,
-    agents: `${domain}/api/admin/userAgent/items`
+    agents: `${domain}/api/admin/userAgent/items`,
+    handover: `${domain}/api/admin/adminuser/handover`
   },
   staff: {
     add: `${domain}/api/admin/adminuser/edit`,
@@ -86,7 +87,9 @@ export default {
     dwsItem: `${domain}/api/admin/customer/collect/item`,
     updateStatus: `${domain}/api/admin/customer/collect/updateStatus`,
     reSend: `${domain}/api/admin/customer/redistribution`,
-    updateLog: `${domain}/api/admin/customer/follow/updateStatus`
+    updateLog: `${domain}/api/admin/customer/follow/updateStatus`,
+    timeout: `${domain}/api/admin/customer/timeout/items`,
+    excel: `${domain}/api/admin/customer/timeout/export`
   },
   distribution: {
     list: `${domain}/api/admin/distribution/items`,

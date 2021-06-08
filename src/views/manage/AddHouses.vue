@@ -187,9 +187,63 @@
       <el-form-item label="楼盘亮点：" prop="lightspot">
         <el-input style="width: 400px" type="textarea" resize="none" size="mini" v-model="housesForm.lightspot"></el-input>
       </el-form-item>
-      <el-form-item label="周边介绍：" prop="rim">
-        <el-input style="width: 400px" type="textarea" resize="none" size="mini" v-model="housesForm.rim"></el-input>
+
+      <el-form-item label="楼盘活动：" prop="marketHouseList">
+        <el-select
+          style="width: 400px;"
+          size="mini"
+          v-model="housesForm.marketHouseList"
+          multiple
+          filterable
+          remote
+          reserve-keyword
+          placeholder="请输入楼盘活动关键词"
+          :remote-method="remoteMethod"
+          :loading="haLoading"
+        >
+          <el-option
+            v-for="item in houseActivity"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
+        </el-select>
       </el-form-item>
+      
+      <!-- <el-form-item label="周边介绍：" prop="rim">
+        <el-input style="width: 400px" type="textarea" resize="none" size="mini" v-model="housesForm.rim"></el-input>
+      </el-form-item> -->
+      <div class="ilb-top">
+        <el-form-item label="市政基建：" prop="municipalInfrastructure">
+          <el-input style="width: 400px" type="textarea" resize="none" size="mini" v-model="housesForm.municipalInfrastructure"></el-input>
+        </el-form-item>
+      </div>
+      <div class="ilb-top">
+        <el-form-item label="商圈消费：" prop="businessCircle">
+          <el-input style="width: 400px" type="textarea" resize="none" size="mini" v-model="housesForm.businessCircle"></el-input>
+        </el-form-item>
+      </div>
+      <div class="ilb-top">
+        <el-form-item label="交通配套：" prop="transportFacilities">
+          <el-input style="width: 400px" type="textarea" resize="none" size="mini" v-model="housesForm.transportFacilities"></el-input>
+        </el-form-item>
+      </div>
+      <div class="ilb-top">
+        <el-form-item label="周边学校：" prop="aroundSchools">
+          <el-input style="width: 400px" type="textarea" resize="none" size="mini" v-model="housesForm.aroundSchools"></el-input>
+        </el-form-item>
+      </div>
+      <div class="ilb-top">
+        <el-form-item label="医疗健康：" prop="healthCare">
+          <el-input style="width: 400px" type="textarea" resize="none" size="mini" v-model="housesForm.healthCare"></el-input>
+        </el-form-item>
+      </div>
+      <div class="ilb-top">
+        <el-form-item label="其他：" prop="other">
+          <el-input style="width: 400px" type="textarea" resize="none" size="mini" v-model="housesForm.other"></el-input>
+        </el-form-item>
+      </div>
+      
       <el-form-item label="楼盘封面：" prop="coverImg">
         <el-upload
           v-if="$store.state.uploadUrl"
@@ -310,7 +364,6 @@
             :value="item.id">
           </el-option>
         </el-select>
-
       </el-form-item>
       <el-form-item label="楼盘详细地址：" prop="address">
         <el-input type="textarea" style="width: 400px;" size="mini" placeholder="请在此填写详细地址" resize="none" v-model="housesForm.address"></el-input>
@@ -350,29 +403,29 @@
           <el-radio :label="0">否</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="分销佣金类别：" prop="distributionType" v-if="housesForm.distribution !== 0">
+      <!-- <el-form-item label="分销佣金类别：" prop="distributionType" v-if="housesForm.distribution !== 0">
         <el-radio-group v-model="housesForm.distributionType">
           <el-radio :label="0">百分比金额</el-radio>
           <el-radio :label="1">固定金额</el-radio>
         </el-radio-group>
-      </el-form-item>
+      </el-form-item> -->
       <div v-if="housesForm.distribution !== 0">
         <div class="ilb-top">
           <el-form-item label="1级佣金比例：" prop="">
             <el-input style="width: 100px" size="mini" v-model="housesForm.level1"></el-input>
-            <span class="form-label" v-if="housesForm.distributionType !== ''">{{housesForm.distributionType ? '元' : '%'}}</span>
+            <!-- <span class="form-label" v-if="housesForm.distributionType !== ''">{{housesForm.distributionType ? '元' : '%'}}</span> -->
           </el-form-item>
         </div>
         <div class="ilb-top">
           <el-form-item label="2级佣金比例：" prop="">
             <el-input style="width: 100px" size="mini" v-model="housesForm.level2"></el-input>
-            <span class="form-label" v-if="housesForm.distributionType !== ''">{{housesForm.distributionType ? '元' : '%'}}</span>
+            <!-- <span class="form-label" v-if="housesForm.distributionType !== ''">{{housesForm.distributionType ? '元' : '%'}}</span> -->
           </el-form-item>
         </div>
         <div class="ilb-top">
           <el-form-item label="3级佣金比例：" prop="">
             <el-input style="width: 100px" size="mini" v-model="housesForm.level3"></el-input>
-            <span class="form-label" v-if="housesForm.distributionType !== ''">{{housesForm.distributionType ? '元' : '%'}}</span>
+            <!-- <span class="form-label" v-if="housesForm.distributionType !== ''">{{housesForm.distributionType ? '元' : '%'}}</span> -->
           </el-form-item>
         </div>
         <div class="warn" style="padding-left: 20px;">合计：计算3级佣金或佣金比例总和，注意，佣金比例是根据实际放款计算</div>
@@ -394,6 +447,11 @@
           </el-option>
         </el-select>
       </el-form-item>
+
+      <el-form-item label="咨询电话：" prop="hotline">
+        <el-input style="width: 400px" size="mini" v-model="housesForm.hotline"></el-input>
+      </el-form-item>
+
       <div class="form-divide-title">楼盘状态：</div>
       <el-form-item label="上下架：" prop="distributionType">
         <el-radio-group v-model="housesForm.state">
@@ -406,7 +464,7 @@
         <span class="form-item-hint-text" style="margin-left: 10px;">数字越大，优先级越高；如优先级相同，则根据创建时间排序</span>
       </el-form-item>
       <el-form-item>
-        <el-button size="mini" type="primary" @click="handleSubmit">确定</el-button>
+        <el-button :disabled="submitting" size="mini" type="primary" @click="handleSubmit">确定</el-button>
         <el-button size="mini" @click="handleCancel">取消</el-button>
       </el-form-item>
     </el-form>
@@ -414,7 +472,7 @@
 </template>
 
 <script>
-import { fetchArea, editHouse, fetchHouseItem, fetchAllUsers } from '../../../src/assets/services/manage-service'
+import { fetchArea, editHouse, fetchHouseItem, fetchAllUsers, fetchMarkethouse } from '../../../src/assets/services/manage-service'
 export default {
   name: 'add-houses',
   data () {
@@ -605,14 +663,24 @@ export default {
         level1: '', // 一级佣金比例
         level2: '', // 二级佣金比例
         level3: '', // 三级佣金比例
-        houseLocation: []
+        houseLocation: [],
         // houseLocation: [
         //   { id: 10, initials: 'J', name: '江苏', parent: 0 },
         //   { id: 109, initials: 'W', name: '无锡', parent: 10 },
         //   { id: 1135, initials: 'B', name: '滨湖区', parent: 109 }
         // ] // 楼盘位置
+        municipalInfrastructure: '', // 市政基建（新增字段）
+        businessCircle: '', // 商圈消费（新增字段）
+        transportFacilities: '', // 交通配套（新增字段）
+        aroundSchools: '', // 周边学校（新增字段）
+        healthCare: '', // 医疗健康（新增字段）
+        other: '', // 其他
+        marketHouseList: [],
+        hotline: '' // 咨询电话
       },
-      map: null
+      map: null,
+      houseActivity: [],
+      haLoading: false
     }
   },
   computed: {
@@ -903,7 +971,23 @@ export default {
     },
     handleCancel () {
       this.$router.go(-1)
-    }
+    },
+    remoteMethod (query) {
+      console.log(query)
+      if (query !== '') {
+        this.haLoading = true
+        fetchMarkethouse({
+          name: query,
+          pageSize: 20,
+          pageNo: 1
+        }).then(({ data }) => {
+          this.houseActivity = data.items
+          this.haLoading = false
+        })
+      } else {
+        this.houseActivity = []
+      }
+    },
   }
 }
 </script>

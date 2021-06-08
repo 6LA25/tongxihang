@@ -39,6 +39,9 @@
                 <el-menu-item index="3-3" v-permission="'待完善客户信息'"
                   >待完善客户信息</el-menu-item
                 >
+                <el-menu-item index="3-4" v-permission="'待完善客户信息'"
+                  >超时客户统计</el-menu-item
+                >
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="4">
@@ -384,6 +387,7 @@ export default {
         '3-1': 'manage-customer-sea',
         '3-2': 'manage-customer-following',
         '3-3': 'perfect-customer-info',
+        '3-4': 'manage-overtime',
         '4-1': 'manage-commission',
         '4-2': 'confirm-transfer-account',
         '4-3': 'check-final-statement',
