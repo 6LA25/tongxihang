@@ -103,6 +103,17 @@
           >选择角色</el-button
         >
       </el-form-item>
+      <el-form-item label="员工描述" prop="desc">
+        <el-input
+          :readonly="$route.query.tag !== 'add'"
+          style="width: 400px"
+          size="mini"
+          autocomplete="off"
+          placeholder="不得超过12字"
+          maxlength="12"
+          v-model.trim="userForm.desc"
+        ></el-input>
+      </el-form-item>
       <el-form-item>
         <el-button size="mini" type="primary" @click="submitForm('userForm')"
           >立即创建</el-button
@@ -185,6 +196,7 @@ export default {
         jobnum: '',
         role: '',
         sex: '',
+        desc: '',
         coverImg: {},
       },
       roleName: '',
@@ -234,6 +246,7 @@ export default {
         this.userForm.mobile = data.item.mobile
         this.userForm.email = data.item.email
         this.userForm.sex = data.item.sex
+        this.userForm.desc = data.item.desc
         this.userForm.coverImg.filepath = data.item.avatar
       })
     }
@@ -302,6 +315,7 @@ export default {
             jobnum: userForm.jobnum,
             role: userForm.role,
             sex: userForm.sex,
+            desc: userForm.desc,
             avatar: userForm.coverImg.filepath
           })
             .then(({ data }) => {
