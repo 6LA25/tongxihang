@@ -103,7 +103,7 @@
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click.stop="handleFollowing(scope.row)">跟进</el-button>
           <el-button
-            v-permission="'编辑客户'"
+            v-permission="'提交佣金'"
             type="primary"
             size="mini"
             @click.stop="handleJumpEditCustomer(scope.row)"
