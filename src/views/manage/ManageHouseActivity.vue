@@ -5,7 +5,7 @@
       <el-button
         type="primary"
         size="small"
-        v-permission="'新建楼盘'"
+        v-permission="'新增楼盘活动'"
         @click="handleAddAct('add')"
         >新建活动</el-button
       >
@@ -77,12 +77,12 @@
           <el-button
             type="primary"
             size="mini"
-            v-permission="'新建楼盘'"
+            v-permission="'编辑楼盘活动'"
             @click.stop="handleShowBatch(scope.row)"
             >{{ scope.row.racktype === 1 ? '下架' : '上架' }}</el-button
           >
           <el-button
-            v-permission="'新建楼盘'"
+            v-permission="'编辑楼盘活动'"
             type="primary"
             size="mini"
             @click.stop="handleJumpEditAct(scope.row)"
@@ -91,14 +91,14 @@
           <el-button
             type="primary"
             size="mini"
-            v-permission="'新建楼盘'"
+            v-permission="'编辑楼盘活动'"
             @click.stop="handleDelete(scope.row)"
             >删除</el-button
           >
           <el-button
             type="primary"
             size="mini"
-            v-permission="'新建楼盘'"
+            v-permission="'查看楼盘活动名单'"
             @click="handleShowNames(scope.row)"
             >报名名单</el-button
           >

@@ -39,7 +39,7 @@
                 <el-menu-item index="3-3" v-permission="'待完善客户信息'"
                   >待完善客户信息</el-menu-item
                 >
-                <el-menu-item index="3-4" v-permission="'待完善客户信息'"
+                <el-menu-item index="3-4" v-permission="'超时客户统计'"
                   >超时客户统计</el-menu-item
                 >
               </el-menu-item-group>
@@ -88,7 +88,7 @@
                 <el-menu-item index="6-3" v-permission="'活动信息管理'"
                   >活动信息管理</el-menu-item
                 >
-                <el-menu-item index="6-4" v-permission="'活动信息管理'"
+                <el-menu-item index="6-4" v-permission="'文章管理'"
                   >文章管理</el-menu-item
                 >
               </el-menu-item-group>
@@ -98,8 +98,8 @@
                 <span>营销活动管理</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="8-1">报名活动</el-menu-item>
-                <el-menu-item index="8-2">楼盘活动</el-menu-item>
+                <el-menu-item index="8-1" v-permission="'报名活动'">报名活动</el-menu-item>
+                <el-menu-item index="8-2" v-permission="'楼盘活动'">楼盘活动</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="7">

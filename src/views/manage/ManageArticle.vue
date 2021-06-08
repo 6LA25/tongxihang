@@ -5,7 +5,7 @@
       <el-button
         type="primary"
         size="small"
-        v-permission="'新建楼盘'"
+        v-permission="'编辑文章'"
         @click="handleAddAct('add')"
         >新建文章</el-button
       >
@@ -84,21 +84,21 @@
       <el-table-column label="操作" min-width="250">
         <template slot-scope="scope">
           <el-button
-            v-permission="'新建楼盘'"
+            v-permission="'编辑文章'"
             type="primary"
             size="mini"
             @click.stop="handleJumpEditAct(scope.row)"
             >编辑文章</el-button
           >
           <el-button
-            v-permission="'新建楼盘'"
+            v-permission="'编辑文章'"
             type="primary"
             size="mini"
             @click.stop="handleUp(scope.row)"
             >{{ scope.row.racktype === '0' ? '上架' : '下架' }}</el-button
           >
           <el-button
-            v-permission="'新建楼盘'"
+            v-permission="'编辑文章'"
             type="warning"
             size="mini"
             @click.stop="handleDelete(scope.row)"

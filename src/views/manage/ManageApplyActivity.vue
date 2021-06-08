@@ -5,7 +5,7 @@
       <el-button
         type="primary"
         size="small"
-        v-permission="'新建楼盘'"
+        v-permission="'新增报名活动'"
         @click="handleAddAct('add')"
         >新建活动</el-button
       >
@@ -91,12 +91,12 @@
           <el-button
             type="primary"
             size="mini"
-            v-permission="'新建楼盘'"
+            v-permission="'编辑报名活动'"
             @click.stop="handleToggleAct(scope.row)"
             >{{scope.row.racktype === 0 ? '开启活动' : '关闭活动'}}</el-button
           >
           <el-button
-            v-permission="'新建楼盘'"
+            v-permission="'编辑报名活动'"
             type="primary"
             size="mini"
             @click.stop="handleJumpEditAct(scope.row)"
@@ -105,7 +105,7 @@
           <el-button
             type="primary"
             size="mini"
-            v-permission="'新建楼盘'"
+            v-permission="'查看报名活动名单'"
             @click="handleShowNames(scope.row.id)"
             >报名名单</el-button
           >

@@ -65,7 +65,7 @@
           <el-button size="mini" @click.stop="handleEdit('preview', scope.row)"
             >查看</el-button
           >
-          <el-button size="mini" @click.stop="handleConnect(scope.row)"
+          <el-button v-permission="'交接'" size="mini" @click.stop="handleConnect(scope.row)"
             >交接</el-button
           >
         </template>
