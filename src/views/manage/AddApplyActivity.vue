@@ -340,7 +340,7 @@ export default {
       if (this.addContentName) {
         this.contentMap.push({
           fieldname: this.addContentName,
-          required: false,
+          required: '0',
         })
       }
       this.addDialogVisible = false

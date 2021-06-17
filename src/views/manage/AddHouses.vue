@@ -430,12 +430,14 @@
         </div>
         <div class="warn" style="padding-left: 20px;">合计：计算3级佣金或佣金比例总和，注意，佣金比例是根据实际放款计算</div>
       </div>
-      <el-form-item label="置业顾问：" prop="adviser">
+      <el-form-item label="置业顾问：" prop="editadviseridList">
         <el-select
+          style="width: 400px;"
           size="mini"
-          v-model="housesForm.adviser"
+          v-model="housesForm.editadviseridList"
           filterable
           remote
+          multiple
           reserve-keyword
           placeholder="请选择置业顾问"
           :remote-method="fetchUsers">
@@ -472,7 +474,7 @@
 </template>
 
 <script>
-import { fetchArea, editHouse, fetchHouseItem, fetchAllUsers, fetchMarkethouse } from '../../../src/assets/services/manage-service'
+import { fetchArea, editHouse, fetchHouseItem, fetchAllUsers,fetchAlllStaff, fetchMarkethouse } from '../../../src/assets/services/manage-service'
 export default {
   name: 'add-houses',
   data () {
@@ -484,7 +486,7 @@ export default {
         type: [{ required: true, message: '请选择楼盘类型', trigger: 'change' }],
         status: [{ required: true, message: '请选择楼盘状态', trigger: 'change' }],
         region: [{ required: true, message: '请选择楼盘所属区域', trigger: 'change' }],
-        adviser: [{ required: true, message: '请选择置业顾问', trigger: 'change' }],
+        editadviseridList: [{ required: true, message: '请选择置业顾问', trigger: 'change' }],
         intro: [{ required: true, message: '请输入楼盘简介', trigger: 'blur' }],
         address: [{ required: true, message: '请输入楼盘详细地址', trigger: 'blur' }],
         coverImg: [{ required: true, message: '请上传楼盘封面' }],
@@ -648,7 +650,7 @@ export default {
         lat: '', // 纬度
         revenueCommissionType: '', // 营收佣金类别
         revenueCommission: '', // 佣金设置
-        adviser: '', // 置业顾问id
+        editadviseridList: [], // 置业顾问id
         sort: '', // 排序
         state: '', // 上下架
         hot: '',
@@ -659,16 +661,11 @@ export default {
         addAmbitusImgs: [], // 周边配套图
         delAmbitusImgs: [],
         distribution: '', // 是否支持分销
-        distributionType: '', // 分销佣金类别
+        // distributionType: '', // 分销佣金类别
         level1: '', // 一级佣金比例
         level2: '', // 二级佣金比例
         level3: '', // 三级佣金比例
         houseLocation: [],
-        // houseLocation: [
-        //   { id: 10, initials: 'J', name: '江苏', parent: 0 },
-        //   { id: 109, initials: 'W', name: '无锡', parent: 10 },
-        //   { id: 1135, initials: 'B', name: '滨湖区', parent: 109 }
-        // ] // 楼盘位置
         municipalInfrastructure: '', // 市政基建（新增字段）
         businessCircle: '', // 商圈消费（新增字段）
         transportFacilities: '', // 交通配套（新增字段）
@@ -707,13 +704,15 @@ export default {
     })
     if (this.$route.query.tag === 'edit' || this.$route.query.tag === 'preview') {
       this.getHouseaItem()
-      this.fetchUsers()
+      // this.fetchUsers()
     }
     this.$store.dispatch('initUpload')
   },
   methods: {
     fetchUsers (query) {
-      fetchAllUsers({}).then(({ data }) => {
+      fetchAlllStaff({
+        account: query
+      }).then(({ data }) => {
         this.options = data.items
       })
     },
@@ -743,6 +742,7 @@ export default {
     getHouseaItem () {
       fetchHouseItem({ id: this.$route.query.id }).then(({ data }) => {
         Object.keys(this.housesForm).forEach(item => {
+          // console.log(item)
           if (item === 'floorType') {
             let arr = data.floorType.split(',')
             arr.forEach(val => {
@@ -755,10 +755,10 @@ export default {
               filename: data.coverImg,
               filepath: data.coverImageLink
             }
-          } else if (item === 'shareImg') {
+          } else if (item === 'shareImg' && data.shareImg) {
             this.housesForm.shareImg = {
-              filename: data.shareImg,
-              filepath: data.shareImageLink
+              filename: data.shareImg || '',
+              filepath: data.shareImageLink || ''
             }
           } else if (item === 'addRealImgs') {
             data.realImgList.forEach(img => {
@@ -780,6 +780,20 @@ export default {
                 name: img.filename,
                 url: img.filepath
               })
+            })
+          } else if (item === 'marketHouseList') {
+            data.marketHouseList.forEach(item => {
+              this.houseActivity.push({
+                id: item.id,
+                name: item.name
+              })
+              this.housesForm.marketHouseList.push(item.id)
+            })
+          } else if (item === 'editadviseridList') {
+            console.log(1111)
+            data.adviseridList.forEach(item => {
+              this.options.push(item)
+              this.housesForm.editadviseridList.push(item.uid)
             })
           } else if (item !== 'houseLocation') {
             this.housesForm[item] = data[item]
@@ -918,12 +932,21 @@ export default {
       this.$refs['housesForm'].validate((valid) => {
         if (valid) {
           let housesForm = JSON.parse(JSON.stringify(this.housesForm))
+          let _marketHouseList = []
+          housesForm.marketHouseList.forEach(item => {
+            _marketHouseList.push({
+              markethouseid: item
+            })
+          })
+          housesForm.marketHouseList = _marketHouseList
           housesForm.floorType = housesForm.floorType.join(',')
           // 编辑背景图
           housesForm.coverImg = housesForm.coverImg.filename
           // 编辑分享图片
           if (housesForm.shareImg) {
             housesForm.shareImg = housesForm.shareImg.filename
+          } else {
+            housesForm.shareImg = ''
           }
           // 编辑新增实景图
           let addRealImgs = []

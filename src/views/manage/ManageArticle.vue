@@ -77,7 +77,7 @@
       <el-table-column prop="statusName" label="文章状态" min-width="100">
         <template slot-scope="scope">
           <div>
-            {{ scope.row.racktype === '0' ? '已关闭' : '上架中' }}
+            {{ scope.row.racktype === 0 ? '已关闭' : '上架中' }}
           </div>
         </template>
       </el-table-column>
@@ -95,7 +95,7 @@
             type="primary"
             size="mini"
             @click.stop="handleUp(scope.row)"
-            >{{ scope.row.racktype === '0' ? '上架' : '下架' }}</el-button
+            >{{ scope.row.racktype === 0 ? '上架' : '下架' }}</el-button
           >
           <el-button
             v-permission="'编辑文章'"
@@ -234,7 +234,7 @@ export default {
       tableData: [],
       search: {
         title: '',
-        racktype: '',
+        racktype: -1,
         pageSize: 10,
         pageNo: 1,
       },
@@ -430,6 +430,7 @@ export default {
         this.search.pageSize = 10
         this.search.pageNo = 1
       })
+      this.search.racktype = -1
       this.fetchList()
     },
     submitForm(formName) {

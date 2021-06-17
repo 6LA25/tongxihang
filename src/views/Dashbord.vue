@@ -306,6 +306,18 @@
                           controls="controls"
                         ></video>
                       </div>
+                      <div class="msg-type-custom" v-if="msg.type === 'TIMCustomElem'">
+                        <img class="img" :src="JSON.parse(msg.payload.description).coverImg" alt="">
+                        <div class="house-container">
+              <div class="house-name">{{JSON.parse(msg.payload.description).houseName}}</div>
+              <div class="house-address">{{JSON.parse(msg.payload.description).address}}</div>
+              <div class="house-detail">
+                <div class="house-price">均价{{JSON.parse(msg.payload.description).price}}元/m²</div>
+                <div class="house-tag" v-if="JSON.parse(msg.payload.description).tag">
+                  {{JSON.parse(msg.payload.description).tag}}</div>
+              </div>
+            </div>
+                      </div>
                     </div>
                   </div>
                 </div>

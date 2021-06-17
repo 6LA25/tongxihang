@@ -184,14 +184,14 @@ export default {
   },
   methods: {
     fetchUsers(query) {
-      fetchAllUsers({
+      fetchAlllStaff({
         account: query
       }).then(({ data }) => {
         this.options = data.items
       })
     },
     fetchUsers2(query) {
-      fetchAllUsers({
+      fetchAlllStaff({
         account: query
       }).then(({ data }) => {
         this.options2 = data.items
