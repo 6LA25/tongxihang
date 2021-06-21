@@ -1,7 +1,7 @@
 <template>
   <div class="add-role-page">
     <div class="content-title">{{ title }}</div>
-    <el-form :model="actForm" :rules="rules" ref="actForm" label-width="100px">
+    <el-form :disabled="allDisabled" :model="actForm" :rules="rules" ref="actForm" label-width="100px">
       <div class="form-title-box">基础信息</div>
       <el-form-item label="活动名称" prop="name">
         <el-input
@@ -168,7 +168,7 @@
               <div class="form-item-hint-text">
                 <span v-if="$route.query.tag === 'edit'"
                   >点击图片修改封面，</span
-                >支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：336 * 256
+                >支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：375 * 667
               </div>
             </el-form-item>
             <el-form-item label="底部按钮">
@@ -235,6 +235,7 @@ export default {
   name: 'add-apply-act',
   data() {
     return {
+      allDisabled: false,
       submitting: false,
       searching: false,
       options: [],
@@ -266,6 +267,7 @@ export default {
       let titleObj = {
         add: '新增',
         edit: '编辑',
+        preview: '预览',
       }
       return `${titleObj[this.$route.query.flag]}报名活动`
     },
@@ -279,13 +281,25 @@ export default {
   },
   mounted() {
     this.$store.dispatch('initUpload')
-    if (this.$route.query.flag === 'edit') {
+    this.allDisabled = this.$route.query.flag === 'preview'
+    if (this.$route.query.flag === 'edit' || this.$route.query.flag === 'preview') {
       fetchMarketRegisterItem({
         id: this.$route.query.id,
       }).then(({ data }) => {
         this.contentMap = this._lodash.sortBy(data.contentMap.list, (item) => {
           return item.sort
         })
+        let selectHouse = data.contentMap.list.find(item => {
+          return item.fieldname === '选购房源'
+        })
+        if (selectHouse) {
+          this.options = [
+            {
+              name: selectHouse.housename,
+              id: selectHouse.houseresouce
+            }
+          ]
+        }
         // this.contentMap = data.contentMap.list
         this.actForm.name = data.name
         this.actForm.longtype = data.longtype
@@ -369,7 +383,7 @@ export default {
     },
     handleChangeRequired(val) {
       console.log(val)
-      if (!val) {
+      if (!(val / 1)) {
         this.options = []
         this.contentMap.forEach((item) => {
           if (item.fieldname === '选购房源') {

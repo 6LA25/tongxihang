@@ -357,6 +357,10 @@ export default {
         {
           value: 5,
           label: '实时动态'
+        },
+        {
+          value: 6,
+          label: '楼盘活动'
         }
       ],
       boughts: [

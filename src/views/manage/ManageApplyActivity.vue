@@ -48,6 +48,7 @@
       tooltip-effect="dark"
       style="width: 100%"
       size="mini"
+      @row-click="handleClickCell"
       v-loading="loading"
     >
       <el-table-column
@@ -106,7 +107,7 @@
             type="primary"
             size="mini"
             v-permission="'查看报名活动名单'"
-            @click="handleShowNames(scope.row.id)"
+            @click.stop="handleShowNames(scope.row.id)"
             >报名名单</el-button
           >
         </template>
@@ -205,6 +206,15 @@ export default {
       }).then(({data}) => {
         this.currentReg = data.item
         this.makeNameList(data)
+      })
+    },
+    handleClickCell (row, column, cell, event) {
+      this.$router.push({
+        name: 'add-appply-activity',
+        query: {
+          id: row.id,
+          flag: 'preview'
+        }
       })
     },
     handleAddAct() {

@@ -48,6 +48,7 @@
       tooltip-effect="dark"
       style="width: 100%"
       size="mini"
+      @row-click="handleClickCell"
       v-loading="loading"
     >
       <el-table-column
@@ -85,7 +86,7 @@
             v-permission="'编辑楼盘活动'"
             type="primary"
             size="mini"
-            @click.stop="handleJumpEditAct(scope.row)"
+            @click.stop="handleJumpEditAct(scope.row, 'edit')"
             >编辑活动</el-button
           >
           <el-button
@@ -99,7 +100,7 @@
             type="primary"
             size="mini"
             v-permission="'查看楼盘活动名单'"
-            @click="handleShowNames(scope.row)"
+            @click.stop="handleShowNames(scope.row)"
             >报名名单</el-button
           >
         </template>
@@ -154,9 +155,11 @@
       :destroy-on-close="true"
     >
       <el-form
+        :disabled="addDiasbled"
         :model="editForm"
         ref="editForm"
         label-width="100px"
+        
         :rules="rules"
       >
         <el-form-item label="是否开启活动" prop="racktype">
@@ -185,7 +188,7 @@
             :data="$store.state.uploadData"
             :name="'Filedata'"
             style="display: inline-block"
-            class="avatar-uploader"
+            class="house-act-uploader"
             :action="$store.state.uploadUrl"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
@@ -196,12 +199,12 @@
               :src="editForm.coverImg.filepath"
               class="cover-img"
             />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <i v-else class="el-icon-plus house-act-uploader-icon"></i>
           </el-upload>
           <div class="form-item-hint-text">
             <span v-if="$route.query.tag === 'edit'"
               >点击图片修改活动封面，</span
-            >支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：336 * 256
+            >支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：343 * 88
           </div>
         </el-form-item>
         <el-form-item
@@ -246,6 +249,7 @@ export default {
   name: 'manage-house-activity',
   data() {
     return {
+      addDiasbled: false,
       editForm: {
         id: '',
         racktype: '',
@@ -295,6 +299,7 @@ export default {
     nameDialogVisible(nv) {
       if (!nv) {
         this.currentReg = {}
+        this.addDiasbled = false
       }
     },
     editVisible(nv) {
@@ -408,7 +413,16 @@ export default {
         })
         .catch(() => {})
     },
-    handleJumpEditAct(item) {
+    handleClickCell(row) {
+      this.handleJumpEditAct(row, 'preview')
+    },
+    handleJumpEditAct(item, flag) {
+      console.log(flag)
+      if (flag === 'preview') {
+        this.addDiasbled = true
+      } else {
+        this.addDiasbled = false
+      }
       this.editVisible = true
       fetchMarkethouseItem({id: item.id}).then(({data}) => {
         this.editForm.id = data.id
@@ -452,10 +466,12 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           editMarkethouse({
+            id: this.editForm.id,
             name: this.editForm.name,
             image: this.editForm.coverImg.filepath,
             tips: this.editForm.hint,
             racktype: this.editForm.racktype,
+
           })
             .then(({ data }) => {
               this.$message.success('操作成功')
@@ -484,13 +500,37 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-.name-title-box {
-  display flex
-  align-items center
-  margin-bottom 10px
-  .title, .num {
-    margin-right 10px
+<style lang="stylus">
+
+.manage-house-activity-page {
+  .name-title-box {
+    display flex
+    align-items center
+    margin-bottom 10px
+    .title, .num {
+      margin-right 10px
+    }
+  }
+  .house-act-uploader .cover-img {
+    height 100%
+  }
+  .house-act-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    width 343px
+    height 88px
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .house-act-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .house-act-uploader-icon {
+    width 343px
+    height 88px
+    line-height 88px
   }
 }
+
 </style>

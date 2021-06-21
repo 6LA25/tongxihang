@@ -23,6 +23,9 @@ export default {
   },
   watch: {
     chatVisible(nv) {
+      if (nv) {
+        this.makeMsgReaded(this.chatUser.conversationID)
+      }
     }
   },
   mounted() {
@@ -99,6 +102,19 @@ export default {
         // if (this.chatUser && receivedMsg.conversationID === this.chatUser.conversationID) {
         //   this.$store.commit('UPDATE_UPDATE_CURRENT_CHAT_USER_MESSAGES', receivedMsg)
         // }
+
+        // 系统推送消息message全局提示
+        let sysMsg = JSON.parse(JSON.stringify(receivedMsgs)).find(item => {
+          return item.conversationID === 'C2Cadministrator'
+        })
+        if (sysMsg) { 
+          this.$message({
+            showClose: true,
+            duration: 5000,
+            message: this.getContactText(sysMsg.payload.text, sysMsg.conversationID)
+          });
+        }
+        // 正在聊天，接收更新聊天信息
         if (this.chatUser) {
           let currentChat = receivedMsgs.find(item => {
             return item.conversationID === this.chatUser.conversationID
@@ -106,7 +122,9 @@ export default {
           if (currentChat) {
             this.$store.commit('UPDATE_UPDATE_CURRENT_CHAT_USER_MESSAGES', currentChat)
             this.makeChatAreaToBottom()
-            this.makeMsgReaded(currentChat.conversationID)
+            if (this.chatVisible) {
+              this.makeMsgReaded(currentChat.conversationID)
+            }
           }
         }
       })
@@ -347,6 +365,16 @@ export default {
     },
     handleToggleMsgOperate(e) {
       console.log('e=>', e)
+    },
+    C2CadministratorTextMsg(msg) {
+      return `请及时跟进新客户：联系方式（${msg.mobile}），客户来源${msg.source}。`
+    },
+    getContactText(contact, conversationID) {
+      if (conversationID === 'C2Cadministrator') {
+        return this.C2CadministratorTextMsg(JSON.parse(contact))
+      } else {
+        return contact
+      }
     }
   }
 }

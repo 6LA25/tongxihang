@@ -89,7 +89,8 @@ export default {
     reSend: `${domain}/api/admin/customer/redistribution`,
     updateLog: `${domain}/api/admin/customer/follow/updateStatus`,
     timeout: `${domain}/api/admin/customer/timeout/items`,
-    excel: `${domain}/api/admin/customer/timeout/export`
+    excel: `${domain}/api/admin/customer/timeout/export`,
+    contract: `${domain}/api/admin/customer/contract`
   },
   distribution: {
     list: `${domain}/api/admin/distribution/items`,
@@ -105,7 +106,8 @@ export default {
     items: `${domain}/api/admin/commission/payments`,
     singleItem: `${domain}/api/admin/commission/item`,
     pay: `${domain}/api/admin/commission/pay`,
-    paymentItem: `${domain}/api/admin/commission/paymentItem`
+    paymentItem: `${domain}/api/admin/commission/paymentItem`,
+    customerCommission: `${domain}/api/admin/customer/commission`
   },
   article: {
     edit: `${domain}/api/admin/article/edit`,

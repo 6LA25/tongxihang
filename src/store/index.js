@@ -64,7 +64,7 @@ export default new Vuex.Store({
     async initUpload({ state, commit }, payload) {
       let { data } = await initUpload()
       // state.uploadUrl = data.file_server
-      state.uploadUrl = 'http://47.103.39.72:8888/filesubmit/open/upload/?file_charset=UTF-8'
+      state.uploadUrl = 'http://106.15.190.210:8888/filesubmit/open/upload/?file_charset=UTF-8'
       state.uploadData.file_init = data.file_init
       state.uploadData.file_token = data.file_token
       state.uploadHeaders.AdminAuthorization = sessionStorage.getItem('ticket')

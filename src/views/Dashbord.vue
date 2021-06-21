@@ -152,6 +152,7 @@
         <!-- <el-footer>Footer</el-footer> -->
       </el-container>
     </el-container>
+    <!-- im -->
     <el-dialog
       :append-to-body="true"
       class="chat-dialog"
@@ -184,12 +185,19 @@
                 >{{ item.unreadCount }}</span
               >
               <img
+                v-if="item.conversationID === 'C2Cadministrator'"
+                src="../assets/imgs/chatting-head-default.jpg"
+                alt=""
+              />
+              <img
+                v-else
                 :src="
-                  item.userProfile.nick ||
+                  item.userProfile.avatar ||
                   require('../assets/imgs/defaultHeader.jpg')
                 "
                 alt=""
               />
+              
             </div>
             <div class="content-box">
               <div class="title-box">
@@ -201,7 +209,7 @@
                 </div>
               </div>
               <div class="recent-msg-box">
-                {{ item.lastMessage.messageForShow }}
+                {{ getContactText(item.lastMessage.messageForShow, item.conversationID) }}
               </div>
             </div>
           </div>
@@ -258,7 +266,7 @@
                         class="msg-type-text"
                         v-if="msg.type === 'TIMTextElem'"
                       >
-                        {{ msg.payload.text }}
+                        {{ getContactText(msg.payload.text, msg.conversationID) }}
                       </div>
                       <img
                         class="msg-type-image"

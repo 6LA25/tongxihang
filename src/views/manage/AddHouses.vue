@@ -784,10 +784,10 @@ export default {
           } else if (item === 'marketHouseList') {
             data.marketHouseList.forEach(item => {
               this.houseActivity.push({
-                id: item.id,
+                id: item.markethouseid,
                 name: item.name
               })
-              this.housesForm.marketHouseList.push(item.id)
+              this.housesForm.marketHouseList.push(item.markethouseid)
             })
           } else if (item === 'editadviseridList') {
             console.log(1111)

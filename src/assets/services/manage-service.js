@@ -706,3 +706,17 @@ export const exportMarkethouseExcel  = (options, name) => Fetch({
     ...options
   }
 }, name)
+
+export const fetchContract  = (options) => Fetch({
+  url: URL.customer.contract,
+  data: {
+    ...options
+  }
+})
+
+export const fetchCustomerCommission  = (options) => Fetch({
+  url: URL.commission.customerCommission,
+  data: {
+    ...options
+  }
+})
