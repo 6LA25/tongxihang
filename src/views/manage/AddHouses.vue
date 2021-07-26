@@ -411,19 +411,19 @@
       </el-form-item> -->
       <div v-if="housesForm.distribution !== 0">
         <div class="ilb-top">
-          <el-form-item label="1级佣金比例：" prop="">
+          <el-form-item label="1级佣金：" prop="">
             <el-input style="width: 100px" size="mini" v-model="housesForm.level1"></el-input>
             <!-- <span class="form-label" v-if="housesForm.distributionType !== ''">{{housesForm.distributionType ? '元' : '%'}}</span> -->
           </el-form-item>
         </div>
         <div class="ilb-top">
-          <el-form-item label="2级佣金比例：" prop="">
+          <el-form-item label="2级佣金：" prop="">
             <el-input style="width: 100px" size="mini" v-model="housesForm.level2"></el-input>
             <!-- <span class="form-label" v-if="housesForm.distributionType !== ''">{{housesForm.distributionType ? '元' : '%'}}</span> -->
           </el-form-item>
         </div>
         <div class="ilb-top">
-          <el-form-item label="3级佣金比例：" prop="">
+          <el-form-item label="3级佣金：" prop="">
             <el-input style="width: 100px" size="mini" v-model="housesForm.level3"></el-input>
             <!-- <span class="form-label" v-if="housesForm.distributionType !== ''">{{housesForm.distributionType ? '元' : '%'}}</span> -->
           </el-form-item>
@@ -450,7 +450,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="咨询电话：" prop="hotline">
+      <el-form-item label="楼盘驻守：" prop="hotline">
         <el-input style="width: 400px" size="mini" v-model="housesForm.hotline"></el-input>
       </el-form-item>
 
@@ -673,7 +673,7 @@ export default {
         healthCare: '', // 医疗健康（新增字段）
         other: '', // 其他
         marketHouseList: [],
-        hotline: '' // 咨询电话
+        hotline: '' // 楼盘驻守
       },
       map: null,
       houseActivity: [],

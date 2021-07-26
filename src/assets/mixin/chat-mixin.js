@@ -23,7 +23,7 @@ export default {
   },
   watch: {
     chatVisible(nv) {
-      if (nv) {
+      if (nv && this.chatUser) {
         this.makeMsgReaded(this.chatUser.conversationID)
       }
     }
@@ -182,15 +182,25 @@ export default {
         // 收到 SDK 进入 not ready 状态通知，此时 SDK 无法正常工作
         // event.name - TIM.EVENT.SDK_NOT_READY
       })
-      tim.on(TIM.EVENT.KICKED_OUT, function (event) {
+      tim.on(TIM.EVENT.KICKED_OUT, (event) => {
         // 收到被踢下线通知
         // event.name - TIM.EVENT.KICKED_OUT
         // event.data.type - 被踢下线的原因，例如:
         //    - TIM.TYPES.KICKED_OUT_MULT_ACCOUNT 多实例登录被踢
         //    - TIM.TYPES.KICKED_OUT_MULT_DEVICE 多终端登录被踢
         //    - TIM.TYPES.KICKED_OUT_USERSIG_EXPIRED 签名过期被踢 （v2.4.0起支持）。
+        console.log('KICKED_OUT', event)
+        this.$confirm(`您已在微信小程序登录IM聊天系统，如需PC登录请刷新页面！`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        })
+          .then(() => {
+            location.reload()
+          })
+          .catch(() => {})
       })
-      tim.on(TIM.EVENT.NET_STATE_CHANGE, function (event) {
+      tim.on(TIM.EVENT.NET_STATE_CHANGE, (event) => {
         //  网络状态发生改变（v2.5.0 起支持）。
         // event.name - TIM.EVENT.NET_STATE_CHANGE
         // event.data.state 当前网络状态，枚举值及说明如下：
@@ -300,7 +310,7 @@ export default {
       this.chatContent += '\n'
     },
     handleSendImage() {
-      if (this.chatUser) {
+      if (this.chatUser && this.chatUser.conversationID !== 'C2Cadministrator') {
         this.$refs.imagePicker.click()
       }
     },
@@ -332,7 +342,7 @@ export default {
       });
     },
     handleSendVideo() {
-      if (this.chatUser) {
+      if (this.chatUser && this.chatUser.conversationID !== 'C2Cadministrator') {
         this.$refs.videoPicker.click()
       }
     },
@@ -370,7 +380,8 @@ export default {
       return `请及时跟进新客户：联系方式（${msg.mobile}），客户来源${msg.source}。`
     },
     getContactText(contact, conversationID) {
-      if (conversationID === 'C2Cadministrator') {
+      if (conversationID === 'C2Cadministrator' && contact.includes('mobile')) {
+        console.log('contact', contact)
         return this.C2CadministratorTextMsg(JSON.parse(contact))
       } else {
         return contact

@@ -2,6 +2,7 @@ const path = require('path')
 var CssSplitWebpackPlugin = require('css-split-webpack-plugin').default
 module.exports = {
   productionSourceMap: false,
+  publicPath: './',
   lintOnSave: false,
   devServer: {
     port: 8099,

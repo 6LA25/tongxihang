@@ -355,7 +355,7 @@
               resize="none"
               placeholder="请输入内容"
               v-model="chatContent"
-              :disabled="!chatUser"
+              :disabled="!chatUser || (chatUser && chatUser.conversationID === 'C2Cadministrator')"
               @keydown.enter.exact.native="handleSendMsg"
               @keyup.ctrl.enter.native="handleLine"
             >
@@ -380,7 +380,7 @@
                 size="mini"
                 type="primary"
                 @click="handleSendMsg"
-                :disabled="!chatUser || !chatContent"
+                :disabled="!chatUser || !chatContent || (chatUser && chatUser.conversationID === 'C2Cadministrator')"
                 >发送</el-button
               >
             </div>

@@ -208,7 +208,7 @@
           <el-input
             type="number"
             v-model="commission.first"
-            :disabled="currentContract.first"
+            :disabled="!currentContract.first"
             size="mini"
           ></el-input>
         </div>
@@ -221,7 +221,7 @@
           <el-input
             type="number"
             v-model="commission.second"
-            :disabled="currentContract.second"
+            :disabled="!currentContract.second"
             size="mini"
           ></el-input>
         </div>
@@ -234,7 +234,7 @@
           <el-input
             type="number"
             v-model="commission.third"
-            :disabled="currentContract.third"
+            :disabled="!currentContract.third"
             size="mini"
           ></el-input>
         </div>

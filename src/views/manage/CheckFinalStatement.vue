@@ -24,6 +24,20 @@
           ></el-input>
         </div>
       </div>
+      <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">结算日期：</div>
+        <div class="ilb-top">
+          <el-date-picker
+            v-model="search.time"
+            size="mini"
+            value-format="yyyy-MM-dd"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
+        </div>
+      </div>
       <div class="ilb-top search-item-box search-btns-box">
         <el-button type="primary" size="mini" @click="handleSearch"
           >搜索</el-button
@@ -168,6 +182,7 @@ export default {
       search: {
         keyword: '',
         userkeyword: '',
+        time: '',
         pageSize: 10,
         pageNo: 1
       },
@@ -198,6 +213,7 @@ export default {
       this.search.pageNo = 1
       this.search.pageSize = 10
       this.search.keyword = ''
+      this.search.time = ''
       this.search.userkeyword = ''
       this.fetchList()
     },
@@ -219,7 +235,9 @@ export default {
         pageSize: this.search.pageSize,
         pageNo: this.search.pageNo,
         keyword: this.search.keyword,
-        userkeyword: this.search.userkeyword
+        userkeyword: this.search.userkeyword,
+        startTime: this.search.time ? this.search.time[0] : '',
+        endTime: this.search.time ? this.search.time[1] : '',
       })
         .then(({ data }) => {
           this.total = data.totalCount
