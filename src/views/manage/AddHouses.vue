@@ -451,7 +451,23 @@
       </el-form-item>
 
       <el-form-item label="楼盘驻守：" prop="hotline">
-        <el-input style="width: 400px" size="mini" v-model="housesForm.hotline"></el-input>
+        <!-- <el-input style="width: 400px" size="mini" v-model="housesForm.hotline"></el-input> -->
+        <el-select
+          style="width: 400px;"
+          size="mini"
+          v-model="housesForm.hotline"
+          filterable
+          remote
+          reserve-keyword
+          placeholder="请选择置业顾问"
+          :remote-method="fetchUsers">
+          <el-option
+            v-for="item in options1"
+            :key="item.uid"
+            :label="item.account"
+            :value="item.uid">
+          </el-option>
+        </el-select>
       </el-form-item>
 
       <div class="form-divide-title">楼盘状态：</div>
@@ -518,6 +534,7 @@ export default {
       cityList: [],
       regionList: [],
       options: [],
+      options1: [],
       // 装修类型
       fitments: [
         {
@@ -714,6 +731,7 @@ export default {
         account: query
       }).then(({ data }) => {
         this.options = data.items
+        this.options1 = data.items
       })
     },
     handleChangeDistribution (val) {
@@ -742,7 +760,7 @@ export default {
     getHouseaItem () {
       fetchHouseItem({ id: this.$route.query.id }).then(({ data }) => {
         Object.keys(this.housesForm).forEach(item => {
-          // console.log(item)
+          console.log(item)
           if (item === 'floorType') {
             let arr = data.floorType.split(',')
             arr.forEach(val => {
@@ -795,6 +813,9 @@ export default {
               this.options.push(item)
               this.housesForm.editadviseridList.push(item.uid)
             })
+          } else if (item === 'hotline' && data.hotlineObject) {
+            this.options1 = [data.hotlineObject]
+            this.housesForm.hotline = data.hotline / 1
           } else if (item !== 'houseLocation') {
             this.housesForm[item] = data[item]
           }

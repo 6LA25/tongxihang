@@ -181,7 +181,7 @@
                   <el-option
                     v-for="item in articlesOptions"
                     :key="item.id"
-                    :label="item.name"
+                    :label="item.title"
                     :value="item.id"
                   >
                   </el-option>
@@ -220,7 +220,8 @@ import {
   fetchNotice,
   fetchNoticeItem,
   fetchHouseList,
-  fetchMarketRegister
+  fetchMarketRegister,
+  fetchAllArticles
 } from '../../assets/services/manage-service'
 export default {
   name: 'manage-hot-word',
@@ -294,7 +295,7 @@ export default {
   methods: {
     fetchArticles(query) {
       this.articlesSearching = true
-      fetchMarketRegister({
+      fetchAllArticles({
         name: query,
         pageSize: 20,
         pageNo: 1,
