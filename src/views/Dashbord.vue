@@ -114,6 +114,12 @@
                 <el-menu-item index="7-3" v-permission="'员工管理'"
                   >员工管理</el-menu-item
                 >
+                <el-menu-item index="7-6" v-permission="'部门管理'"
+                  >部门管理</el-menu-item
+                >
+                <el-menu-item index="7-5" v-permission="'外部会员管理'"
+                  >外部会员管理</el-menu-item
+                >
                 <el-menu-item index="7-4" v-permission="'员工发展'"
                   >员工发展</el-menu-item
                 >
@@ -125,7 +131,7 @@
       <el-container>
         <el-header style="height: 50px">
           <div class="user-info-box">
-            <div @click="handleJumpTim" style="position: relative">
+            <div @click="handleJumpTim" style="position: relative" v-permission="'线上沟通功能'">
               <div class="unread-all-num" v-if="allUnreadMsg > 0">
                 {{ allUnreadMsg }}
               </div>
@@ -422,6 +428,8 @@ export default {
         '7-2': 'manage-permission',
         '7-3': 'manage-staff',
         '7-4': 'user-develop',
+        '7-5': 'manage-outside-staff',
+        '7-6': 'manage-department',
         '8-1': 'manage-appply-activity',
         '8-2': 'manage-house-activity',
       },
@@ -440,7 +448,9 @@ export default {
     },
   },
   mounted() {
-    this.initTim()
+    if (sessionStorage.getItem('permissions').includes('线上沟通功能')) {
+      this.initTim()
+    }
   },
   methods: {
     handleJumpTim() {
@@ -474,7 +484,9 @@ export default {
             sessionStorage.removeItem('userSig')
             this.$store.commit('UPDATE_USER_INFO', {})
             this.$store.commit('UPDATE_USER_PERMISSIONS', [])
-            this.timLogout()
+            if (sessionStorage.getItem('permissions').includes('线上沟通功能')) {
+              this.timLogout()
+            }
             this.$router.push({
               name: 'login',
             })

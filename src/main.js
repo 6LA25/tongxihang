@@ -10,6 +10,7 @@ import permission from './assets/directives/permission'
 import _ from 'lodash'
 import TIM from 'tim-js-sdk'
 import TIMUploadPlugin from 'tim-upload-plugin'
+// https://api.anxuanhouse.com/data/permission/list
 let options = {
   SDKAppID: 1400511488 // 接入时需要将0替换为您的即时通信 IM 应用的 SDKAppID
 }

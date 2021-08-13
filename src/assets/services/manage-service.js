@@ -720,3 +720,24 @@ export const fetchCustomerCommission  = (options) => Fetch({
     ...options
   }
 })
+
+export const fetchAllDepartments  = (options) => Fetch({
+  url: URL.department.items,
+  data: {
+    ...options
+  }
+})
+
+export const editDepartment  = (options) => Fetch({
+  url: URL.department.edit,
+  data: {
+    ...options
+  }
+})
+
+export const deleteDepartment  = (options) => Fetch({
+  url: URL.department.delete,
+  data: {
+    ...options
+  }
+})

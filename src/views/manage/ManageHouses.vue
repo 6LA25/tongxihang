@@ -108,7 +108,11 @@
       <el-table-column prop="regionName" label="楼盘区域" min-width="150" show-overflow-tooltip></el-table-column>
       <el-table-column prop="price" label="定价（元/平）" min-width="100"></el-table-column>
       <el-table-column prop="typeName" label="楼盘类型" min-width="80" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="statusName" label="楼盘状态" min-width="80" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="statusName" label="楼盘状态" min-width="80" show-overflow-tooltip>
+        <template slot-scope="scope">
+          {{getStatusName(scope.row)}}
+        </template>
+      </el-table-column>
       <el-table-column prop="stateName" label="上架状态" min-width="80"></el-table-column>
       <el-table-column label="操作" min-width="440">
         <template slot-scope="scope">
@@ -171,7 +175,7 @@ export default {
         },
         {
           value: 4,
-          label: '在售｜即将加推'
+          label: '在售'
         },
         {
           value: 5,
@@ -188,6 +192,14 @@ export default {
         {
           value: 3,
           label: '售罄'
+        },
+        {
+          value: 7,
+          label: '待售'
+        },
+        {
+          value: 8,
+          label: '认筹中'
         }
       ],
       putawayStatus: [
@@ -258,6 +270,12 @@ export default {
   watch: {
   },
   methods: {
+    getStatusName(row) {
+      let data = this.houseStatus.find(item => {
+        return item.value === row.status
+      })
+      return data.label
+    },
     handleJumpInfo (data) {
       this.$router.push({
         name: 'house-dynamic',

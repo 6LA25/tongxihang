@@ -8,9 +8,9 @@ module.exports = {
     port: 8099,
     proxy: {
       '/api': {
-        // target: 'http://anxuanhouse.com',
+        target: 'http://anxuanhouse.com',
         // target: 'http://47.103.39.72:8888',
-        target: 'http://106.15.190.210:8888',
+        // target: 'http://106.15.190.210:8888',
         changeOrigin: true
       }
     }

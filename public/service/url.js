@@ -1,6 +1,6 @@
-// let domain = process.env.NODE_ENV === 'development' ? '' : 'http://anxuanhouse.com'
+let domain = process.env.NODE_ENV === 'development' ? '' : 'http://anxuanhouse.com'
 // let domain = process.env.NODE_ENV === 'development' ? '' : 'http://106.15.190.210:8888'
-let domain = process.env.NODE_ENV === 'development' ? '' : ''
+// let domain = process.env.NODE_ENV === 'development' ? '' : ''
 // let domain = ''
 
 export default {
@@ -135,5 +135,10 @@ export default {
     shelves: `${domain}/api/admin/markethouse/shelves`,
     registrations: `${domain}/api/admin/markethouse/registrations`,
     excel: `${domain}/api/admin/markethouse/registrations/export`
+  },
+  department: {
+    items: `${domain}/api/admin/department/items`,
+    edit: `${domain}/api/admin/department/edit`,
+    delete: `${domain}/api/admin/department/delete`,
   }
 }

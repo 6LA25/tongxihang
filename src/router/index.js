@@ -156,6 +156,16 @@ const routes = [
         component: () => import(/* webpackChunkName: "ManageStaff" */ '../views/manage/ManageStaff.vue')
       },
       {
+        path: '/manage-department',
+        name: 'manage-department',
+        component: () => import(/* webpackChunkName: "manage-department" */ '../views/manage/manage-department.vue')
+      },
+      {
+        path: '/manage-outside-staff',
+        name: 'manage-outside-staff',
+        component: () => import(/* webpackChunkName: "ManageOutsideStaff" */ '../views/manage/manage-outside-staff.vue')
+      },
+      {
         path: '/add-staff',
         name: 'add-staff',
         component: () => import(/* webpackChunkName: "AddStaff" */ '../views/manage/AddStaff.vue')

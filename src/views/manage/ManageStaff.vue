@@ -10,6 +10,55 @@
         >新建员工</el-button
       >
     </div>
+    <div class="search-head-box">
+      <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">用户名：</div>
+        <div class="ilb-top">
+          <el-input v-model="search.account" placeholder="请输入用户名" size="mini"></el-input>
+        </div>
+      </div>
+      <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">姓名：</div>
+        <div class="ilb-top">
+          <el-input v-model="search.realname" placeholder="请输入姓名" size="mini"></el-input>
+        </div>
+      </div>
+      <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">手机号：</div>
+        <div class="ilb-top">
+          <el-input v-model="search.mobile" placeholder="请输入手机号" size="mini"></el-input>
+        </div>
+      </div>
+      <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">部门：</div>
+        <div class="ilb-top">
+          <el-input v-model="search.departmentid" placeholder="请输入部门名称" size="mini"></el-input>
+        </div>
+      </div>
+      <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">角色：</div>
+        <div class="ilb-top">
+          <el-input v-model="search.rolename" placeholder="请输入角色名称" size="mini"></el-input>
+        </div>
+      </div>
+      <div class="ilb-top search-item-box">
+        <div class="ilb-top search-item-label">状态：</div>
+        <div class="ilb-top">
+          <el-select v-model="search.status" placeholder="请选择" size="mini">
+            <el-option
+              v-for="item in statusList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </div>
+      </div>
+      <div class="ilb-top search-item-box search-btns-box">
+        <el-button type="primary" size="mini" @click="handleSearch">搜索</el-button>
+        <el-button type="warning" size="mini" @click="handleReset">重置</el-button>
+      </div>
+    </div>
     <el-table
       ref="multipleTable"
       :data="tableData"
@@ -39,6 +88,12 @@
       <el-table-column
         prop="jobnum"
         label="员工编号"
+        width="150"
+        show-overflow-tooltip
+      ></el-table-column>
+      <el-table-column
+        prop="departmentname"
+        label="所属部门"
         width="150"
         show-overflow-tooltip
       ></el-table-column>
@@ -75,9 +130,9 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="pageNo"
+        :current-page="search.pageNo"
         :page-sizes="[10, 20, 30, 40]"
-        :page-size="pageSize"
+        :page-size="search.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
       ></el-pagination>
@@ -158,8 +213,30 @@ export default {
       loading: false,
       dialogVisible: false,
       tableData: [],
-      pageSize: 10,
-      pageNo: 1,
+      search: {
+        account: '',
+        realname: '',
+        mobile: '',
+        departmentid: '',
+        rolename: '',
+        status: '',
+        pageSize: 10,
+        pageNo: 1
+      },
+      statusList: [
+        {
+          value: -1,
+          label: '全部'
+        },
+        {
+          value: 1,
+          label: '有效'
+        },
+        {
+          value: 2,
+          label: '无效'
+        }
+      ], 
       total: 0,
       options: [],
       options2: [],
@@ -183,6 +260,18 @@ export default {
     }
   },
   methods: {
+    handleSearch () {
+      this.search.pageNo = 1
+      this.fetchList()
+    },
+    handleReset () {
+      Object.keys(this.search).forEach(item => {
+        this.search[item] = ''
+        this.search.pageSize = 10
+        this.search.pageNo = 1
+      })
+      this.fetchList()
+    },
     fetchUsers(query) {
       fetchAlllStaff({
         account: query
@@ -213,8 +302,8 @@ export default {
             zygw_account: this.adviser,
             qykh_account: this.qykh_account
           }).then(({data}) => {
-            this.pageSize = 10
-            this.pageNo = 1
+            this.search.pageSize = 10
+            this.search.pageNo = 1
             this.$message.success('交接成功')
             this.dialogVisible = false
             this.fetchList()
@@ -242,8 +331,7 @@ export default {
     fetchList() {
       this.loading = true
       fetchAlllStaff({
-        pageSize: this.pageSize,
-        pageNo: this.pageNo,
+        ...this.search
       })
         .then(({ data }) => {
           this.total = data.totalCount
@@ -255,11 +343,11 @@ export default {
         })
     },
     handleSizeChange(val) {
-      this.pageSize = val
+      this.search.pageSize = val
       this.fetchList()
     },
     handleCurrentChange(val) {
-      this.pageNo = val
+      this.search.pageNo = val
       this.fetchList()
     },
   },

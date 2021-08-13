@@ -87,7 +87,7 @@
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         <div class="form-item-hint-text">
-          <span v-if="$route.query.tag === 'edit'">点击图片修改活动封面，</span
+          <span v-if="$route.query.tag === 'edit'">点击图片修改头像，</span
           >支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：336 * 256
         </div>
       </el-form-item>
@@ -103,9 +103,28 @@
           >选择角色</el-button
         >
       </el-form-item>
+
+      <el-form-item label="所属部门：" prop="departmentid">
+        <el-select
+          style="width: 400px"
+          size="mini"
+          v-model="userForm.departmentid"
+          reserve-keyword
+          placeholder="请选择置业顾问"
+        >
+          <el-option
+            v-for="item in options1"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item label="员工描述" prop="desc">
         <el-input
-          :readonly="$route.query.tag !== 'add'"
+          :readonly="$route.query.tag === 'preview'"
           style="width: 400px"
           size="mini"
           autocomplete="off"
@@ -176,6 +195,7 @@ import {
   addStaff,
   fetchAllRoles,
   fetchStaffItem,
+  fetchAllDepartments
 } from '../../assets/services/manage-service'
 export default {
   name: 'add-staff',
@@ -186,6 +206,7 @@ export default {
       pageSize: 10,
       total: 0,
       tableData: [],
+      options1: [],
       loading: false,
       userForm: {
         account: '',
@@ -198,6 +219,7 @@ export default {
         sex: '',
         desc: '',
         coverImg: {},
+        departmentid: ''
       },
       roleName: '',
       selectRole: {
@@ -233,6 +255,7 @@ export default {
   },
   mounted() {
     this.$store.dispatch('initUpload')
+    this.fetchDeps()
     if (this.$route.query.tag !== 'add') {
       this.rules.password[0].required = false
       fetchStaffItem({
@@ -243,6 +266,7 @@ export default {
         this.roleName = data.item.roleName
         this.userForm.jobnum = data.item.jobnum
         this.userForm.realname = data.item.realname
+        this.userForm.departmentid = data.item.departmentid || ''
         this.userForm.mobile = data.item.mobile
         this.userForm.email = data.item.email
         this.userForm.sex = data.item.sex
@@ -252,6 +276,14 @@ export default {
     }
   },
   methods: {
+    fetchDeps() {
+      fetchAllDepartments({
+        pageSize: 20,
+        pageNo: 1,
+      }).then(({ data }) => {
+        this.options1 = data.items
+      })
+    },
     handleAvatarSuccess(res, file) {
       console.log(res)
       if (res.result_code === 10001) {
@@ -312,6 +344,7 @@ export default {
             realname: userForm.realname,
             email: userForm.email,
             mobile: userForm.mobile,
+            departmentid: userForm.departmentid,
             jobnum: userForm.jobnum,
             role: userForm.role,
             sex: userForm.sex,
