@@ -549,6 +549,33 @@
           >支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：260 * 350
         </div>
       </el-form-item>
+
+      <el-form-item label="报名成功展示图：" prop="recommendImg">
+        <el-upload
+          v-if="$store.state.uploadUrl"
+          :headers="$store.state.uploadHeaders"
+          :data="$store.state.uploadData"
+          :name="'Filedata'"
+          style="display: inline-block"
+          class="avatar-uploader"
+          :action="$store.state.uploadUrl"
+          :show-file-list="false"
+          :on-success="uploadRecommendImgSuccess"
+          :before-upload="beforeAvatarUpload"
+        >
+          <img
+            v-if="housesForm.recommendImg"
+            :src="housesForm.recommendImg.filepath"
+            class="cover-img"
+          />
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+        <div class="form-item-hint-text">
+          <span v-if="$route.query.tag === 'edit'">点击图片修改封面，</span
+          >支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：260 * 350
+        </div>
+      </el-form-item>
+
       <div class="form-divide-title">楼盘位置</div>
       <el-form-item label="楼盘所属区域：" prop="region">
         <el-select
@@ -1002,6 +1029,7 @@ export default {
         rim: '', // 周边介绍
         coverImg: null, // 封面
         shareImg: null, // 分享封面图
+        recommendImg: null, // 分享封面图
         province: '', // 省id
         city: '', // 市id
         region: '', // 区id
@@ -1123,6 +1151,11 @@ export default {
                 filename: data.shareImg || '',
                 filepath: data.shareImageLink || '',
               }
+            } else if (item === 'recommendImg' && data.recommendImgLink) {
+              this.housesForm.recommendImg = {
+                filename: data.recommendImg,
+                filepath: data.recommendImgLink,
+              }
             } else if (item === 'addRealImgs') {
               data.realImgList.forEach((img) => {
                 this.housesForm.addRealImgs.push({
@@ -1220,6 +1253,16 @@ export default {
       this.$refs['housesForm'].clearValidate('coverImg')
       // this.housesForm.coverImg = res.http_path
       this.housesForm.coverImg = {
+        filename: res.filename,
+        filepath: res.http_path,
+      }
+    },
+    uploadRecommendImgSuccess(res, file) {
+      if (res.result_code === 10001) {
+        this.$message.error(`上传错误：${res.result_msg}`)
+        return
+      }
+      this.housesForm.recommendImg = {
         filename: res.filename,
         filepath: res.http_path,
       }
@@ -1324,6 +1367,11 @@ export default {
             housesForm.shareImg = housesForm.shareImg.filename
           } else {
             housesForm.shareImg = ''
+          }
+          if (housesForm.recommendImg) {
+            housesForm.recommend_img  = housesForm.recommendImg.filename
+          } else {
+            housesForm.recommend_img = ''
           }
           // 编辑新增实景图
           let addRealImgs = []

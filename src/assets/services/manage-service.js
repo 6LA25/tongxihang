@@ -741,3 +741,32 @@ export const deleteDepartment  = (options) => Fetch({
     ...options
   }
 })
+
+export const fetchExternalUsers  = (options) => Fetch({
+  url: URL.externalUsers.items,
+  data: {
+    ...options
+  }
+})
+
+export const editExternalUser  = (options) => Fetch({
+  url: URL.externalUsers.edit,
+  data: {
+    ...options
+  }
+})
+
+export const fetchExternalUser  = (options) => Fetch({
+  url: URL.externalUsers.item,
+  data: {
+    ...options
+  }
+})
+
+export const deleteExternalUser  = (options) => Fetch({
+  url: URL.externalUsers.delete,
+  data: {
+    ...options
+  }
+})
+

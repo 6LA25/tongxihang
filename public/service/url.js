@@ -140,5 +140,11 @@ export default {
     items: `${domain}/api/admin/department/items`,
     edit: `${domain}/api/admin/department/edit`,
     delete: `${domain}/api/admin/department/delete`,
+  },
+  externalUsers: {
+    items: `${domain}/api/admin/externalUsers/items`,
+    edit: `${domain}/api/admin/externalUsers/edit`,
+    item: `${domain}/api/admin/externalUsers/item`,
+    delete: `${domain}/api/admin/externalUsers/delete`,
   }
 }

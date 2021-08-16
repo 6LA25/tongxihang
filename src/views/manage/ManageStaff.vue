@@ -70,13 +70,13 @@
       <el-table-column
         prop="account"
         label="用户名"
-        width="200"
+        min-width="150"
         show-overflow-tooltip
       ></el-table-column>
       <el-table-column
         prop="realname"
         label="姓名"
-        width="200"
+        width="150"
         show-overflow-tooltip
       ></el-table-column>
       <el-table-column
@@ -88,7 +88,7 @@
       <el-table-column
         prop="jobnum"
         label="员工编号"
-        width="150"
+        min-width="150"
         show-overflow-tooltip
       ></el-table-column>
       <el-table-column

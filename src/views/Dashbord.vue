@@ -137,6 +137,7 @@
               </div>
               <i class="icon-btn el-icon-message text"></i>
             </div>
+            <img class="avator" :src="$store.state.userInfo.avatar || require('../assets/imgs/defaultHeader.jpg')" alt="">
             <div class="text">{{ $store.state.userInfo.account }}</div>
             <div>
               <i
@@ -563,6 +564,13 @@ export default {
           display flex
           align-items center
           height 50px
+        }
+        .avator {
+          height 32px
+          width 32px
+          border-radius 16px
+          object-fit cover
+          margin-left 10px
         }
         .icon-btn {
           font-size 20px

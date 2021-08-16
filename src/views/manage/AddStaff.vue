@@ -278,7 +278,7 @@ export default {
   methods: {
     fetchDeps() {
       fetchAllDepartments({
-        pageSize: 20,
+        pageSize: 50,
         pageNo: 1,
       }).then(({ data }) => {
         this.options1 = data.items

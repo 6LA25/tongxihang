@@ -171,6 +171,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "AddStaff" */ '../views/manage/AddStaff.vue')
       },
       {
+        path: '/add-external-user',
+        name: 'add-external-user',
+        component: () => import(/* webpackChunkName: "add-external-user" */ '../views/manage/add-external-user.vue')
+      },
+      {
         path: '/manage-permission',
         name: 'manage-permission',
         component: () => import(/* webpackChunkName: "ManagePermission" */ '../views/manage/ManagePermission.vue')
