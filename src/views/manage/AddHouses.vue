@@ -1223,7 +1223,12 @@ export default {
             } else if (item === 'estateTypes') {
               this.housesForm.estateTypes = data.estateTypes ? data.estateTypes : []
             } else if (item === 'houseFeatures') {
-              this.housesForm.houseFeatures = data.houseFeatures ? data.houseFeatures : []
+              let arr = data.houseFeatures.split(',')
+              arr.forEach((val) => {
+                if (val) {
+                  this.housesForm.houseFeatures.push(val / 1)
+                }
+              })
             } else if (item !== 'houseLocation') {
               this.housesForm[item] = data[item]
             }
@@ -1426,7 +1431,7 @@ export default {
             }
           })
           housesForm.addAmbitusImgs = addAmbitusImgs
-
+          housesForm.houseFeatures = housesForm.houseFeatures.join(',')
           editHouse({
             ...housesForm,
             id: this.$route.query.id || '',
