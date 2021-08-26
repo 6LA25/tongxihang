@@ -770,3 +770,9 @@ export const deleteExternalUser  = (options) => Fetch({
   }
 })
 
+export const fetchStaffExternal  = (options) => Fetch({
+  url: URL.allUsers,
+  data: {
+    ...options
+  }
+})

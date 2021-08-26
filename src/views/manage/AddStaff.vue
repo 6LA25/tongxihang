@@ -104,7 +104,7 @@
         >
       </el-form-item>
 
-      <el-form-item label="所属部门：" prop="departmentid">
+      <el-form-item label="选择部门：" prop="departmentid">
         <el-select
           style="width: 400px"
           size="mini"

@@ -27,6 +27,7 @@
         <el-input
           style="width: 400px"
           size="mini"
+          type="number"
           v-model="housesForm.price"
         ></el-input>
         <span class="form-label">元/m2</span>
@@ -186,6 +187,13 @@
             </el-checkbox-group>
           </el-form-item>
         </div>
+      </div>
+      <div>
+        <el-form-item label="楼盘特色标签：">
+            <el-checkbox-group v-model="housesForm.houseFeatures">
+              <el-checkbox v-for="item in houseFeaturesList" :label="item.value" :key="item.value" name="estateTypes">{{item.label}}</el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
       </div>
       <div>
         <div class="ilb-top">
@@ -833,7 +841,7 @@ export default {
       submitting: false,
       rules: {
         name: [{ required: true, message: '请输入楼盘名称', trigger: 'blur' }],
-        price: [{ required: true, message: '请输入楼盘定价', trigger: 'blur' }],
+        // price: [{ required: true, message: '请输入楼盘定价', trigger: 'blur' }],
         type: [
           { required: true, message: '请选择楼盘类型', trigger: 'change' },
         ],
@@ -952,6 +960,19 @@ export default {
           label: '二手房',
         },
       ],
+      houseFeaturesList: [
+        { value: 1, label: '新盘' },
+        { value: 2, label: '近期开盘' },
+        { value: 3, label: '热销中' },
+        { value: 4, label: '房源紧俏' },
+        { value: 5, label: '限价盘' },
+        { value: 6, label: '低首付' },
+        { value: 7, label: '特价房' },
+        { value: 8, label: '清盘特价' },
+        { value: 9, label: '高回报' },
+        { value: 10, label: '不限购' },
+        { value: 11, label: '现房' },
+      ],
       estateTypes: [
         { value: 1, label: '住宅' },
         { value: 2, label: '公寓' },
@@ -959,6 +980,11 @@ export default {
         { value: 4, label: '写字楼' },
         { value: 5, label: '厂房' },
         { value: 6, label: '车位' },
+        { value: 7, label: '洋房' },
+        { value: 8, label: '别墅' },
+        { value: 9, label: '高层' },
+        { value: 10, label: '小高层' },
+        { value: 11, label: '商业' },
       ],
       houseStatus: [
         {
@@ -1033,6 +1059,7 @@ export default {
         province: '', // 省id
         city: '', // 市id
         region: '', // 区id
+        houseFeatures: [], // 特色标签
         address: '', // 楼盘具体地址
         lng: '', // 经度
         lat: '', // 纬度
@@ -1195,6 +1222,8 @@ export default {
               this.housesForm.hotlineId = data.hotlineId / 1
             } else if (item === 'estateTypes') {
               this.housesForm.estateTypes = data.estateTypes ? data.estateTypes : []
+            } else if (item === 'houseFeatures') {
+              this.housesForm.houseFeatures = data.houseFeatures ? data.houseFeatures : []
             } else if (item !== 'houseLocation') {
               this.housesForm[item] = data[item]
             }
@@ -1369,9 +1398,9 @@ export default {
             housesForm.shareImg = ''
           }
           if (housesForm.recommendImg) {
-            housesForm.recommend_img  = housesForm.recommendImg.filename
+            housesForm.recommendImg  = housesForm.recommendImg.filename
           } else {
-            housesForm.recommend_img = ''
+            housesForm.recommendImg = ''
           }
           // 编辑新增实景图
           let addRealImgs = []
