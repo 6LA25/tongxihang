@@ -966,10 +966,10 @@ export default {
         { value: 3, label: '热销中' },
         { value: 4, label: '房源紧俏' },
         { value: 5, label: '限价盘' },
-        { value: 6, label: '低首付' },
+        { value: 6, label: '低总价' },
         { value: 7, label: '特价房' },
         { value: 8, label: '清盘特价' },
-        { value: 9, label: '高回报' },
+        { value: 9, label: '热搜盘' },
         { value: 10, label: '不限购' },
         { value: 11, label: '现房' },
       ],
@@ -988,24 +988,8 @@ export default {
       ],
       houseStatus: [
         {
-          value: 1,
-          label: '热销中',
-        },
-        {
           value: 4,
           label: '在售',
-        },
-        {
-          value: 5,
-          label: '即将首开',
-        },
-        {
-          value: 2,
-          label: '即将开盘',
-        },
-        {
-          value: 6,
-          label: '即将售罄',
         },
         {
           value: 3,
