@@ -93,7 +93,7 @@
       ></el-table-column>
       <el-table-column
         prop="departmentname"
-        label="所属部门"
+        label="选择部门"
         width="150"
         show-overflow-tooltip
       ></el-table-column>

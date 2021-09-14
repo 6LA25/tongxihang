@@ -110,7 +110,7 @@
           size="mini"
           v-model="userForm.departmentid"
           reserve-keyword
-          placeholder="请选择置业顾问"
+          placeholder="请选择部门"
         >
           <el-option
             v-for="item in options1"

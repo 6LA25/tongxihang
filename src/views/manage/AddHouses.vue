@@ -79,13 +79,13 @@
           v-model="housesForm.tags"
         ></el-input>
       </el-form-item>
-      <el-form-item label="楼盘特色：" prop="feature">
+      <!-- <el-form-item label="楼盘特色：" prop="feature">
         <el-input
           style="width: 400px"
           size="mini"
           v-model="housesForm.feature"
         ></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="建筑类型：" prop="buildingType">
         <el-input
           style="width: 400px"
@@ -95,7 +95,7 @@
       </el-form-item>
       <div>
         <div class="ilb-top">
-          <el-form-item label="装修标准：" prop="standard">
+          <el-form-item label="装修状况：" prop="standard">
             <el-input
               style="width: 150px"
               size="mini"
@@ -147,7 +147,7 @@
       </div>
       <div>
         <div class="ilb-top">
-          <el-form-item label="装修：" prop="fitment">
+          <el-form-item label="装修状态：" prop="fitment">
             <el-select
               size="mini"
               v-model="housesForm.fitment"
@@ -189,7 +189,7 @@
         </div>
       </div>
       <div>
-        <el-form-item label="楼盘特色标签：">
+        <el-form-item label="楼盘特色：">
             <el-checkbox-group v-model="housesForm.houseFeatures">
               <el-checkbox v-for="item in houseFeaturesList" :label="item.value" :key="item.value" name="estateTypes">{{item.label}}</el-checkbox>
             </el-checkbox-group>
@@ -580,7 +580,7 @@
         </el-upload>
         <div class="form-item-hint-text">
           <span v-if="$route.query.tag === 'edit'">点击图片修改封面，</span
-          >支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：260 * 350
+          >支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：270 * 390
         </div>
       </el-form-item>
 
@@ -900,7 +900,15 @@ export default {
         },
         {
           value: 2,
-          label: '精装修',
+          label: '带装修',
+        },
+        {
+          value: 3,
+          label: '毛坯&带装修',
+        },
+        {
+          value: 0,
+          label: '不限',
         },
       ],
       // 楼型
@@ -1157,7 +1165,7 @@ export default {
                 filename: data.coverImg,
                 filepath: data.coverImageLink,
               }
-            } else if (item === 'shareImg' && data.shareImg) {
+            } else if (item === 'shareImg' && data.shareImageLink) {
               this.housesForm.shareImg = {
                 filename: data.shareImg || '',
                 filepath: data.shareImageLink || '',
@@ -1206,7 +1214,7 @@ export default {
               this.housesForm.hotlineId = data.hotlineId / 1
             } else if (item === 'estateTypes') {
               this.housesForm.estateTypes = data.estateTypes ? data.estateTypes : []
-            } else if (item === 'houseFeatures') {
+            } else if (item === 'houseFeatures' && data.houseFeatures) {
               let arr = data.houseFeatures.split(',')
               arr.forEach((val) => {
                 if (val) {
@@ -1370,6 +1378,7 @@ export default {
       this.$refs['housesForm'].validate((valid) => {
         if (valid) {
           let housesForm = JSON.parse(JSON.stringify(this.housesForm))
+          console.log('housesForm', housesForm)
           let _marketHouseList = []
           housesForm.marketHouseList.forEach((item) => {
             _marketHouseList.push({
