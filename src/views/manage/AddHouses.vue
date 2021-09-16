@@ -183,17 +183,29 @@
         <div class="ilb-top">
           <el-form-item label="物业类型：">
             <el-checkbox-group v-model="housesForm.estateTypes">
-              <el-checkbox v-for="item in estateTypes" :label="item.value" :key="item.value" name="estateTypes">{{item.label}}</el-checkbox>
+              <el-checkbox
+                v-for="item in estateTypes"
+                :label="item.value"
+                :key="item.value"
+                name="estateTypes"
+                >{{ item.label }}</el-checkbox
+              >
             </el-checkbox-group>
           </el-form-item>
         </div>
       </div>
       <div>
         <el-form-item label="楼盘特色：">
-            <el-checkbox-group v-model="housesForm.houseFeatures">
-              <el-checkbox v-for="item in houseFeaturesList" :label="item.value" :key="item.value" name="estateTypes">{{item.label}}</el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
+          <el-checkbox-group v-model="housesForm.houseFeatures">
+            <el-checkbox
+              v-for="item in houseFeaturesList"
+              :label="item.value"
+              :key="item.value"
+              name="estateTypes"
+              >{{ item.label }}</el-checkbox
+            >
+          </el-checkbox-group>
+        </el-form-item>
       </div>
       <div>
         <div class="ilb-top">
@@ -749,7 +761,11 @@
           合计：计算3级佣金或佣金比例总和，注意，佣金比例是根据实际放款计算
         </div>
       </div>
-      <el-form-item label="置业顾问：" prop="editadviseridList" v-permission="'配置置业顾问'">
+      <el-form-item
+        label="置业顾问："
+        prop="editadviseridList"
+        v-permission="'配置置业顾问'"
+      >
         <el-select
           style="width: 400px"
           size="mini"
@@ -771,7 +787,11 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="楼盘驻守：" prop="hotlineId" v-permission="'配置楼盘驻守'">
+      <el-form-item
+        label="楼盘驻守："
+        prop="hotlineId"
+        v-permission="'配置楼盘驻守'"
+      >
         <!-- <el-input style="width: 400px" size="mini" v-model="housesForm.hotline"></el-input> -->
         <el-select
           style="width: 400px"
@@ -833,6 +853,7 @@ import {
   fetchAllUsers,
   fetchAlllStaff,
   fetchMarkethouse,
+  fetchStaffExternal
 } from '../../../src/assets/services/manage-service'
 export default {
   name: 'add-houses',
@@ -1118,7 +1139,7 @@ export default {
   },
   methods: {
     fetchUsers(query) {
-      fetchAlllStaff({
+      fetchStaffExternal({
         account: query,
       }).then(({ data }) => {
         this.options = data.items
@@ -1152,7 +1173,6 @@ export default {
       fetchHouseItem({ id: this.$route.query.id })
         .then(({ data }) => {
           Object.keys(this.housesForm).forEach((item) => {
-            console.log(item)
             if (item === 'floorType') {
               let arr = data.floorType.split(',')
               arr.forEach((val) => {
@@ -1213,14 +1233,20 @@ export default {
               this.options1 = [data.hotlineObject]
               this.housesForm.hotlineId = data.hotlineId / 1
             } else if (item === 'estateTypes') {
-              this.housesForm.estateTypes = data.estateTypes ? data.estateTypes : []
-            } else if (item === 'houseFeatures' && data.houseFeatures) {
-              let arr = data.houseFeatures.split(',')
-              arr.forEach((val) => {
-                if (val) {
-                  this.housesForm.houseFeatures.push(val / 1)
-                }
-              })
+              this.housesForm.estateTypes = data.estateTypes
+                ? data.estateTypes
+                : []
+            } else if (item === 'houseFeatures') {
+              if (data.houseFeatures) {
+                let arr = data.houseFeatures.split(',')
+                arr.forEach((val) => {
+                  if (val) {
+                    this.housesForm.houseFeatures.push(val / 1)
+                  }
+                })
+              } else {
+                this.housesForm.houseFeatures = []
+              }
             } else if (item !== 'houseLocation') {
               this.housesForm[item] = data[item]
             }
@@ -1396,7 +1422,7 @@ export default {
             housesForm.shareImg = ''
           }
           if (housesForm.recommendImg) {
-            housesForm.recommendImg  = housesForm.recommendImg.filename
+            housesForm.recommendImg = housesForm.recommendImg.filename
           } else {
             housesForm.recommendImg = ''
           }
