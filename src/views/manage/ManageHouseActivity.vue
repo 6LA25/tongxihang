@@ -204,7 +204,7 @@
           <div class="form-item-hint-text">
             <span v-if="$route.query.tag === 'edit'"
               >点击图片修改活动封面，</span
-            >支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：343 * 55
+            >支持jpg/jpeg/png格式图片，大小不超过1M，建议尺寸：343 * 70
           </div>
         </el-form-item>
         <el-form-item

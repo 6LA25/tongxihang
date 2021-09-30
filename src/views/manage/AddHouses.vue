@@ -346,7 +346,7 @@
           </el-form-item>
         </div>
       </div>
-      <el-form-item label="楼盘亮点：" prop="lightspot">
+      <!-- <el-form-item label="楼盘亮点：" prop="lightspot">
         <el-input
           style="width: 400px"
           type="textarea"
@@ -354,7 +354,7 @@
           size="mini"
           v-model="housesForm.lightspot"
         ></el-input>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="楼盘活动：" prop="marketHouseList">
         <el-select
@@ -880,9 +880,6 @@ export default {
           { required: true, message: '请输入楼盘详细地址', trigger: 'blur' },
         ],
         coverImg: [{ required: true, message: '请上传楼盘封面' }],
-        revenueCommission: [
-          { required: true, message: '请输入佣金设置', trigger: 'blur' },
-        ],
         tags: [
           {
             validator: (rule, value, callback) => {

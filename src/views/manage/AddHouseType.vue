@@ -148,7 +148,7 @@
             :action="$store.state.uploadUrl">
             <i class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-        <div class="form-item-hint-text">最多上传4张图片，支持jpg/jpeg/png格式图片，大小不超过1M</div>
+        <div class="form-item-hint-text">最多上传4张图片，支持jpg/jpeg/png格式图片，大小不超过1M；建议尺寸：375*250</div>
       </el-form-item>
 
       <el-form-item label="样板图：" prop="editForm">
@@ -168,7 +168,7 @@
             :action="$store.state.uploadUrl">
             <i class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-        <div class="form-item-hint-text">最多上传4张图片，支持jpg/jpeg/png格式图片，大小不超过1M</div>
+        <div class="form-item-hint-text">最多上传4张图片，支持jpg/jpeg/png格式图片，大小不超过1M；建议尺寸：375*250</div>
       </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
