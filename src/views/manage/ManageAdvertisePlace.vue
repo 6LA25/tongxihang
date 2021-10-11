@@ -58,6 +58,7 @@
       <el-table-column prop="title" label="广告位名称" min-width="200"></el-table-column>
       <el-table-column prop="sort" label="排序" min-width="100"></el-table-column>
       <el-table-column prop="on_time" label="上架时间" min-width="180"></el-table-column>
+      <el-table-column prop="postionName" label="广告位位置" min-width="180"></el-table-column>
       <el-table-column prop="statusName" label="上架状态" min-width="100"></el-table-column>
       <el-table-column label="操作" min-width="280">
         <template slot-scope="scope">
@@ -110,6 +111,10 @@ export default {
         {
           value: 2,
           label: '开屏广告'
+        },
+        {
+          value: 3,
+          label: '首页公告下方'
         }
       ],
       putways: [

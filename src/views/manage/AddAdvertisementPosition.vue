@@ -31,7 +31,10 @@
           <img v-if="advForm.image" :src="advForm.image.path" class="cover-img">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-        <div class="form-item-hint-text">支持jpg/jpeg/png格式图片，大小不超过1M；建议尺寸350*180</div>
+        <div class="form-item-hint-text">
+          支持jpg/jpeg/png格式图片，大小不超过1M；<br/>
+          建议尺寸： 首页banner（350*200）；开屏广告（270*390）；首页公告下方（327*80）
+        </div>
       </el-form-item>
       <el-form-item label="广告内容：" prop="link_type">
         <el-radio-group v-model="advForm.link_type" @change="handleSelectLink">
